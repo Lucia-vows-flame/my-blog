@@ -7,6 +7,26 @@ function qs(id) {
   return document.getElementById(id);
 }
 
+function initKeyboardFocusGating() {
+  const root = document.body;
+  if (!root) return;
+
+  const onKeyDown = (ev) => {
+    // Only enable keyboard focus styles for navigation keys.
+    const k = ev.key;
+    if (k === "Tab" || k.startsWith("Arrow") || k === "Enter" || k === " ") {
+      root.classList.add("kb");
+    }
+  };
+  const onPointer = () => {
+    root.classList.remove("kb");
+  };
+
+  window.addEventListener("keydown", onKeyDown, { capture: true });
+  window.addEventListener("mousedown", onPointer, { capture: true });
+  window.addEventListener("touchstart", onPointer, { capture: true, passive: true });
+}
+
 function parseHashParams() {
   const raw = (location.hash || "").replace(/^#/, "");
   const params = new URLSearchParams(raw);
@@ -47,6 +67,125 @@ function normalizeThemePref(pref) {
   const p = String(pref || "system").toLowerCase();
   if (p === "light" || p === "dark" || p === "system") return p;
   return "system";
+}
+
+function normalizeMode(mode) {
+  const m = String(mode || "scroll").toLowerCase();
+  return m === "page" ? "page" : "scroll";
+}
+
+function normalizeZoomString(z) {
+  const v = String(z || "page-width");
+  return v;
+}
+
+function formatZoomLabel(z) {
+  const zoom = parseZoomValue(z);
+  if (zoom === "page-width") return "适合宽度（推荐）";
+  if (zoom === "page-fit") return "适合页面（整页）";
+  if (typeof zoom === "number") return `${Math.round(zoom * 100)}%`;
+  return String(z || "");
+}
+
+function initDropdown({ rootId, btnId, menuId, initialValue, formatLabel, onChange }) {
+  const root = qs(rootId);
+  const btn = qs(btnId);
+  const menu = qs(menuId);
+  if (!root || !btn || !menu) return null;
+
+  const opts = [...menu.querySelectorAll("[data-value]")].filter((x) => x instanceof HTMLElement);
+  const labelFor = (value) => {
+    const v = String(value);
+    const match = opts.find((o) => o.dataset.value === v);
+    if (match) return match.textContent || v;
+    return typeof formatLabel === "function" ? formatLabel(v) : v;
+  };
+
+  const setValue = (value) => {
+    const v = String(value);
+    btn.textContent = labelFor(v);
+    for (const o of opts) {
+      const selected = o.dataset.value === v;
+      o.setAttribute("aria-selected", selected ? "true" : "false");
+    }
+  };
+
+  const isOpen = () => !menu.hidden;
+  const open = () => {
+    root.classList.add("is-open");
+    menu.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    const sel = opts.find((o) => o.getAttribute("aria-selected") === "true") || opts[0];
+    sel?.focus?.();
+  };
+  const close = () => {
+    root.classList.remove("is-open");
+    menu.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+  };
+  const toggle = () => {
+    if (isOpen()) close();
+    else open();
+  };
+
+  btn.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    toggle();
+  });
+
+  btn.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter" || ev.key === " ") {
+      ev.preventDefault();
+      open();
+    } else if (ev.key === "ArrowDown") {
+      ev.preventDefault();
+      open();
+    } else if (ev.key === "Escape") {
+      ev.preventDefault();
+      close();
+    }
+  });
+
+  for (const opt of opts) {
+    opt.setAttribute("tabindex", "-1");
+    opt.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      const v = opt.dataset.value || "";
+      setValue(v);
+      onChange?.(v);
+      close();
+      btn.focus();
+    });
+
+    opt.addEventListener("keydown", (ev) => {
+      const i = opts.indexOf(opt);
+      if (ev.key === "ArrowDown") {
+        ev.preventDefault();
+        opts[Math.min(opts.length - 1, i + 1)]?.focus?.();
+      } else if (ev.key === "ArrowUp") {
+        ev.preventDefault();
+        opts[Math.max(0, i - 1)]?.focus?.();
+      } else if (ev.key === "Enter" || ev.key === " ") {
+        ev.preventDefault();
+        opt.click();
+      } else if (ev.key === "Escape") {
+        ev.preventDefault();
+        close();
+        btn.focus();
+      }
+    });
+  }
+
+  document.addEventListener("mousedown", (ev) => {
+    if (!isOpen()) return;
+    const t = ev.target;
+    if (!(t instanceof Node)) return;
+    if (!root.contains(t)) close();
+  });
+
+  setValue(initialValue);
+  close();
+  return { setValue, close, open };
 }
 
 function clamp(n, lo, hi) {
@@ -231,6 +370,8 @@ function formatMode(mode) {
 }
 
 async function main() {
+  initKeyboardFocusGating();
+
   const params = parseHashParams();
   const file = params.file || "";
   if (!file) {
@@ -238,14 +379,19 @@ async function main() {
     return;
   }
 
-  const themeSelect = qs("theme-select");
   const themePrefInit = normalizeThemePref(params.theme || safeLocalStorageGet("pdf.theme") || "system");
   let themePref = themePrefInit;
+  /** @type {{setValue:(v:string)=>void, close:()=>void, open:()=>void} | null} */
+  let themeDd = null;
+  /** @type {{setValue:(v:string)=>void, close:()=>void, open:()=>void} | null} */
+  let modeDd = null;
+  /** @type {{setValue:(v:string)=>void, close:()=>void, open:()=>void} | null} */
+  let zoomDd = null;
 
   const applyTheme = (pref) => {
     themePref = normalizeThemePref(pref);
     safeLocalStorageSet("pdf.theme", themePref);
-    if (themeSelect) themeSelect.value = themePref;
+    themeDd?.setValue(themePref);
     const actual = themePref === "system" ? getSystemTheme() : themePref;
     document.body.dataset.theme = actual;
     document.body.dataset.themePref = themePref;
@@ -265,7 +411,8 @@ async function main() {
   }
 
   const initialMode = formatMode(params.mode || safeLocalStorageGet("pdf.mode") || "scroll");
-  const initialZoom = parseZoomValue(params.zoom || safeLocalStorageGet("pdf.zoom") || "page-width");
+  const initialZoomRaw = normalizeZoomString(params.zoom || safeLocalStorageGet("pdf.zoom") || "page-width");
+  const initialZoom = parseZoomValue(initialZoomRaw);
   const initialRotate = Number(params.rotate || safeLocalStorageGet("pdf.rotate") || "0");
   const initialPage = Number(params.page || "1");
 
@@ -297,20 +444,15 @@ async function main() {
   const pageCount = qs("page-count");
   const prevPage = qs("prev-page");
   const nextPage = qs("next-page");
-  const zoomSelect = qs("zoom-select");
   const zoomIn = qs("zoom-in");
   const zoomOut = qs("zoom-out");
   const rotateBtn = qs("rotate");
-  const modeSelect = qs("mode-select");
   const stage = qs("stage");
 
   if (!viewPage || !viewScroll || !canvas || !annoLayer || !pagesEl || !stage) {
     showError("Viewer DOM 不完整。", { file });
     return;
   }
-
-  if (modeSelect) modeSelect.value = initialMode;
-  if (zoomSelect) zoomSelect.value = String(initialZoom);
 
   const ctx = canvas.getContext("2d", { alpha: false });
   if (!ctx) {
@@ -359,13 +501,13 @@ async function main() {
   function setMode(mode) {
     state.mode = formatMode(mode);
     safeLocalStorageSet("pdf.mode", state.mode);
-    if (modeSelect) modeSelect.value = state.mode;
+    modeDd?.setValue(state.mode);
   }
 
   function setZoom(next) {
     state.zoom = parseZoomValue(next);
     safeLocalStorageSet("pdf.zoom", typeof state.zoom === "number" ? String(state.zoom) : state.zoom);
-    if (zoomSelect) zoomSelect.value = String(state.zoom);
+    zoomDd?.setValue(typeof state.zoom === "number" ? String(state.zoom) : String(state.zoom));
   }
 
   function zoomBy(delta) {
@@ -603,15 +745,43 @@ async function main() {
     });
   }
 
-  modeSelect?.addEventListener("change", () => {
-    setMode(modeSelect.value);
-    applyModeAndRender();
+  modeDd = initDropdown({
+    rootId: "dd-mode",
+    btnId: "mode-btn",
+    menuId: "mode-menu",
+    initialValue: state.mode,
+    onChange: (v) => {
+      setMode(v);
+      applyModeAndRender();
+    },
   });
 
-  themeSelect?.addEventListener("change", () => {
-    applyTheme(themeSelect.value);
-    syncHash();
+  themeDd = initDropdown({
+    rootId: "dd-theme",
+    btnId: "theme-btn",
+    menuId: "theme-menu",
+    initialValue: themePref,
+    onChange: (v) => {
+      applyTheme(v);
+      syncHash();
+    },
   });
+
+  zoomDd = initDropdown({
+    rootId: "dd-zoom",
+    btnId: "zoom-btn",
+    menuId: "zoom-menu",
+    initialValue: typeof state.zoom === "number" ? String(state.zoom) : initialZoomRaw,
+    formatLabel: (v) => formatZoomLabel(v),
+    onChange: (v) => {
+      setZoom(v);
+      if (state.mode === "scroll") invalidateScrollRenders();
+      applyModeAndRender();
+    },
+  });
+
+  // Ensure theme is applied after dropdown is ready (so button label updates).
+  applyTheme(themePref);
 
   prevPage?.addEventListener("click", () => goToPage(state.pageNum - 1));
   nextPage?.addEventListener("click", () => goToPage(state.pageNum + 1));
@@ -623,11 +793,6 @@ async function main() {
     goToPage(v);
   });
 
-  zoomSelect?.addEventListener("change", () => {
-    setZoom(zoomSelect.value);
-    if (state.mode === "scroll") invalidateScrollRenders();
-    applyModeAndRender();
-  });
   zoomIn?.addEventListener("click", () => {
     zoomBy(0.1);
     if (state.mode === "scroll") invalidateScrollRenders();
