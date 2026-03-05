@@ -73,13 +73,18 @@ python3 scripts/publish_posts.py
 
 ### Typst 附件（图片等）放哪里？
 
-强制规定：**所有 Typst 附件（图片等）统一放在 `incoming/typst/images/` 下**，然后在 Typst 中用“项目绝对路径”引用（以 `/` 开头）：
+强制规定：**所有 Typst 附件（图片等）必须放在 `incoming/typst/**/images/**` 下**（支持多级目录），并在 Typst 中用相对路径引用。
 
-- 示例结构：`incoming/typst/Computer Science/DSA/CS61B2025/notes/lec01.typ`
-- 图片放在：`incoming/typst/images/CS61B2025/fig1.png`
-- Typst 引用：`#image("/images/CS61B2025/fig1.png")`
+- 示例结构（一级分类）：`incoming/typst/tools_tutorial/Tmux使用教程.typ`
+- 图片放在：`incoming/typst/tools_tutorial/images/tmux/tmux-cover.png`
+- Typst 引用：`#image("images/tmux/tmux-cover.png")`
 
-脚本会自动把 Typst 的 `--root` 设为 `incoming/typst/`（当你的源文件位于该目录下），因此 `/images/...` 在任何 note 里都可用。
+示例结构（多级分类）：`incoming/typst/Computer Science/DSA/CS61B2025/notes/lec01.typ`
+
+- 图片放在：`incoming/typst/Computer Science/DSA/CS61B2025/images/fig1.png`
+- Typst 引用：`#image("../images/fig1.png")`
+
+脚本会自动把 Typst 的 `--root` 设为 `incoming/typst/`（当你的源文件位于该目录下）。
 
 > 若用 GitHub Actions 自动编译 Typst：附件文件也需要一并提交到仓库，否则 CI 找不到图片就会编译失败。若不想提交附件，可以改为本地编译出 PDF 后只提交 `docs/**`。
 

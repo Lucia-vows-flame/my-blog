@@ -131,9 +131,9 @@ def compile_typst_to_pdf(*, typ_path: Path, out_pdf: Path, typst_root: Path | No
 def enforce_images_location(*, deps_path: Path, root: Path) -> None:
     """
     Enforce: all non-.typ dependencies that live under incoming/typst/ must be
-    placed under incoming/typst/images/.
+    placed under a `images/` directory under incoming/typst/ (supports multi-level).
     """
-    images_root = (INCOMING_TYP / "images").resolve()
+    typ_root = INCOMING_TYP.resolve()
 
     text = deps_path.read_text(encoding="utf-8", errors="replace")
     for raw in text.splitlines():
@@ -148,22 +148,20 @@ def enforce_images_location(*, deps_path: Path, root: Path) -> None:
             p = p.resolve()
 
         try:
-            p.relative_to(INCOMING_TYP.resolve())
+            rel = p.relative_to(typ_root)
         except ValueError:
             continue
 
         if p.suffix.lower() == ".typ":
             continue
 
-        try:
-            p.relative_to(images_root)
-        except ValueError as e:
+        if "images" not in rel.parts:
             raise SystemExit(
                 "Typst 附件位置不符合约定：\n"
                 f"- 发现依赖文件：{p}\n"
-                f"- 但它不在：{images_root}\n"
-                "请把所有图片/附件移动到 incoming/typst/images/ 下，并在 Typst 中用 /images/... 引用。"
-            ) from e
+                "- 但它不在：incoming/typst/**/images/**\n"
+                "请把所有图片/附件移动到某个分类目录下的 images/ 目录（支持多级目录），并在 Typst 中用相对路径引用。"
+            )
 
 
 def write_meta(*, out_dir: Path, row: Row) -> None:

@@ -2,7 +2,7 @@ typ_file,pdf_file,slug,title,date,categories,excerpt
 
 # 每个字段该怎么填（以 # 开头的行会被脚本忽略）：
 # - typ_file：可选，Typst 源文件路径（相对 incoming/typst/，可包含子目录），例如 tools/tmux.typ
-#   - 强制规定：图片/附件统一放在 incoming/typst/images/ 下，并在 typ 中用 /images/... 引用
+#   - 强制规定：图片/附件必须放在 incoming/typst/**/images/** 下（支持多级目录），并在 typ 中用相对路径引用
 # - pdf_file：可选，PDF 文件路径（相对 incoming/pdfs/），例如 tmux.pdf
 #   - typ_file 与 pdf_file 二选一即可；若同时填写，默认优先用 typ_file 编译
 # - slug：必填，全站唯一；同时作为目录名与文章 id，建议只用 a-z 0-9 和 -，例如 tmux-tutorial
@@ -17,3 +17,8 @@ typ_file,pdf_file,slug,title,date,categories,excerpt
 # tools/tmux.typ,,tmux-tutorial,Tmux 使用教程,2026-03-04,Tools Tutorial,介绍 tmux 的常用操作与配置
 # 示例（直接用 PDF）：
 # ,tmux.pdf,tmux-tutorial,Tmux 使用教程,2026-03-04,Tools Tutorial,介绍 tmux 的常用操作与配置
+
+
+
+Tmux使用教程.typ,,tmux-tutorial,Tmux 使用教程,2026-03-04,Tools Tutorial,
+
