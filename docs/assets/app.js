@@ -1,4 +1,5 @@
 const POSTS_URL = "data/posts.json";
+const PDF_VIEWER = "pdf.html";
 
 function routeToPost({ id, path }) {
   const params = new URLSearchParams();
@@ -65,6 +66,14 @@ function normalizePost(raw) {
     categories,
     excerpt: typeof raw.excerpt === "string" ? raw.excerpt : "",
   };
+}
+
+function isPdfPost(post) {
+  return String(post?.path || "").toLowerCase().endsWith(".pdf");
+}
+
+function pdfViewerUrl(pdfPath) {
+  return `${PDF_VIEWER}#file=${encodeURIComponent(pdfPath)}`;
 }
 
 function buildCategoryTree(posts) {
@@ -246,6 +255,7 @@ function renderCategories({ root, activeCategory }) {
 }
 
 function postLink(post) {
+  if (isPdfPost(post)) return pdfViewerUrl(post.path);
   return `post.html#id=${encodeURIComponent(post.id)}`;
 }
 
@@ -269,6 +279,11 @@ function renderLatest(posts) {
     title.className = "post-title";
     title.href = postLink(post);
     title.textContent = post.title;
+    if (isPdfPost(post)) {
+      title.target = "_blank";
+      title.rel = "noopener noreferrer";
+      title.title = "PDF 将在新窗口打开";
+    }
 
     li.append(date, title);
     list.append(li);
@@ -319,6 +334,11 @@ function renderCategory(posts, category) {
       const a = document.createElement("a");
       a.href = postLink(post);
       a.textContent = `${post.title}（${formatDate(post.date)}）`;
+      if (isPdfPost(post)) {
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.title = "PDF 将在新窗口打开";
+      }
       li.append(a);
       ul.append(li);
     }
@@ -392,6 +412,7 @@ function renderPost(posts, { postId, postPath }) {
   const meta = qs("post-meta");
   const frame = qs("post-frame");
   const frameWrap = qs("post-frame-wrap");
+  const placeholder = qs("post-placeholder");
   if (!frame) return;
 
   if (!post) {
@@ -408,11 +429,11 @@ function renderPost(posts, { postId, postPath }) {
   if (meta) {
     const cats = post.categories.map((c) => categoryBreadcrumbLinks(c)).join(" | ");
     const isPdf = post.path.toLowerCase().endsWith(".pdf");
-    const viewer = isPdf ? `pdf.html#file=${encodeURIComponent(post.path)}` : post.path;
+    const viewer = isPdf ? pdfViewerUrl(post.path) : post.path;
     const open = `<a class="pill" href="${viewer}" target="_blank" rel="noopener noreferrer">新窗口</a>`;
     const raw = isPdf ? `<a class="pill" href="${post.path}" target="_blank" rel="noopener noreferrer">原始 PDF</a>` : "";
     const download = isPdf ? `<a class="pill" href="${post.path}" download>下载</a>` : "";
-    const fullscreen = `<button class="pill pill--btn" type="button" data-action="toggle-fullscreen">全屏</button>`;
+    const fullscreen = isPdf ? "" : `<button class="pill pill--btn" type="button" data-action="toggle-fullscreen">全屏</button>`;
     meta.innerHTML =
       `<span class="meta-row">` +
       `<span class="meta-date">${formatDate(post.date)}</span>` +
@@ -422,9 +443,57 @@ function renderPost(posts, { postId, postPath }) {
       `<span class="meta-actions">${open}${raw}${download}${fullscreen}</span>`;
   }
 
-  const isPdf = post.path.toLowerCase().endsWith(".pdf");
+  const isPdf = isPdfPost(post);
   if (frameWrap) frameWrap.classList.toggle("is-pdf", isPdf);
-  frame.src = isPdf ? `pdf.html#file=${encodeURIComponent(post.path)}` : post.path;
+
+  if (isPdf) {
+    const viewer = pdfViewerUrl(post.path);
+    frame.hidden = true;
+    frame.removeAttribute("src");
+    frame.srcdoc = "";
+
+    if (placeholder) {
+      placeholder.hidden = false;
+      const key = `pdf.autopen:${post.id}`;
+      const opened = (() => {
+        try {
+          return sessionStorage.getItem(key) === "1";
+        } catch {
+          return false;
+        }
+      })();
+
+      let openedNow = false;
+      if (!opened) {
+        try {
+          const w = window.open(viewer, "_blank", "noopener,noreferrer");
+          openedNow = Boolean(w);
+          sessionStorage.setItem(key, "1");
+        } catch {
+          // ignore
+        }
+      }
+
+      placeholder.innerHTML =
+        `<div class="post-placeholder__inner">` +
+        `<div class="post-placeholder__title">PDF 将在新窗口打开</div>` +
+        `<div class="post-placeholder__desc">` +
+        (openedNow ? `已为你打开新窗口。` : `如果浏览器拦截了弹窗，请点击下面按钮手动打开。`) +
+        `</div>` +
+        `<div class="post-placeholder__actions">` +
+        `<a class="pill" href="${viewer}" target="_blank" rel="noopener noreferrer">打开 PDF 阅读器</a>` +
+        `<a class="pill" href="${post.path}" target="_blank" rel="noopener noreferrer">打开原始 PDF</a>` +
+        `<a class="pill" href="${post.path}" download>下载</a>` +
+        `</div>` +
+        `</div>`;
+    }
+
+    return;
+  }
+
+  if (placeholder) placeholder.hidden = true;
+  frame.hidden = false;
+  frame.src = post.path;
 }
 
 function escapeHtml(s) {

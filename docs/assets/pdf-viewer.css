@@ -139,6 +139,37 @@
   justify-content: flex-end;
 }
 
+.pdf-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px 0 10px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--pdf-border);
+  background: var(--pdf-panel);
+}
+
+.pdf-field:hover {
+  background: var(--pdf-panel-2);
+}
+
+.pdf-field__label {
+  font-size: 12px;
+  color: var(--pdf-muted);
+  letter-spacing: 0.2px;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.pdf-field .pdf-select {
+  border: 0;
+  height: 32px;
+  background-color: transparent;
+  padding-left: 0;
+  padding-right: 28px;
+}
+
 .pdf-divider {
   width: 1px;
   height: 22px;
@@ -204,6 +235,7 @@
     5px 5px;
   background-repeat: no-repeat;
   padding-right: 28px;
+  max-width: 220px;
 }
 
 .pdf-page[data-theme="light"] .pdf-select {

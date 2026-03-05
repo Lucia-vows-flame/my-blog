@@ -384,6 +384,42 @@ a:hover {
   padding: 0;
 }
 
+.post-placeholder {
+  padding: 22px 18px;
+}
+
+.post-placeholder__inner {
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-soft);
+  padding: 18px 16px;
+}
+
+.post-placeholder__title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  margin-bottom: 6px;
+}
+
+.post-placeholder__desc {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.post-placeholder__actions {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.post-frame__wrap.is-pdf .post-placeholder {
+  padding: 16px;
+}
+
 .post-frame {
   width: 100%;
   height: calc(100vh - 240px);

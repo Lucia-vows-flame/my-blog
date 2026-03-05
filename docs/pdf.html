@@ -16,16 +16,22 @@
         </div>
 
         <div class="pdf-controls" role="toolbar" aria-label="PDF controls">
-          <select id="mode-select" class="pdf-select" aria-label="View mode">
-            <option value="scroll" selected>滚动</option>
-            <option value="page">翻页</option>
-          </select>
+          <div class="pdf-field" title="阅读方式：连续滚动或单页翻页">
+            <span class="pdf-field__label">模式</span>
+            <select id="mode-select" class="pdf-select" aria-label="View mode">
+              <option value="scroll" selected>滚动（连续）</option>
+              <option value="page">翻页（单页）</option>
+            </select>
+          </div>
 
-          <select id="theme-select" class="pdf-select" aria-label="Theme">
-            <option value="system" selected>跟随系统</option>
-            <option value="light">亮色</option>
-            <option value="dark">暗色</option>
-          </select>
+          <div class="pdf-field" title="主题：亮色/暗色/跟随系统">
+            <span class="pdf-field__label">主题</span>
+            <select id="theme-select" class="pdf-select" aria-label="Theme">
+              <option value="system" selected>跟随系统（推荐）</option>
+              <option value="light">亮色</option>
+              <option value="dark">暗色</option>
+            </select>
+          </div>
 
           <button class="pdf-btn" type="button" id="prev-page" title="上一页 (←)">
             ‹
@@ -42,16 +48,19 @@
           <span class="pdf-divider" aria-hidden="true"></span>
 
           <button class="pdf-btn" type="button" id="zoom-out" title="缩小 (-)">−</button>
-          <select id="zoom-select" class="pdf-select" aria-label="Zoom">
-            <option value="page-width" selected>适合宽度</option>
-            <option value="page-fit">适合页面</option>
-            <option value="0.5">50%</option>
-            <option value="0.75">75%</option>
-            <option value="1">100%</option>
-            <option value="1.25">125%</option>
-            <option value="1.5">150%</option>
-            <option value="2">200%</option>
-          </select>
+          <div class="pdf-field" title="缩放：适合宽度/适合页面/百分比">
+            <span class="pdf-field__label">缩放</span>
+            <select id="zoom-select" class="pdf-select" aria-label="Zoom">
+              <option value="page-width" selected>适合宽度（推荐）</option>
+              <option value="page-fit">适合页面（整页）</option>
+              <option value="0.5">50%</option>
+              <option value="0.75">75%</option>
+              <option value="1">100%</option>
+              <option value="1.25">125%</option>
+              <option value="1.5">150%</option>
+              <option value="2">200%</option>
+            </select>
+          </div>
           <button class="pdf-btn" type="button" id="zoom-in" title="放大 (+)">+</button>
 
           <span class="pdf-divider" aria-hidden="true"></span>
