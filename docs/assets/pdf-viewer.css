@@ -11,12 +11,26 @@
   --pdf-canvas-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
   --pdf-link-hover: rgba(96, 165, 250, 0.55);
   --pdf-link-bg: rgba(96, 165, 250, 0.08);
+
+  --pdf-font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Noto Sans CJK SC", "Noto Sans SC",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --pdf-font-display: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino,
+    "Songti SC", STSong, SimSun, serif;
+  --pdf-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+  --pdf-accent-a: rgba(96, 165, 250, 0.95);
+  --pdf-accent-b: rgba(52, 211, 153, 0.9);
+  --pdf-accent-c: rgba(236, 72, 153, 0.85);
+  --pdf-glow: 0 0 0 transparent;
 }
 
 .pdf-page {
   color: var(--pdf-text);
   background: var(--pdf-bg);
   color-scheme: dark;
+  font-family: var(--pdf-font-ui);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
@@ -95,6 +109,29 @@
     rgba(255, 255, 255, 0.06);
   box-shadow: 0 10px 28px rgba(2, 6, 23, 0.5);
   padding: 10px 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pdf-topbar__inner::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(96, 165, 250, 0.22),
+    rgba(52, 211, 153, 0.16),
+    rgba(236, 72, 153, 0.12),
+    rgba(96, 165, 250, 0.22)
+  );
+  opacity: 0.9;
+  filter: blur(14px);
+}
+
+.pdf-topbar__inner > * {
+  position: relative;
+  z-index: 1;
 }
 
 .pdf-page[data-theme="light"] .pdf-topbar__inner {
@@ -113,13 +150,27 @@
 }
 
 .pdf-brand__title {
-  font-weight: 750;
-  letter-spacing: 0.2px;
-  font-size: 14px;
+  font-family: var(--pdf-font-display);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  font-size: 15px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 46vw;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.96), rgba(191, 219, 254, 0.95));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 0 rgba(2, 6, 23, 0.25);
+}
+
+.pdf-page[data-theme="light"] .pdf-brand__title {
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.94), rgba(37, 99, 235, 0.9));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
 }
 
 .pdf-brand__meta {
@@ -129,6 +180,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 46vw;
+  font-family: var(--pdf-font-mono);
 }
 
 .pdf-controls {
@@ -147,19 +199,58 @@
   height: 34px;
   border-radius: 10px;
   border: 1px solid var(--pdf-border);
-  background: var(--pdf-panel);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent),
+    radial-gradient(420px 120px at 18% 0%, rgba(96, 165, 250, 0.14), transparent 60%),
+    radial-gradient(360px 120px at 92% 10%, rgba(52, 211, 153, 0.1), transparent 55%),
+    var(--pdf-panel);
+  box-shadow: 0 6px 16px rgba(2, 6, 23, 0.22);
+  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
 .pdf-field:hover {
   background: var(--pdf-panel-2);
+  transform: translateY(-0.5px);
+  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.28);
 }
 
 .pdf-field__label {
+  font-family: var(--pdf-font-display);
   font-size: 12px;
-  color: var(--pdf-muted);
-  letter-spacing: 0.2px;
+  font-weight: 700;
+  letter-spacing: 0.35px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.88), rgba(191, 219, 254, 0.86));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.35px;
   user-select: none;
   white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(2, 6, 23, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pdf-field__label::before {
+  content: "✦";
+  font-size: 11px;
+  line-height: 1;
+  color: rgba(191, 219, 254, 0.9);
+  text-shadow: 0 1px 0 rgba(2, 6, 23, 0.25);
+}
+
+.pdf-page[data-theme="light"] .pdf-field__label {
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.88), rgba(37, 99, 235, 0.85));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+
+.pdf-page[data-theme="light"] .pdf-field__label::before {
+  color: rgba(37, 99, 235, 0.75);
+  text-shadow: none;
 }
 
 .pdf-field .pdf-select {
@@ -186,6 +277,8 @@
   color: var(--pdf-text);
   border-radius: 10px;
   height: 34px;
+  font-family: var(--pdf-font-ui);
+  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
 .pdf-btn,
@@ -205,6 +298,7 @@
 .pdf-btn:hover,
 .pdf-btn.pdf-btn--link:hover {
   background: var(--pdf-panel-2);
+  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.22);
 }
 
 .pdf-btn:active,
