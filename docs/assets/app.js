@@ -355,6 +355,8 @@ function decorateIframeLinks(frame, posts) {
         if (!(target instanceof Element)) return;
         const a = target.closest("a[href]");
         if (!a) return;
+        if ((a.getAttribute("target") || "").toLowerCase() === "_blank") return;
+        if (a.hasAttribute("download")) return;
         const href = a.getAttribute("href") || "";
 
         const abs = toAbsoluteUrl(href, doc.baseURI);
@@ -389,6 +391,7 @@ function renderPost(posts, { postId, postPath }) {
   const title = qs("post-title");
   const meta = qs("post-meta");
   const frame = qs("post-frame");
+  const frameWrap = qs("post-frame-wrap");
   if (!frame) return;
 
   if (!post) {
@@ -405,8 +408,10 @@ function renderPost(posts, { postId, postPath }) {
   if (meta) {
     const cats = post.categories.map((c) => categoryBreadcrumbLinks(c)).join(" | ");
     const isPdf = post.path.toLowerCase().endsWith(".pdf");
-    const open = `<a class="pill" href="${post.path}" target="_blank" rel="noopener noreferrer">新窗口</a>`;
-    const download = isPdf ? `<a class="pill" href="${post.path}" download>下载 PDF</a>` : "";
+    const viewer = isPdf ? `pdf.html#file=${encodeURIComponent(post.path)}` : post.path;
+    const open = `<a class="pill" href="${viewer}" target="_blank" rel="noopener noreferrer">新窗口</a>`;
+    const raw = isPdf ? `<a class="pill" href="${post.path}" target="_blank" rel="noopener noreferrer">原始 PDF</a>` : "";
+    const download = isPdf ? `<a class="pill" href="${post.path}" download>下载</a>` : "";
     const fullscreen = `<button class="pill pill--btn" type="button" data-action="toggle-fullscreen">全屏</button>`;
     meta.innerHTML =
       `<span class="meta-row">` +
@@ -414,11 +419,12 @@ function renderPost(posts, { postId, postPath }) {
       `<span class="meta-sep">·</span>` +
       `<span class="meta-cats">${cats}</span>` +
       `</span>` +
-      `<span class="meta-actions">${open}${download}${fullscreen}</span>`;
+      `<span class="meta-actions">${open}${raw}${download}${fullscreen}</span>`;
   }
 
   const isPdf = post.path.toLowerCase().endsWith(".pdf");
-  frame.src = isPdf ? `${post.path}#view=FitH` : post.path;
+  if (frameWrap) frameWrap.classList.toggle("is-pdf", isPdf);
+  frame.src = isPdf ? `pdf.html#file=${encodeURIComponent(post.path)}` : post.path;
 }
 
 function escapeHtml(s) {

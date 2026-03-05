@@ -379,6 +379,11 @@ a:hover {
   min-height: 70vh;
 }
 
+.post-frame__wrap.is-pdf {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0;
+}
+
 .post-frame {
   width: 100%;
   height: calc(100vh - 240px);
