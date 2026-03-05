@@ -75,8 +75,8 @@ python3 scripts/publish_posts.py
 
 强制规定：**所有 Typst 附件（图片等）必须放在 `incoming/typst/**/images/**` 下**（支持多级目录），并在 Typst 中用相对路径引用。
 
-- 示例结构（一级分类）：`incoming/typst/tools_tutorial/Tmux使用教程.typ`
-- 图片放在：`incoming/typst/tools_tutorial/images/tmux/tmux-cover.png`
+- 示例结构（一级分类）：`incoming/typst/Tools Tutorial/Tmux使用教程.typ`
+- 图片放在：`incoming/typst/Tools Tutorial/images/tmux/tmux-cover.png`
 - Typst 引用：`#image("images/tmux/tmux-cover.png")`
 
 示例结构（多级分类）：`incoming/typst/Computer Science/DSA/CS61B2025/notes/lec01.typ`

@@ -189,13 +189,30 @@ def main() -> None:
         out_dir.mkdir(parents=True, exist_ok=True)
         out_pdf = out_dir / "doc.pdf"
 
-        if row.typ_file and not ns.skip_compile:
+        if row.typ_file:
             typ_path = (INCOMING_TYP / row.typ_file).resolve()
             if not typ_path.exists():
                 typ_path = Path(row.typ_file).resolve()
             if not typ_path.exists():
                 raise SystemExit(f"Typst source not found for slug={row.slug}: {row.typ_file}")
-            compile_typst_to_pdf(typ_path=typ_path, out_pdf=out_pdf, typst_root=typst_root)
+
+            if ns.skip_compile:
+                if out_pdf.exists():
+                    pass
+                elif row.pdf_file:
+                    pdf_path = (INCOMING_PDFS / row.pdf_file).resolve()
+                    if not pdf_path.exists():
+                        pdf_path = Path(row.pdf_file).resolve()
+                    if not pdf_path.exists():
+                        raise SystemExit(f"PDF not found for slug={row.slug}: {row.pdf_file}")
+                    shutil.copyfile(pdf_path, out_pdf)
+                else:
+                    raise SystemExit(
+                        f"--skip-compile set but no PDF available for slug={row.slug}. "
+                        f"Either provide pdf_file in manifest, remove --skip-compile, or ensure {out_pdf} exists."
+                    )
+            else:
+                compile_typst_to_pdf(typ_path=typ_path, out_pdf=out_pdf, typst_root=typst_root)
         else:
             pdf_path = (INCOMING_PDFS / row.pdf_file).resolve()
             if not pdf_path.exists():
