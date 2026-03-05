@@ -2,39 +2,72 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>我的技术文档</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div class="topbar__inner">
-        <a class="brand" href="./">文章存档</a>
-        <nav class="topbar__nav">
-          <a class="topbar__link is-active" href="./">按日期排列</a>
-        </nav>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
+      <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="./">文章存档</a>
+        <button class="navbar-toggler" type="button" data-action="nav-toggle" aria-controls="navbarResponsive" aria-expanded="false">
+          菜单
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive" data-nav-collapse>
+          <ul class="navbar-nav ms-auto py-4 py-lg-0">
+            <li class="nav-item">
+              <a class="nav-link px-lg-3 py-3 py-lg-4 is-active" href="./">首页</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <header class="masthead" style="background-image: url('assets/img/home-bg.jpg')">
+      <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-10 col-lg-8 col-xl-7">
+            <div class="site-heading">
+              <h1>我的技术文档</h1>
+              <span class="subheading">按日期归档 · 多级分类导航</span>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
 
-    <main class="layout">
-      <section class="card content">
-        <div class="content__header">
-          <h1 class="content__title">最新文章</h1>
-          <div class="content__meta" id="latest-meta"></div>
+    <main class="container px-4 px-lg-5">
+      <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+          <div class="blog-pageTitle">
+            <h2 class="blog-pageTitle__title">最新文章</h2>
+            <div class="blog-pageTitle__meta" id="latest-meta"></div>
+          </div>
+
+          <div id="latest-list"></div>
         </div>
 
-        <div class="divider"></div>
-        <ul class="post-list" id="latest-list"></ul>
-      </section>
-
-      <aside class="card sidebar">
-        <h2 class="sidebar__title">分类</h2>
-        <div class="divider"></div>
-        <ul class="cat-list" id="cat-list"></ul>
-      </aside>
+        <aside class="col-lg-4 blog-sidebar">
+          <div class="blog-sidebar__card">
+            <div class="blog-sidebar__title">分类</div>
+            <ul class="cat-list" id="cat-list"></ul>
+          </div>
+        </aside>
+      </div>
     </main>
+
+    <footer class="border-top">
+      <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-10 col-lg-8 col-xl-7">
+            <div class="small text-center text-muted fst-italic">© <span id="footer-year"></span> · Powered by GitHub Pages</div>
+          </div>
+        </div>
+      </div>
+    </footer>
 
     <script type="module" src="assets/app.js"></script>
   </body>
 </html>
-

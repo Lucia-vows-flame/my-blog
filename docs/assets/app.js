@@ -270,25 +270,46 @@ function renderLatest(posts) {
 
   list.innerHTML = "";
   for (const post of latest) {
-    const li = document.createElement("li");
+    const wrap = document.createElement("div");
+    wrap.className = "post-preview";
 
-    const date = document.createElement("div");
-    date.className = "post-date";
-    date.textContent = formatDate(post.date);
-
-    const title = document.createElement("a");
-    title.className = "post-title";
-    title.href = postLink(post);
-    title.textContent = post.title;
+    const a = document.createElement("a");
+    a.href = postLink(post);
     if (isPdfPost(post)) {
-      title.target = "_blank";
-      title.rel = "noopener noreferrer";
-      title.title = "PDF 将在新窗口打开";
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.title = "PDF 将在新窗口打开";
     }
 
-    li.append(date, title);
-    list.append(li);
+    const h2 = document.createElement("h2");
+    h2.className = "post-title";
+    h2.textContent = post.title;
+    a.append(h2);
+
+    if (post.excerpt) {
+      const h3 = document.createElement("h3");
+      h3.className = "post-subtitle";
+      h3.textContent = post.excerpt;
+      a.append(h3);
+    }
+
+    wrap.append(a);
+
+    const cats = post.categories.map((c) => categoryBreadcrumbLinks(c)).join(" | ");
+    const pm = document.createElement("p");
+    pm.className = "post-meta";
+    pm.innerHTML = `发表于 ${escapeHtml(formatDate(post.date))}${cats ? ` · ${cats}` : ""}`;
+    wrap.append(pm);
+
+    list.append(wrap);
+
+    const hr = document.createElement("hr");
+    hr.className = "my-4";
+    list.append(hr);
   }
+
+  const last = list.lastElementChild;
+  if (last && last.tagName.toLowerCase() === "hr") last.remove();
 }
 
 function groupByYear(posts) {
@@ -322,31 +343,45 @@ function renderCategory(posts, category) {
   const yearGroups = groupByYear(filtered);
 
   for (const g of yearGroups) {
-    const wrap = document.createElement("section");
-    wrap.className = "year-group";
-
     const h = document.createElement("h2");
-    h.className = "year-title";
+    h.className = "blog-yearHeading";
     h.textContent = `${g.year}年`;
+    groups.append(h);
 
-    const ul = document.createElement("ul");
     for (const post of g.items) {
-      const li = document.createElement("li");
+      const wrap = document.createElement("div");
+      wrap.className = "post-preview";
+
       const a = document.createElement("a");
       a.href = postLink(post);
-      a.textContent = `${post.title}（${formatDate(post.date)}）`;
       if (isPdfPost(post)) {
         a.target = "_blank";
         a.rel = "noopener noreferrer";
         a.title = "PDF 将在新窗口打开";
       }
-      li.append(a);
-      ul.append(li);
-    }
 
-    wrap.append(h, ul);
-    groups.append(wrap);
+      const h2 = document.createElement("h2");
+      h2.className = "post-title";
+      h2.textContent = post.title;
+      a.append(h2);
+      wrap.append(a);
+
+      const cats = post.categories.map((c) => categoryBreadcrumbLinks(c)).join(" | ");
+      const pm = document.createElement("p");
+      pm.className = "post-meta";
+      pm.innerHTML = `发表于 ${escapeHtml(formatDate(post.date))}${cats ? ` · ${cats}` : ""}`;
+      wrap.append(pm);
+
+      groups.append(wrap);
+
+      const hr = document.createElement("hr");
+      hr.className = "my-4";
+      groups.append(hr);
+    }
   }
+
+  const last = groups.lastElementChild;
+  if (last && last.tagName.toLowerCase() === "hr") last.remove();
 }
 
 function decorateIframeLinks(frame, posts) {
@@ -548,7 +583,52 @@ function route({ posts, categories }) {
   }
 }
 
+function setupNav() {
+  const btn = document.querySelector("[data-action='nav-toggle']");
+  const collapse = document.querySelector("[data-nav-collapse]");
+  if (!(btn instanceof HTMLElement) || !(collapse instanceof HTMLElement)) return;
+
+  const close = () => {
+    collapse.classList.remove("show");
+    btn.setAttribute("aria-expanded", "false");
+  };
+
+  btn.addEventListener("click", () => {
+    const isOpen = collapse.classList.contains("show");
+    if (isOpen) close();
+    else {
+      collapse.classList.add("show");
+      btn.setAttribute("aria-expanded", "true");
+    }
+  });
+
+  document.addEventListener(
+    "click",
+    (ev) => {
+      if (!collapse.classList.contains("show")) return;
+      const target = ev.target;
+      if (!(target instanceof Node)) return;
+      if (btn.contains(target) || collapse.contains(target)) return;
+      close();
+    },
+    { capture: true },
+  );
+
+  window.addEventListener("hashchange", close);
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 992) close();
+  });
+}
+
+function setFooterYear() {
+  const el = qs("footer-year");
+  if (el) el.textContent = String(new Date().getFullYear());
+}
+
 async function main() {
+  setupNav();
+  setFooterYear();
+
   const res = await fetch(POSTS_URL, { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to load ${POSTS_URL}: ${res.status}`);
   const data = await res.json();

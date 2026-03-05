@@ -1,7 +1,6 @@
 /* global pdfjsLib */
 
-const PDFJS_VERSION = "3.11.174";
-const WORKER_SRC = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.js`;
+const WORKER_SRC = new URL("./vendor/pdfjs/pdf.worker.min.js", import.meta.url).toString();
 
 function qs(id) {
   return document.getElementById(id);

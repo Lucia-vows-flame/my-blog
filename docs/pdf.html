@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PDF</title>
-    <link rel="stylesheet" href="assets/style.css?v=20260305" />
+    <link rel="stylesheet" href="assets/style.css" />
     <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260305i" />
   </head>
   <body class="pdf-page">
@@ -111,12 +111,44 @@
       </div>
     </main>
 
-    <!-- PDF.js (CDN). If you prefer offline, vendor these files into docs/assets/ and update URLs. -->
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script type="module" src="assets/pdf-viewer.js?v=20260305i"></script>
+    <!-- PDF.js (local, 0 外链). Place files here:
+         - docs/assets/vendor/pdfjs/pdf.min.js
+         - docs/assets/vendor/pdfjs/pdf.worker.min.js
+    -->
+    <script>
+      window.__PDFJS_LOAD_FAILED__ = false;
+    </script>
+    <script src="assets/vendor/pdfjs/pdf.min.js" onerror="window.__PDFJS_LOAD_FAILED__ = true;"></script>
+    <script type="module">
+      const params = new URLSearchParams((location.hash || "").replace(/^#/, ""));
+      const file = params.get("file") ? decodeURIComponent(params.get("file")) : "";
+
+      const openRaw = document.getElementById("open-raw");
+      const download = document.getElementById("download");
+      if (openRaw && file) openRaw.href = file;
+      if (download && file) download.href = file;
+
+      if (window.__PDFJS_LOAD_FAILED__ || !window.pdfjsLib) {
+        const loading = document.getElementById("loading");
+        const error = document.getElementById("error");
+        if (loading) loading.hidden = true;
+        if (error) {
+          error.hidden = false;
+          error.innerHTML =
+            `<div style="font-weight:800;font-size:16px;margin-bottom:8px">PDF 阅读器未启用</div>` +
+            `<div style="opacity:.8;line-height:1.6">` +
+            `当前页面配置为 <b>0 外链</b>，需要本地提供 PDF.js 文件：<code>assets/vendor/pdfjs/pdf.min.js</code> 与 <code>assets/vendor/pdfjs/pdf.worker.min.js</code>。` +
+            `</div>` +
+            (file
+              ? `<div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">` +
+                `<a class="pdf-btn pdf-btn--link pdf-btn--metal" href="${file}" target="_blank" rel="noopener noreferrer">打开原始 PDF</a>` +
+                `<a class="pdf-btn pdf-btn--link pdf-btn--metal" href="${file}" download>下载</a>` +
+                `</div>`
+              : "");
+        }
+      } else {
+        await import(`./assets/pdf-viewer.js?v=20260305i`);
+      }
+    </script>
   </body>
 </html>
