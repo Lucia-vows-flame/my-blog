@@ -93,6 +93,11 @@ function initDropdown({ rootId, btnId, menuId, initialValue, formatLabel, onChan
   const menu = qs(menuId);
   if (!root || !btn || !menu) return null;
 
+  const originalParent = menu.parentElement;
+  const originalNext = menu.nextSibling;
+  let isPortaled = false;
+  let raf = 0;
+
   const opts = [...menu.querySelectorAll("[data-value]")].filter((x) => x instanceof HTMLElement);
   const labelFor = (value) => {
     const v = String(value);
@@ -115,17 +120,82 @@ function initDropdown({ rootId, btnId, menuId, initialValue, formatLabel, onChan
     root.classList.add("is-open");
     menu.hidden = false;
     btn.setAttribute("aria-expanded", "true");
+    portal();
     const sel = opts.find((o) => o.getAttribute("aria-selected") === "true") || opts[0];
     sel?.focus?.();
   };
   const close = () => {
     root.classList.remove("is-open");
+    unportal();
     menu.hidden = true;
     btn.setAttribute("aria-expanded", "false");
   };
   const toggle = () => {
     if (isOpen()) close();
     else open();
+  };
+
+  const reposition = () => {
+    if (!isPortaled) return;
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      const btnRect = btn.getBoundingClientRect();
+
+      // Temporarily measure.
+      menu.style.left = "0px";
+      menu.style.top = "0px";
+      menu.style.maxWidth = "min(360px, 92vw)";
+      menu.style.minWidth = `${Math.max(260, Math.floor(btnRect.width))}px`;
+
+      const menuRect = menu.getBoundingClientRect();
+      const pad = 10;
+
+      let left = btnRect.right - menuRect.width;
+      left = clamp(left, pad, window.innerWidth - menuRect.width - pad);
+
+      let top = btnRect.bottom + 10;
+      if (top + menuRect.height > window.innerHeight - pad) {
+        top = btnRect.top - 10 - menuRect.height;
+        top = Math.max(pad, top);
+      }
+
+      menu.style.left = `${Math.round(left)}px`;
+      menu.style.top = `${Math.round(top)}px`;
+    });
+  };
+
+  const portal = () => {
+    if (isPortaled) {
+      reposition();
+      return;
+    }
+    if (!originalParent) return;
+
+    isPortaled = true;
+    menu.dataset.portaled = "1";
+    menu.hidden = false;
+    menu.style.position = "fixed";
+    menu.style.zIndex = "2147483647";
+    menu.style.margin = "0";
+    menu.style.visibility = "hidden";
+    document.body.append(menu);
+    reposition();
+    menu.style.visibility = "";
+  };
+
+  const unportal = () => {
+    if (!isPortaled) return;
+    isPortaled = false;
+    menu.dataset.portaled = "0";
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+
+    menu.removeAttribute("style");
+    if (originalParent) {
+      if (originalNext) originalParent.insertBefore(menu, originalNext);
+      else originalParent.append(menu);
+    }
   };
 
   btn.addEventListener("click", (ev) => {
@@ -180,8 +250,11 @@ function initDropdown({ rootId, btnId, menuId, initialValue, formatLabel, onChan
     if (!isOpen()) return;
     const t = ev.target;
     if (!(t instanceof Node)) return;
-    if (!root.contains(t)) close();
+    if (!root.contains(t) && !menu.contains(t)) close();
   });
+
+  window.addEventListener("scroll", () => reposition(), { passive: true });
+  window.addEventListener("resize", () => reposition(), { passive: true });
 
   setValue(initialValue);
   close();

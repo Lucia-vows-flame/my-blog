@@ -16,7 +16,7 @@
     "Helvetica Neue", Arial, "Noto Sans", "Noto Sans CJK SC", "Noto Sans SC",
     "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --pdf-font-display: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino,
-    "Songti SC", STSong, SimSun, serif;
+    "KaiTi", "Kaiti SC", "STKaiti", "Songti SC", STSong, SimSun, serif;
   --pdf-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
 
@@ -279,9 +279,19 @@
   font-family: var(--pdf-font-display);
   font-weight: 900;
   letter-spacing: 0.35px;
+  font-size: 13px;
   text-shadow: 0 1px 0 rgba(2, 6, 23, 0.25);
   position: relative;
   overflow: hidden;
+}
+
+.pdf-btn--metal {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent) padding-box,
+    radial-gradient(200px 80px at 18% 0%, rgba(96, 165, 250, 0.16), transparent 60%) padding-box,
+    radial-gradient(180px 80px at 92% 10%, rgba(52, 211, 153, 0.12), transparent 55%) padding-box,
+    var(--pdf-panel) padding-box,
+    var(--pdf-border-grad) border-box;
 }
 
 .pdf-btn--metal::before {
