@@ -24,6 +24,10 @@
   --pdf-accent-b: rgba(52, 211, 153, 0.9);
   --pdf-accent-c: rgba(236, 72, 153, 0.85);
   --pdf-glow: 0 0 0 transparent;
+
+  --pdf-control-radius: 12px;
+  --pdf-border-grad: linear-gradient(90deg, rgba(96, 165, 250, 0.55), rgba(52, 211, 153, 0.35), rgba(236, 72, 153, 0.28));
+  --pdf-border-grad-soft: linear-gradient(90deg, rgba(96, 165, 250, 0.28), rgba(52, 211, 153, 0.18), rgba(236, 72, 153, 0.14));
 }
 
 .pdf-page {
@@ -173,6 +177,21 @@
   text-shadow: none;
 }
 
+.pdf-page[data-theme="light"] .pdf-field {
+  box-shadow:
+    0 10px 22px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.pdf-page[data-theme="light"] .pdf-pagebox {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.pdf-page[data-theme="light"] .pdf-btn:hover,
+.pdf-page[data-theme="light"] .pdf-btn.pdf-btn--link:hover {
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+}
+
 .pdf-brand__meta {
   font-size: 12px;
   color: var(--pdf-muted);
@@ -197,19 +216,27 @@
   gap: 8px;
   padding: 0 8px 0 10px;
   height: 34px;
-  border-radius: 10px;
-  border: 1px solid var(--pdf-border);
+  border-radius: var(--pdf-control-radius);
+  border: 1px solid transparent;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent),
-    radial-gradient(420px 120px at 18% 0%, rgba(96, 165, 250, 0.14), transparent 60%),
-    radial-gradient(360px 120px at 92% 10%, rgba(52, 211, 153, 0.1), transparent 55%),
-    var(--pdf-panel);
-  box-shadow: 0 6px 16px rgba(2, 6, 23, 0.22);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent) padding-box,
+    radial-gradient(420px 120px at 18% 0%, rgba(96, 165, 250, 0.16), transparent 60%) padding-box,
+    radial-gradient(360px 120px at 92% 10%, rgba(52, 211, 153, 0.12), transparent 55%) padding-box,
+    var(--pdf-panel) padding-box,
+    var(--pdf-border-grad-soft) border-box;
+  box-shadow:
+    0 10px 24px rgba(2, 6, 23, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
 .pdf-field:hover {
-  background: var(--pdf-panel-2);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), transparent) padding-box,
+    radial-gradient(420px 120px at 18% 0%, rgba(96, 165, 250, 0.2), transparent 60%) padding-box,
+    radial-gradient(360px 120px at 92% 10%, rgba(52, 211, 153, 0.16), transparent 55%) padding-box,
+    var(--pdf-panel-2) padding-box,
+    var(--pdf-border-grad) border-box;
   transform: translateY(-0.5px);
   box-shadow: 0 10px 22px rgba(2, 6, 23, 0.28);
 }
@@ -218,12 +245,11 @@
   font-family: var(--pdf-font-display);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.35px;
+  letter-spacing: 0.45px;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.88), rgba(191, 219, 254, 0.86));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  letter-spacing: 0.35px;
   user-select: none;
   white-space: nowrap;
   text-shadow: 0 1px 0 rgba(2, 6, 23, 0.25);
@@ -259,6 +285,9 @@
   background-color: transparent;
   padding-left: 0;
   padding-right: 28px;
+  font-family: var(--pdf-font-display);
+  font-weight: 750;
+  letter-spacing: 0.2px;
 }
 
 .pdf-divider {
@@ -275,7 +304,7 @@
   border: 1px solid var(--pdf-border);
   background: var(--pdf-panel);
   color: var(--pdf-text);
-  border-radius: 10px;
+  border-radius: var(--pdf-control-radius);
   height: 34px;
   font-family: var(--pdf-font-ui);
   transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
@@ -293,12 +322,18 @@
   text-decoration: none;
   font-size: 13px;
   line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.12px;
 }
 
 .pdf-btn:hover,
 .pdf-btn.pdf-btn--link:hover {
-  background: var(--pdf-panel-2);
-  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.22);
+  border-color: transparent;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent) padding-box,
+    var(--pdf-panel-2) padding-box,
+    var(--pdf-border-grad) border-box;
+  box-shadow: 0 14px 28px rgba(2, 6, 23, 0.24);
 }
 
 .pdf-btn:active,
@@ -362,9 +397,13 @@
   gap: 8px;
   padding: 0 8px;
   height: 34px;
-  border-radius: 10px;
-  border: 1px solid var(--pdf-border);
-  background: var(--pdf-panel);
+  border-radius: var(--pdf-control-radius);
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent) padding-box,
+    var(--pdf-panel) padding-box,
+    var(--pdf-border-grad-soft) border-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .pdf-pagebox__sep {
