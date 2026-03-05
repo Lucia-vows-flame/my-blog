@@ -1,0 +1,90 @@
+name: Publish posts (Typst → PDF)
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "incoming/**"
+      - "scripts/**"
+      - ".github/workflows/publish-posts.yml"
+  workflow_dispatch:
+    inputs:
+      commit_and_push:
+        description: "Commit and push generated docs/ changes back to the repo"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Typst (official binary)
+        shell: bash
+        run: |
+          set -euo pipefail
+          arch="$(uname -m)"
+          case "$arch" in
+            x86_64|amd64) asset="typst-x86_64-unknown-linux-musl.tar.xz" ;;
+            aarch64|arm64) asset="typst-aarch64-unknown-linux-musl.tar.xz" ;;
+            *) echo "Unsupported arch: $arch" ; exit 2 ;;
+          esac
+
+          url="https://github.com/typst/typst/releases/latest/download/${asset}"
+          echo "Downloading: $url"
+          tmpdir="$(mktemp -d)"
+          trap 'rm -rf "$tmpdir"' EXIT
+          curl -L --fail -o "$tmpdir/typst.tar.xz" "$url"
+          mkdir -p "$tmpdir/typst"
+          tar -xJf "$tmpdir/typst.tar.xz" -C "$tmpdir/typst" --strip-components=1
+
+          mkdir -p "$HOME/.local/bin"
+          install -m 0755 "$tmpdir/typst/typst" "$HOME/.local/bin/typst"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          typst --version
+
+      - name: Publish posts
+        run: |
+          set -euo pipefail
+          python3 scripts/publish_posts.py
+
+      - name: Show changes
+        run: |
+          set -euo pipefail
+          git status --porcelain
+
+      - name: Commit and push
+        if: ${{ github.event_name == 'push' || inputs.commit_and_push == 'true' }}
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain docs)" ]; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          branch="${GITHUB_REF_NAME:-main}"
+          git switch "$branch" 2>/dev/null || git checkout -B "$branch"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git commit -m "Publish posts (Typst → PDF)"
+          git push origin "HEAD:$branch"

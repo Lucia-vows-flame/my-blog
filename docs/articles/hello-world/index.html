@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hello World</title>
+    <style>
+      body {
+        font: 16px/1.7 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+          Arial, "Noto Sans", "Liberation Sans", sans-serif;
+        margin: 24px;
+      }
+      code {
+        background: rgba(0, 0, 0, 0.06);
+        padding: 1px 6px;
+        border-radius: 6px;
+      }
+      pre {
+        background: rgba(0, 0, 0, 0.06);
+        padding: 12px;
+        border-radius: 12px;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello World（示例文章）</h1>
+    <p>如果你能在 <code>post.html</code> 中看到这段内容，说明 iframe 加载文章 HTML 正常。</p>
+    <pre><code>typst compile main.typ docs/articles/my-post/doc.pdf
+typst compile --features html main.typ --format html --output docs/articles/my-post/index.html</code></pre>
+  </body>
+</html>

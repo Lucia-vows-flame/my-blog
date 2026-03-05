@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>文章</title>
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="./">文章存档</a>
+        <nav class="topbar__nav">
+          <a class="topbar__link" href="./">按日期排列</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="layout layout--post">
+      <section class="card content">
+        <div class="content__header">
+          <h1 class="content__title" id="post-title">文章</h1>
+          <div class="content__meta" id="post-meta"></div>
+        </div>
+        <div class="divider"></div>
+
+        <div class="post-frame__wrap">
+          <iframe
+            id="post-frame"
+            class="post-frame"
+            title="post"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          ></iframe>
+        </div>
+      </section>
+
+      <aside class="card sidebar">
+        <h2 class="sidebar__title">分类</h2>
+        <div class="divider"></div>
+        <ul class="cat-list" id="cat-list"></ul>
+      </aside>
+    </main>
+
+    <script type="module" src="assets/app.js"></script>
+  </body>
+</html>
+

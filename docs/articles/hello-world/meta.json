@@ -1,0 +1,9 @@
+{
+  "id": "hello-world",
+  "title": "Hello World（示例文章）",
+  "date": "2026-03-04",
+  "categories": ["开发者手册"],
+  "path": "articles/hello-world/index.html",
+  "excerpt": "这是一个示例文章，用于验证分类/跳转是否正常。"
+}
+
