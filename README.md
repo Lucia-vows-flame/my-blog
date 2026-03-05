@@ -86,6 +86,10 @@ python3 scripts/publish_posts.py
 
 脚本会自动把 Typst 的 `--root` 设为 `incoming/typst/`（当你的源文件位于该目录下）。
 
+### 中文变成豆腐块（□）怎么办？
+
+这通常是编译环境缺少中文字体导致的（尤其是 GitHub Actions）。本仓库的工作流已安装 Noto CJK 字体并建议在 Typst 中使用 `Noto Serif/Sans CJK SC` 作为中文字体兜底。
+
 > 若用 GitHub Actions 自动编译 Typst：附件文件也需要一并提交到仓库，否则 CI 找不到图片就会编译失败。若不想提交附件，可以改为本地编译出 PDF 后只提交 `docs/**`。
 
 ## 元数据格式

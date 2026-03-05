@@ -18,12 +18,24 @@
 #set par(spacing: 1.5em)
 
 #set text(
-  font: ("Times New Roman", "Noto Serif SC"),
+  // Prefer CJK fonts that exist on GitHub Actions runner (Ubuntu).
+  // Keep several aliases for local machines.
+  font: (
+    "Noto Serif CJK SC",
+    "Noto Sans CJK SC",
+    "Noto Serif SC",
+    "Noto Sans SC",
+    "Source Han Serif SC",
+    "Source Han Sans SC",
+  ),
   size: 12pt,
   lang: "zh",
-) //设置正文字体, Times New Roman 是英文使用的字体, Noto Serif SC 是中文使用的字体.
+) //设置正文字体，确保 CI 环境也有中文字体可用。
 
-#show heading: set text(font: "New Computer Modern", weight: "bold") //设置标题字体,bold表示粗体
+#show heading: set text(
+  font: ("New Computer Modern", "Noto Serif CJK SC", "Noto Sans CJK SC"),
+  weight: "bold",
+) //设置标题字体,bold表示粗体（中文用 CJK 字体兜底）
 
 #set heading(numbering: "1.") //设置标题编号格式
 
