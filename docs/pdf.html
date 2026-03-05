@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PDF</title>
     <link rel="stylesheet" href="assets/style.css?v=20260305" />
-    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260305c" />
+    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260305e" />
   </head>
   <body class="pdf-page">
     <header class="pdf-topbar">
       <div class="pdf-topbar__inner">
         <div class="pdf-brand">
-          <span class="pdf-brand__title" id="pdf-title">PDF</span>
-          <span class="pdf-brand__meta" id="pdf-subtitle"></span>
+          <span class="pdf-mark" aria-hidden="true"></span>
+          <div class="pdf-brand__text">
+            <span class="pdf-brand__title" id="pdf-title">PDF</span>
+            <span class="pdf-brand__meta" id="pdf-subtitle"></span>
+          </div>
         </div>
 
         <div class="pdf-controls" role="toolbar" aria-label="PDF controls">
@@ -72,7 +75,7 @@
             <div class="pdf-tools">
               <button class="pdf-btn" type="button" id="rotate" title="旋转 (R)">⟳</button>
               <a
-                class="pdf-btn pdf-btn--link"
+                class="pdf-btn pdf-btn--link pdf-btn--metal"
                 id="open-raw"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -80,7 +83,7 @@
               >
                 原始
               </a>
-              <a class="pdf-btn pdf-btn--link" id="download" download title="下载 PDF">下载</a>
+              <a class="pdf-btn pdf-btn--link pdf-btn--metal" id="download" download title="下载 PDF">下载</a>
             </div>
           </div>
         </div>
@@ -114,6 +117,6 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script type="module" src="assets/pdf-viewer.js?v=20260305c"></script>
+    <script type="module" src="assets/pdf-viewer.js?v=20260305e"></script>
   </body>
 </html>
