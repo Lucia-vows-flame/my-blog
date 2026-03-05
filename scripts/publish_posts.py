@@ -4,7 +4,6 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -15,37 +14,26 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 ARTICLES = DOCS / "articles"
 INCOMING = ROOT / "incoming"
-INCOMING_PDFS = INCOMING / "pdfs"
 INCOMING_TYP = INCOMING / "typst"
 MANIFEST = INCOMING / "manifest.csv"
 
 
 @dataclass(frozen=True)
 class Row:
-    pdf_file: str
     typ_file: str
     slug: str
     title: str
     date: str
-    categories: list[str]
     excerpt: str
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Publish posts from incoming sources (Typst→PDF or PDF) into docs/ and rebuild index.")
+    p = argparse.ArgumentParser(description="Publish posts from incoming Typst sources (Typst→PDF) into docs/ and rebuild index.")
     p.add_argument("--manifest", default=str(MANIFEST), help="CSV manifest path (default: incoming/manifest.csv)")
     p.add_argument("--typst-root", default="", help="Pass as --root to typst compile (default: each .typ parent)")
-    p.add_argument("--skip-compile", action="store_true", help="Skip Typst compilation (assume PDFs already provided)")
+    p.add_argument("--skip-compile", action="store_true", help="Skip Typst compilation (assume docs/articles/<slug>/doc.pdf already exists)")
     p.add_argument("--skip-index", action="store_true", help="Skip regenerating docs/data/posts.json")
     return p.parse_args()
-
-
-def split_categories(raw: str) -> list[str]:
-    items = [x.strip() for x in raw.split(",")]
-    items = [x for x in items if x]
-    if not items:
-        raise SystemExit("Empty categories")
-    return items
 
 
 def read_manifest(path: Path) -> list[Row]:
@@ -55,7 +43,7 @@ def read_manifest(path: Path) -> list[Row]:
     rows: list[Row] = []
     with path.open("r", encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
-        required = {"slug", "title", "date", "categories"}
+        required = {"typ_file", "slug", "title", "date"}
         missing = required - set(reader.fieldnames or [])
         if missing:
             raise SystemExit(f"Manifest missing column(s): {', '.join(sorted(missing))}")
@@ -71,12 +59,10 @@ def read_manifest(path: Path) -> list[Row]:
             if not any((rec.get(k) or "").strip() for k in (reader.fieldnames or [])):
                 continue
 
-            pdf_file = (rec.get("pdf_file") or "").strip()
             typ_file = (rec.get("typ_file") or "").strip()
             slug = (rec.get("slug") or "").strip()
             title = (rec.get("title") or "").strip()
             date = (rec.get("date") or "").strip()
-            cats = split_categories((rec.get("categories") or "").strip())
             excerpt = (rec.get("excerpt") or "").strip()
 
             if not slug:
@@ -85,10 +71,10 @@ def read_manifest(path: Path) -> list[Row]:
                 raise SystemExit(f"Line {i}: empty title for slug={slug}")
             if not date:
                 raise SystemExit(f"Line {i}: empty date for slug={slug}")
-            if not (typ_file or pdf_file):
-                raise SystemExit(f"Line {i}: need typ_file or pdf_file for slug={slug}")
+            if not typ_file:
+                raise SystemExit(f"Line {i}: typ_file required (Typst-only mode) for slug={slug}")
 
-            rows.append(Row(pdf_file=pdf_file, typ_file=typ_file, slug=slug, title=title, date=date, categories=cats, excerpt=excerpt))
+            rows.append(Row(typ_file=typ_file, slug=slug, title=title, date=date, excerpt=excerpt))
 
     slugs = [r.slug for r in rows]
     if len(slugs) != len(set(slugs)):
@@ -164,12 +150,46 @@ def enforce_images_location(*, deps_path: Path, root: Path) -> None:
             )
 
 
-def write_meta(*, out_dir: Path, row: Row) -> None:
+def derive_categories_from_typst_path(*, typ_path: Path) -> list[str]:
+    """
+    Derive a single multi-level category path from a source file location under a base root.
+
+    Example:
+      incoming/typst/Computer Science/DSA/CS61B2025/notes/lec01.typ
+      -> ["Computer Science/DSA/CS61B2025/notes"]
+
+    The `images/` directory (and anything under it) is ignored.
+    """
+    try:
+        rel = typ_path.resolve().relative_to(INCOMING_TYP.resolve())
+    except ValueError:
+        raise SystemExit(
+            "Cannot auto-derive categories because the source file is not under expected directory:\n"
+            f"- typ_file resolved to: {typ_path}\n"
+            f"- expected under: {INCOMING_TYP}\n"
+            "Move the file under the expected directory structure."
+        )
+
+    parent = rel.parent
+    if str(parent) in (".", ""):
+        return ["Uncategorized"]
+
+    parts = [p for p in parent.parts if p and p != "."]
+    if "images" in parts:
+        parts = parts[: parts.index("images")]
+
+    cat = "/".join(parts).strip()
+    if not cat:
+        return ["Uncategorized"]
+    return [cat]
+
+
+def write_meta(*, out_dir: Path, row: Row, categories: list[str]) -> None:
     meta = {
         "id": row.slug,
         "title": row.title,
         "date": row.date,
-        "categories": row.categories,
+        "categories": categories,
         "path": f"articles/{row.slug}/doc.pdf",
     }
     if row.excerpt:
@@ -188,40 +208,27 @@ def main() -> None:
         out_dir = ARTICLES / row.slug
         out_dir.mkdir(parents=True, exist_ok=True)
         out_pdf = out_dir / "doc.pdf"
+        categories: list[str] = []
 
-        if row.typ_file:
-            typ_path = (INCOMING_TYP / row.typ_file).resolve()
-            if not typ_path.exists():
-                typ_path = Path(row.typ_file).resolve()
-            if not typ_path.exists():
-                raise SystemExit(f"Typst source not found for slug={row.slug}: {row.typ_file}")
+        typ_file_norm = row.typ_file.replace("\\", "/")
+        typ_path = (INCOMING_TYP / typ_file_norm).resolve()
+        if not typ_path.exists():
+            typ_path = Path(typ_file_norm).resolve()
+        if not typ_path.exists():
+            raise SystemExit(f"Typst source not found for slug={row.slug}: {row.typ_file}")
 
-            if ns.skip_compile:
-                if out_pdf.exists():
-                    pass
-                elif row.pdf_file:
-                    pdf_path = (INCOMING_PDFS / row.pdf_file).resolve()
-                    if not pdf_path.exists():
-                        pdf_path = Path(row.pdf_file).resolve()
-                    if not pdf_path.exists():
-                        raise SystemExit(f"PDF not found for slug={row.slug}: {row.pdf_file}")
-                    shutil.copyfile(pdf_path, out_pdf)
-                else:
-                    raise SystemExit(
-                        f"--skip-compile set but no PDF available for slug={row.slug}. "
-                        f"Either provide pdf_file in manifest, remove --skip-compile, or ensure {out_pdf} exists."
-                    )
-            else:
-                compile_typst_to_pdf(typ_path=typ_path, out_pdf=out_pdf, typst_root=typst_root)
+        categories = derive_categories_from_typst_path(typ_path=typ_path)
+
+        if ns.skip_compile:
+            if not out_pdf.exists():
+                raise SystemExit(
+                    f"--skip-compile set but output PDF not found for slug={row.slug}: {out_pdf}\n"
+                    "Either remove --skip-compile, or pre-generate the PDF at the expected path."
+                )
         else:
-            pdf_path = (INCOMING_PDFS / row.pdf_file).resolve()
-            if not pdf_path.exists():
-                pdf_path = Path(row.pdf_file).resolve()
-            if not pdf_path.exists():
-                raise SystemExit(f"PDF not found for slug={row.slug}: {row.pdf_file}")
-            shutil.copyfile(pdf_path, out_pdf)
+            compile_typst_to_pdf(typ_path=typ_path, out_pdf=out_pdf, typst_root=typst_root)
 
-        write_meta(out_dir=out_dir, row=row)
+        write_meta(out_dir=out_dir, row=row, categories=categories)
 
     if not ns.skip_index:
         subprocess.run(["python3", str(ROOT / "scripts" / "build_posts_index.py")], check=True)

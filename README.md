@@ -1,9 +1,9 @@
-# Blog (GitHub Pages + Typst PDF/HTML)
+# Blog (GitHub Pages + Typst)
 
 这个仓库包含一个**纯静态**的 GitHub Pages 博客骨架，核心能力：
 
-- 文章已是 HTML（由 Typst 编译生成）也能直接接入
-- 文章也可以直接用 PDF（Typst 编译为单文件，最省心）
+- 文章可以是 HTML（例如 Typst 导出 HTML）也能直接接入
+- 文章也可以是 PDF（例如 Typst 编译为单文件）
 - 自动按分类统计数量，并提供分类页（按年份分组）
 - 文章页保留侧边栏分类导航（通过 `iframe` 加载文章内容：HTML 或 PDF）
 
@@ -20,14 +20,11 @@
 
 - `docs/articles/<slug>/meta.json`（示例见 `docs/articles/hello-world/meta.json`）
 
-## Typst 输出建议：使用 PDF（推荐）
-
-如果你更希望“写作体验简单 + 版式稳定 + 多页自然”，PDF 是最省心的：Typst 直接编译出单个 `doc.pdf`，部署也简单。
+## Typst 输出（PDF / HTML）
 
 在本仓库中：博客页会通过 `iframe` 加载 `meta.json` 里的 `path`，它可以指向 `.html` 或 `.pdf`。
 
-如果你仍想用 HTML（更好的站内链接/锚点/SEO）：Typst 的 HTML 导出需要显式开启实验特性：
-`typst compile --features html --format html ...`
+如果你想用 HTML（更好的站内链接/锚点/SEO）：Typst 的 HTML 导出需要显式开启实验特性：`typst compile --features html --format html ...`
 
 4) 生成站点索引（分类/列表用）：
 
@@ -37,27 +34,24 @@ python3 scripts/build_posts_index.py
 
 ## 发布文章（推荐：自动化）
 
-你可以把源文件/原始 PDF 放在 `incoming/`，再用脚本一键生成可发布的 `docs/**`。
+你可以把源文件放在 `incoming/`，再用脚本一键生成可发布的 `docs/**`。
 
-### 1) 上传 Typst 或 PDF
+### 1) 上传 Typst
 
 - Typst 源文件：放到 `incoming/typst/`（可包含子目录）
-- PDF 文件：放到 `incoming/pdfs/`
 
 ### 2) 填写清单 `incoming/manifest.csv`
 
 清单是一行一篇文章，字段含义：
 
-- `typ_file`: 可选，Typst 源文件路径（相对 `incoming/typst/`）
-- `pdf_file`: 可选，PDF 文件路径（相对 `incoming/pdfs/`）
+- `typ_file`: **必填**，Typst 源文件路径（相对 `incoming/typst/`，可包含子目录）
 - `slug`: 必填，全站唯一（目录名 + 文章 id）
 - `title`: 必填
 - `date`: 必填（`YYYY-MM-DD`）
-- `categories`: 必填（英文逗号分隔；支持多级分类，用 `/` 分隔层级，例如 `Computer Science/DSA/CS61B2025`）
 - `excerpt`: 可选
 
-> `typ_file` 与 `pdf_file` 二选一即可；若同时填写，默认优先用 `typ_file` 编译。
 > 多级分类说明：在单个分类里用 `/` 分隔层级后，侧边栏会自动生成树状分类；点击任意层级会展示该层级及其子层级下的文章。
+> 分类不再通过 `manifest.csv` 填写：脚本会根据 Typst 源文件在 `incoming/typst/` 下的父目录自动生成分类（忽略 `images/` 目录）。
 
 ### 3) 一键生成并更新索引
 
@@ -75,8 +69,8 @@ python3 scripts/publish_posts.py
 
 强制规定：**所有 Typst 附件（图片等）必须放在 `incoming/typst/**/images/**` 下**（支持多级目录），并在 Typst 中用相对路径引用。
 
-- 示例结构（一级分类）：`incoming/typst/Tools Tutorial/Tmux使用教程.typ`
-- 图片放在：`incoming/typst/Tools Tutorial/images/tmux/tmux-cover.png`
+- 示例结构（多级分类）：`incoming/typst/Tools Tutorial/Tmux Konwledge Base/Tmux使用教程.typ`
+- 图片放在：`incoming/typst/Tools Tutorial/Tmux Konwledge Base/images/tmux/tmux-cover.png`
 - Typst 引用：`#image("images/tmux/tmux-cover.png")`
 
 示例结构（多级分类）：`incoming/typst/Computer Science/DSA/CS61B2025/notes/lec01.typ`

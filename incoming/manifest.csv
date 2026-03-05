@@ -1,24 +1,20 @@
-typ_file,pdf_file,slug,title,date,categories,excerpt
+typ_file,slug,title,date,excerpt
 
 # 每个字段该怎么填（以 # 开头的行会被脚本忽略）：
-# - typ_file：可选，Typst 源文件路径（相对 incoming/typst/，可包含子目录），例如 tools/tmux.typ
+# - typ_file：必填，Typst 源文件路径（相对 incoming/typst/，可包含子目录），例如 Tools Tutorial/Tmux Konwledge Base/Tmux使用教程.typ
 #   - 强制规定：图片/附件必须放在 incoming/typst/**/images/** 下（支持多级目录），并在 typ 中用相对路径引用
-# - pdf_file：可选，PDF 文件路径（相对 incoming/pdfs/），例如 tmux.pdf
-#   - typ_file 与 pdf_file 二选一即可；若同时填写，默认优先用 typ_file 编译
 # - slug：必填，全站唯一；同时作为目录名与文章 id，建议只用 a-z 0-9 和 -，例如 tmux-tutorial
 # - title：必填，文章标题
 # - date：必填，YYYY-MM-DD，例如 2026-03-04
-# - categories：必填，分类用英文逗号分隔，例如 工具,开发者手册
-#   - 支持多级分类：在单个分类里用 / 分隔层级，例如 Computer Science/DSA/CS61B2025
+# - 分类：不再通过 CSV 填写。脚本会从源文件的父目录自动生成多级分类（用 / 连接）。
+#   - Typst：取 typ_file 在 incoming/typst/ 下的父目录
+#   - 目录中出现 images/ 时会忽略 images 及其子路径
 # - excerpt：可选，摘要（可留空）
 # CSV 提示：如果标题/摘要里包含逗号，请用英文双引号包起来，例如 "标题,含逗号"
 #
 # 示例（Typst→PDF）：
-# tools/tmux.typ,,tmux-tutorial,Tmux 使用教程,2026-03-04,Tools Tutorial,介绍 tmux 的常用操作与配置
-# 示例（直接用 PDF）：
-# ,tmux.pdf,tmux-tutorial,Tmux 使用教程,2026-03-04,Tools Tutorial,介绍 tmux 的常用操作与配置
+# Tools Tutorial/Tmux Konwledge Base/Tmux使用教程.typ,tmux-tutorial,Tmux 使用教程,2026-03-04,介绍 tmux 的常用操作与配置
 
 
 
-Tools Tutorial/Tmux使用教程.typ,,tmux-tutorial,Tmux 使用教程,2026-03-04,Tools Tutorial,
-
+Tools Tutorial/Tmux Konwledge Base/Tmux使用教程.typ,tmux-tutorial,Tmux 使用教程,2026-03-04,
