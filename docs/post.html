@@ -19,12 +19,14 @@
     <main class="layout layout--post">
       <section class="card content">
         <div class="content__header">
-          <h1 class="content__title" id="post-title">文章</h1>
-          <div class="content__meta" id="post-meta"></div>
+          <div class="content__headerMain">
+            <h1 class="content__title" id="post-title">文章</h1>
+            <div class="content__meta content__meta--wrap" id="post-meta"></div>
+          </div>
         </div>
         <div class="divider"></div>
 
-        <div class="post-frame__wrap">
+        <div class="post-frame__wrap" id="post-frame-wrap">
           <iframe
             id="post-frame"
             class="post-frame"
@@ -45,4 +47,3 @@
     <script type="module" src="assets/app.js"></script>
   </body>
 </html>
-

@@ -404,14 +404,21 @@ function renderPost(posts, { postId, postPath }) {
 
   if (meta) {
     const cats = post.categories.map((c) => categoryBreadcrumbLinks(c)).join(" | ");
-    const open = `<a href="${post.path}" target="_blank" rel="noopener noreferrer">新窗口打开</a>`;
-    const download = post.path.toLowerCase().endsWith(".pdf")
-      ? ` · <a href="${post.path}" download>下载 PDF</a>`
-      : "";
-    meta.innerHTML = `${formatDate(post.date)} · ${cats} · ${open}${download}`;
+    const isPdf = post.path.toLowerCase().endsWith(".pdf");
+    const open = `<a class="pill" href="${post.path}" target="_blank" rel="noopener noreferrer">新窗口</a>`;
+    const download = isPdf ? `<a class="pill" href="${post.path}" download>下载 PDF</a>` : "";
+    const fullscreen = `<button class="pill pill--btn" type="button" data-action="toggle-fullscreen">全屏</button>`;
+    meta.innerHTML =
+      `<span class="meta-row">` +
+      `<span class="meta-date">${formatDate(post.date)}</span>` +
+      `<span class="meta-sep">·</span>` +
+      `<span class="meta-cats">${cats}</span>` +
+      `</span>` +
+      `<span class="meta-actions">${open}${download}${fullscreen}</span>`;
   }
 
-  frame.src = post.path;
+  const isPdf = post.path.toLowerCase().endsWith(".pdf");
+  frame.src = isPdf ? `${post.path}#view=FitH` : post.path;
 }
 
 function escapeHtml(s) {
@@ -474,6 +481,23 @@ async function main() {
 
   const frame = qs("post-frame");
   if (frame) decorateIframeLinks(frame, posts);
+
+  document.addEventListener("click", (ev) => {
+    const target = ev.target;
+    if (!(target instanceof Element)) return;
+    const btn = target.closest("[data-action='toggle-fullscreen']");
+    if (!btn) return;
+
+    const wrap = qs("post-frame-wrap") || target.closest(".post-frame__wrap");
+    if (!wrap) return;
+
+    try {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else wrap.requestFullscreen();
+    } catch {
+      // ignore
+    }
+  });
 
   route({ posts, categories });
   window.addEventListener("hashchange", () => route({ posts, categories }));
