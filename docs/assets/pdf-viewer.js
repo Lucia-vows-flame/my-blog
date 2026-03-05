@@ -39,6 +39,16 @@ function safeLocalStorageSet(key, value) {
   }
 }
 
+function getSystemTheme() {
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function normalizeThemePref(pref) {
+  const p = String(pref || "system").toLowerCase();
+  if (p === "light" || p === "dark" || p === "system") return p;
+  return "system";
+}
+
 function clamp(n, lo, hi) {
   return Math.min(hi, Math.max(lo, n));
 }
@@ -228,6 +238,32 @@ async function main() {
     return;
   }
 
+  const themeSelect = qs("theme-select");
+  const themePrefInit = normalizeThemePref(params.theme || safeLocalStorageGet("pdf.theme") || "system");
+  let themePref = themePrefInit;
+
+  const applyTheme = (pref) => {
+    themePref = normalizeThemePref(pref);
+    safeLocalStorageSet("pdf.theme", themePref);
+    if (themeSelect) themeSelect.value = themePref;
+    const actual = themePref === "system" ? getSystemTheme() : themePref;
+    document.body.dataset.theme = actual;
+    document.body.dataset.themePref = themePref;
+  };
+
+  applyTheme(themePrefInit);
+
+  const mm = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  const onSystemThemeChange = () => {
+    if (themePref !== "system") return;
+    applyTheme("system");
+  };
+  try {
+    mm?.addEventListener?.("change", onSystemThemeChange);
+  } catch {
+    // ignore
+  }
+
   const initialMode = formatMode(params.mode || safeLocalStorageGet("pdf.mode") || "scroll");
   const initialZoom = parseZoomValue(params.zoom || safeLocalStorageGet("pdf.zoom") || "page-width");
   const initialRotate = Number(params.rotate || safeLocalStorageGet("pdf.rotate") || "0");
@@ -346,6 +382,7 @@ async function main() {
   function syncHash() {
     setHashParams({
       file,
+      theme: themePref,
       mode: state.mode,
       page: state.pageNum,
       zoom: typeof state.zoom === "number" ? String(state.zoom) : state.zoom,
@@ -571,6 +608,11 @@ async function main() {
     applyModeAndRender();
   });
 
+  themeSelect?.addEventListener("change", () => {
+    applyTheme(themeSelect.value);
+    syncHash();
+  });
+
   prevPage?.addEventListener("click", () => goToPage(state.pageNum - 1));
   nextPage?.addEventListener("click", () => goToPage(state.pageNum + 1));
 
@@ -642,6 +684,11 @@ async function main() {
   window.addEventListener("hashchange", () => {
     const p = parseHashParams();
     if (p.file && p.file !== file) return;
+
+    const nextThemePref = normalizeThemePref(p.theme || themePref);
+    if (nextThemePref !== themePref) {
+      applyTheme(nextThemePref);
+    }
 
     const nextMode = formatMode(p.mode || state.mode);
     const nextZoom = parseZoomValue(p.zoom || state.zoom);
