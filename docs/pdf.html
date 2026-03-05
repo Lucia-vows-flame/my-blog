@@ -16,6 +16,11 @@
         </div>
 
         <div class="pdf-controls" role="toolbar" aria-label="PDF controls">
+          <select id="mode-select" class="pdf-select" aria-label="View mode">
+            <option value="scroll" selected>滚动</option>
+            <option value="page">翻页</option>
+          </select>
+
           <button class="pdf-btn" type="button" id="prev-page" title="上一页 (←)">
             ‹
           </button>
@@ -61,8 +66,16 @@
           <div class="pdf-loading__text" id="loading-text">正在加载…</div>
         </div>
         <div class="pdf-error" id="error" hidden></div>
-        <div class="pdf-canvasWrap" id="canvas-wrap" hidden>
-          <canvas id="pdf-canvas" class="pdf-canvas"></canvas>
+        <div class="pdf-view" id="view-page" hidden>
+          <div class="pdf-canvasWrap" id="canvas-wrap">
+            <div class="pdf-pageLayer" id="single-layer">
+              <canvas id="pdf-canvas" class="pdf-canvas"></canvas>
+              <div id="anno-layer" class="pdf-annoLayer" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pdf-view" id="view-scroll" hidden>
+          <div class="pdf-pages" id="pages" aria-label="PDF pages"></div>
         </div>
       </div>
     </main>

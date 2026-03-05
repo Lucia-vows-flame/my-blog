@@ -181,6 +181,49 @@
   justify-content: center;
 }
 
+.pdf-pageLayer {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.pdf-annoLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.pdf-link {
+  position: absolute;
+  display: block;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.pdf-link:hover {
+  outline: 2px solid rgba(96, 165, 250, 0.55);
+  outline-offset: 1px;
+  background: rgba(96, 165, 250, 0.08);
+}
+
+.pdf-pages {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.pdf-pageItem {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.pdf-pageItem .pdf-pageLayer {
+  max-width: 100%;
+}
+
 .pdf-canvas {
   border-radius: 12px;
   background: white;
@@ -246,4 +289,3 @@
     min-height: calc(100vh - 170px);
   }
 }
-
