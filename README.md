@@ -137,7 +137,8 @@ python3 -m http.server 8000 --directory docs
 
 1) Settings → Actions → General → **Workflow permissions**
 
-- 选择 **Read and write permissions**
+- 选择 **Read and write permissions**，并点击页面底部 **Save**
+  - 常见小坑：只改选项但忘记点 Save，设置不会生效，工作流会因为权限不足而失败
 
 2) 如果默认分支（如 `main`）开启了 Branch protection（Settings → Branches）
 
