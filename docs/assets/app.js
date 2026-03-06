@@ -79,8 +79,8 @@ function pdfViewerUrl(pdfPath) {
 }
 
 function buildCategoryTree(posts) {
-  /** @type {{name: string, path: string, count: number, children: Map<string, any>}} */
-  const root = { name: "", path: "", count: 0, children: new Map() };
+  /** @type {{name: string, path: string, count: number, children: Map<string, any>, postIds: Set<string>}} */
+  const root = { name: "", path: "", count: 0, children: new Map(), postIds: new Set() };
 
   for (const post of posts) {
     const uniq = new Set(post.categories);
@@ -94,10 +94,14 @@ function buildCategoryTree(posts) {
         acc = acc ? `${acc}/${part}` : part;
         let child = cur.children.get(part);
         if (!child) {
-          child = { name: part, path: acc, count: 0, children: new Map() };
+          child = { name: part, path: acc, count: 0, children: new Map(), postIds: new Set() };
           cur.children.set(part, child);
         }
-        child.count += 1;
+        const postId = String(post.id);
+        if (!child.postIds.has(postId)) {
+          child.postIds.add(postId);
+          child.count += 1;
+        }
         cur = child;
       }
     }
@@ -145,9 +149,55 @@ function computeTopLevelPostCounts(posts) {
   return m;
 }
 
+function computePostsByExactCategory(posts) {
+  /** @type {Map<string, any[]>} */
+  const m = new Map();
+  for (const post of posts) {
+    const uniq = new Set(post.categories);
+    for (const cat of uniq) {
+      const key = normalizeCategoryPath(cat);
+      if (!key) continue;
+      const arr = m.get(key) || [];
+      arr.push(post);
+      m.set(key, arr);
+    }
+  }
+
+  for (const arr of m.values()) arr.sort(byDateDesc);
+  return m;
+}
+
 function getFirstCategoryPath(root) {
   const top = [...root.children.values()].sort(compareCatNode)[0];
   return top?.path || "";
+}
+
+function getIndexExpandedDefaults({ root, activeCategory }) {
+  /** @type {Set<string>} */
+  const expanded = new Set();
+
+  // Expand top-level by default (so users can discover deeper categories).
+  for (const child of root.children.values()) expanded.add(child.path);
+
+  // Expand all ancestors of active category.
+  if (activeCategory) {
+    const parts = splitCategoryPath(activeCategory);
+    let acc = "";
+    for (let i = 0; i < parts.length - 1; i += 1) {
+      acc = acc ? `${acc}/${parts[i]}` : parts[i];
+      expanded.add(acc);
+    }
+  }
+
+  // Merge with saved toggles.
+  for (const path of allCategoryPaths(root)) {
+    const key = `cat.index.expanded:${path}`;
+    const v = safeLocalStorageGet(key);
+    if (v === "1") expanded.add(path);
+    if (v === "0") expanded.delete(path);
+  }
+
+  return expanded;
 }
 
 function getExpandedDefaults({ root, activeCategory }) {
@@ -302,10 +352,12 @@ function renderCategoryIndex({ posts, root, activeCategory }) {
   const sectionsEl = qs("cat-sections");
   if (!chipsEl || !sectionsEl) return;
 
-  if (totalEl) totalEl.textContent = String(countAllCategories(root));
+  if (totalEl) totalEl.textContent = String(root.children.size);
 
   const topCounts = computeTopLevelPostCounts(posts);
+  const postsByCat = computePostsByExactCategory(posts);
   const activeTop = topLevelFromPath(activeCategory);
+  const expanded = getIndexExpandedDefaults({ root, activeCategory });
 
   chipsEl.innerHTML = "";
   const topNodes = [...root.children.values()].sort(compareCatNode);
@@ -333,77 +385,136 @@ function renderCategoryIndex({ posts, root, activeCategory }) {
   }
 
   sectionsEl.innerHTML = "";
+  const box = document.createElement("div");
+  box.className = "cat-indexBox";
+  sectionsEl.append(box);
 
-  const renderTree = (node, level) => {
+  const renderNode = (node, level) => {
     const li = document.createElement("li");
-    li.className = "cat-treeItem";
+    li.className = "cat-indexItem";
+    li.dataset.level = String(level);
     li.style.setProperty("--level", String(level));
 
-    const row = document.createElement("a");
-    row.className = "cat-treeRow";
-    row.href = `#c=${encodeURIComponent(node.path)}`;
-    if (activeCategory && activeCategory === node.path) row.classList.add("is-active");
-    else if (isActiveOrAncestor({ activeCategory, nodePath: node.path })) row.classList.add("is-active-ancestor");
+    if (level === 0) li.id = `cat-top_${categoryId(node.name)}`;
 
-    const dot = document.createElement("span");
-    dot.className = "cat-treeDot";
-    dot.setAttribute("aria-hidden", "true");
+    const row = document.createElement("div");
+    row.className = "cat-indexRow";
 
-    const label = document.createElement("span");
-    label.className = "cat-treeName";
-    label.textContent = node.name;
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "cat-indexToggle";
 
-    const count = document.createElement("span");
-    count.className = "cat-treeCount";
-    count.textContent = `(${node.count})`;
+    const directPosts = postsByCat.get(node.path) || [];
+    const hasChildren = node.children.size > 0;
+    const hasPosts = directPosts.length > 0;
+    const expandable = hasChildren || hasPosts;
 
-    row.append(dot, label, count);
-    li.append(row);
-
-    if (node.children.size) {
-      const ul = document.createElement("ul");
-      ul.className = "cat-tree";
-      const children = [...node.children.values()].sort(compareCatNode);
-      for (const child of children) ul.append(renderTree(child, level + 1));
-      li.append(ul);
+    toggle.disabled = !expandable;
+    if (!expandable) {
+      toggle.textContent = "";
+      toggle.setAttribute("aria-hidden", "true");
     }
 
+    const link = document.createElement("a");
+    link.className = "cat-indexLink";
+    link.href = `#c=${encodeURIComponent(node.path)}`;
+
+    if (activeCategory && activeCategory === node.path) link.classList.add("is-active");
+    else if (isActiveOrAncestor({ activeCategory, nodePath: node.path })) link.classList.add("is-active-ancestor");
+
+    const nameWrap = document.createElement("span");
+    nameWrap.className = "cat-indexNameWrap";
+
+    const dot = document.createElement("span");
+    dot.className = "cat-indexDot";
+    dot.setAttribute("aria-hidden", "true");
+
+    const name = document.createElement("span");
+    name.className = "cat-indexName";
+    name.textContent = node.name;
+
+    nameWrap.append(dot, name);
+
+    const count = document.createElement("span");
+    count.className = "cat-indexCount";
+    count.textContent = `(${node.count})`;
+
+    link.append(nameWrap, count);
+    row.append(toggle, link);
+    li.append(row);
+
+    if (!expandable) return li;
+
+    const childrenWrap = document.createElement("div");
+    childrenWrap.className = "cat-indexChildren";
+
+    const isExpanded = expanded.has(node.path);
+    childrenWrap.hidden = !isExpanded;
+    toggle.textContent = isExpanded ? "▾" : "▸";
+    toggle.setAttribute("aria-label", isExpanded ? "Collapse" : "Expand");
+    toggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+
+    toggle.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const next = !expanded.has(node.path);
+      if (next) expanded.add(node.path);
+      else expanded.delete(node.path);
+      safeLocalStorageSet(`cat.index.expanded:${node.path}`, next ? "1" : "0");
+      toggle.textContent = next ? "▾" : "▸";
+      toggle.setAttribute("aria-label", next ? "Collapse" : "Expand");
+      toggle.setAttribute("aria-expanded", next ? "true" : "false");
+      childrenWrap.hidden = !next;
+    });
+
+    if (hasChildren) {
+      const ul = document.createElement("ul");
+      ul.className = "cat-indexList";
+      const children = [...node.children.values()].sort(compareCatNode);
+      for (const child of children) ul.append(renderNode(child, level + 1));
+      childrenWrap.append(ul);
+    }
+
+    if (hasPosts) {
+      const ul = document.createElement("ul");
+      ul.className = "cat-postList";
+      ul.style.setProperty("--level", String(level + 1));
+      for (const post of directPosts) {
+        const item = document.createElement("li");
+        item.className = "cat-postItem";
+
+        const dot = document.createElement("span");
+        dot.className = "cat-postDot";
+        dot.setAttribute("aria-hidden", "true");
+
+        const a = document.createElement("a");
+        a.className = "cat-postLink";
+        a.href = postLink(post);
+        a.textContent = post.title;
+        if (isPdfPost(post)) {
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.title = "PDF 将在新窗口打开";
+        }
+
+        const date = document.createElement("span");
+        date.className = "cat-postDate";
+        date.textContent = formatDate(post.date);
+
+        item.append(dot, a, date);
+        ul.append(item);
+      }
+      childrenWrap.append(ul);
+    }
+
+    li.append(childrenWrap);
     return li;
   };
 
-  for (const top of topNodes) {
-    const section = document.createElement("section");
-    section.className = "cat-section";
-    section.id = `cat-top_${categoryId(top.name)}`;
-    if (top.name === activeTop) section.classList.add("is-active");
-
-    const h = document.createElement("div");
-    h.className = "cat-sectionHead";
-
-    const title = document.createElement("a");
-    title.className = "cat-sectionTitle";
-    title.href = `#c=${encodeURIComponent(top.path)}`;
-    title.textContent = top.name;
-
-    const count = document.createElement("span");
-    count.className = "cat-sectionCount";
-    count.textContent = `(${top.count})`;
-
-    h.append(title, count);
-    section.append(h);
-
-    const list = document.createElement("ul");
-    list.className = "cat-tree";
-    if (top.children.size) {
-      const children = [...top.children.values()].sort(compareCatNode);
-      for (const child of children) list.append(renderTree(child, 0));
-    } else {
-      list.append(renderTree(top, 0));
-    }
-    section.append(list);
-
-    sectionsEl.append(section);
-  }
+  const ul = document.createElement("ul");
+  ul.className = "cat-indexList";
+  for (const top of topNodes) ul.append(renderNode(top, 0));
+  box.append(ul);
 }
 
 function renderLatest(posts) {
