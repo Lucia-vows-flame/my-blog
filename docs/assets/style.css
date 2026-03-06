@@ -297,7 +297,7 @@ body.category .category-hero .site-heading {
 
 .category-main {
   margin-top: 0;
-  padding-top: 0.65rem;
+  padding-top: 0.28rem;
   padding-bottom: 3rem;
   position: relative;
 }
@@ -782,7 +782,7 @@ body.category:not(.pdf-page)::after {
   }
 
   .category-main {
-    padding-top: 0.9rem;
+    padding-top: 0.38rem;
   }
 }
 
