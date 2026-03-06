@@ -620,6 +620,18 @@ function setupNav() {
   });
 }
 
+function setupNavScrollChrome() {
+  const nav = document.querySelector("[data-nav]");
+  if (!(nav instanceof HTMLElement)) return;
+
+  const onScroll = () => {
+    nav.classList.toggle("is-scrolled", window.scrollY > 8);
+  };
+
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+}
+
 function setFooterYear() {
   const el = qs("footer-year");
   if (el) el.textContent = String(new Date().getFullYear());
@@ -627,6 +639,7 @@ function setFooterYear() {
 
 async function main() {
   setupNav();
+  setupNavScrollChrome();
   setFooterYear();
 
   const res = await fetch(POSTS_URL, { cache: "no-store" });

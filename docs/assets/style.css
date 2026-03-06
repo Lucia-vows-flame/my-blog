@@ -20,6 +20,14 @@ body {
   font-family: var(--blog-font-sans);
 }
 
+/* Remove template font hardcodes (0 外链，使用系统字体栈). */
+header.masthead .site-heading .subheading,
+header.masthead .page-heading .subheading,
+header.masthead .post-heading .subheading,
+header.masthead .post-heading .meta {
+  font-family: var(--blog-font-sans);
+}
+
 /* Subtle background texture without hurting readability. */
 body:not(.pdf-page)::before {
   content: "";
@@ -31,6 +39,118 @@ body:not(.pdf-page)::before {
     radial-gradient(900px 420px at 90% 10%, rgba(13, 110, 253, 0.06), transparent 55%);
   opacity: 1;
   z-index: -1;
+}
+
+body.home:not(.pdf-page)::before {
+  opacity: 0;
+}
+
+/* HOME hero (Auroral-like) */
+.home-hero {
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
+  position: relative;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px 500px at 50% 45%, rgba(0, 0, 0, 0.55), transparent 62%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.42));
+}
+
+.home-hero .site-heading {
+  text-shadow: 0 10px 38px rgba(0, 0, 0, 0.55);
+}
+
+.home-hero .site-heading h1 {
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+.home-hero .site-heading .subheading {
+  margin-top: 0.5rem;
+  color: rgba(255, 255, 255, 0.92);
+  opacity: 0.95;
+  letter-spacing: 0.2px;
+  font-family: var(--blog-font-sans);
+}
+
+/* Give the hero some breathing room under the fixed navbar. */
+body.home .home-hero .site-heading {
+  padding-top: 3.5rem;
+}
+
+/* Glass navbar over hero */
+body.home #mainNav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  background: transparent;
+}
+
+body.home #mainNav > .container,
+body.home #mainNav > .container-fluid,
+body.home #mainNav > .container-lg,
+body.home #mainNav > .container-md,
+body.home #mainNav > .container-sm,
+body.home #mainNav > .container-xl,
+body.home #mainNav > .container-xxl {
+  margin-top: 12px;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+}
+
+body.home #mainNav .navbar-brand {
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+
+body.home #mainNav .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+}
+
+body.home #mainNav .navbar-nav .nav-link:hover,
+body.home #mainNav .navbar-nav .nav-link.active {
+  color: rgba(255, 255, 255, 1);
+}
+
+/* Add a "glass" background after scrolling, for readability. */
+#mainNav.is-scrolled {
+  background: transparent;
+}
+
+body.home #mainNav.is-scrolled > .container,
+body.home #mainNav.is-scrolled > .container-fluid,
+body.home #mainNav.is-scrolled > .container-lg,
+body.home #mainNav.is-scrolled > .container-md,
+body.home #mainNav.is-scrolled > .container-sm,
+body.home #mainNav.is-scrolled > .container-xl,
+body.home #mainNav.is-scrolled > .container-xxl {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+body.home .navbar-toggler {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.navbar-toggler:focus-visible {
+  outline: none;
+  box-shadow: var(--blog-ring);
 }
 
 .blog-pageTitle {
