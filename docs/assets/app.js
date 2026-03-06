@@ -128,10 +128,30 @@ function countAllCategories(root) {
   return n;
 }
 
-function hashHue(s) {
-  let h = 0;
-  for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return h % 360;
+const CATEGORY_CHIP_COLORS = [
+  "#49b1f5",
+  "#ff7242",
+  "#13ce66",
+  "#409eff",
+  "#fe9900",
+  "#8e8cd8",
+  "#835af1",
+  "#ff4949",
+  "#fc6423",
+];
+
+function hexToRgba(hex, alpha) {
+  const s = String(hex || "").trim();
+  const raw = s.startsWith("#") ? s.slice(1) : s;
+  if (!/^[\da-fA-F]{6}$/.test(raw)) return `rgba(73, 177, 245, ${alpha})`;
+  const r = Number.parseInt(raw.slice(0, 2), 16);
+  const g = Number.parseInt(raw.slice(2, 4), 16);
+  const b = Number.parseInt(raw.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function pickRandomCategoryChipColor() {
+  return CATEGORY_CHIP_COLORS[Math.floor(Math.random() * CATEGORY_CHIP_COLORS.length)] || CATEGORY_CHIP_COLORS[0];
 }
 
 function computeTopLevelPostCounts(posts) {
@@ -365,7 +385,10 @@ function renderCategoryIndex({ posts, root, activeCategory }) {
     const chip = document.createElement("a");
     chip.className = "cat-chip";
     chip.href = `#top=${encodeURIComponent(node.name)}`;
-    chip.style.setProperty("--chip-h", String(hashHue(node.name)));
+    const chipColor = pickRandomCategoryChipColor();
+    chip.style.setProperty("--chip-color", chipColor);
+    chip.style.setProperty("--chip-bg", hexToRgba(chipColor, 0.12));
+    chip.style.setProperty("--chip-shadow", hexToRgba(chipColor, 0.18));
     if (node.name === activeTop) chip.classList.add("is-active");
 
     const hash = document.createElement("span");
