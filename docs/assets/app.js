@@ -198,7 +198,7 @@ function renderCategories({ root, activeCategory }) {
 
     const link = document.createElement("a");
     link.className = "cat-link";
-    link.href = `category.html#c=${encodeURIComponent(node.path)}`;
+    link.href = `article.html#c=${encodeURIComponent(node.path)}`;
 
     if (activeCategory && activeCategory === node.path) link.classList.add("is-active");
     else if (isActiveOrAncestor({ activeCategory, nodePath: node.path })) link.classList.add("is-active-ancestor");
@@ -336,8 +336,8 @@ function renderCategory(posts, category) {
   const cat = normalizeCategoryPath(category);
   const prefix = cat ? `${cat}/` : "";
   const filtered = posts.filter((p) => p.categories.some((c) => c === cat || (prefix && c.startsWith(prefix))));
-  if (title) title.textContent = `分类：${cat}`;
-  if (meta) meta.textContent = `（共${filtered.length}篇文章）`;
+  if (title) title.textContent = "ARTICLE";
+  if (meta) meta.innerHTML = `${cat ? `分类：${categoryBreadcrumbLinks(cat)}` : "按分类浏览全部文章"}${`（共${filtered.length}篇文章）`}`;
 
   groups.innerHTML = "";
   const yearGroups = groupByYear(filtered);
@@ -547,7 +547,7 @@ function categoryBreadcrumbLinks(path) {
   return parts
     .map((part) => {
       acc = acc ? `${acc}/${part}` : part;
-      return `<a href="category.html#c=${encodeURIComponent(acc)}">${escapeHtml(part)}</a>`;
+      return `<a href="article.html#c=${encodeURIComponent(acc)}">${escapeHtml(part)}</a>`;
     })
     .join(" / ");
 }
