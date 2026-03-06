@@ -45,6 +45,32 @@ body.home:not(.pdf-page)::before {
   opacity: 0;
 }
 
+/* Nav icons (no external icon fonts). */
+.nav-ico {
+  display: inline-flex;
+  width: 1.05em;
+  height: 1.05em;
+  flex: 0 0 1.05em;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-ico svg {
+  width: 1.05em;
+  height: 1.05em;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.navbar-nav .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 /* HOME hero (Auroral-like) */
 .home-hero {
   min-height: 100vh;
@@ -101,12 +127,8 @@ body.home #mainNav > .container-md,
 body.home #mainNav > .container-sm,
 body.home #mainNav > .container-xl,
 body.home #mainNav > .container-xxl {
-  margin-top: 12px;
-  border-radius: 999px;
-  padding: 8px 14px;
-  background: rgba(0, 0, 0, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(10px);
+  margin-top: 8px;
+  padding: 10px 14px;
 }
 
 body.home #mainNav .navbar-brand {
@@ -117,11 +139,13 @@ body.home #mainNav .navbar-brand {
 body.home #mainNav .navbar-nav .nav-link {
   color: rgba(255, 255, 255, 0.88);
   text-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+  border-radius: 999px;
 }
 
 body.home #mainNav .navbar-nav .nav-link:hover,
 body.home #mainNav .navbar-nav .nav-link.active {
   color: rgba(255, 255, 255, 1);
+  text-decoration: none;
 }
 
 /* Add a "glass" background after scrolling, for readability. */
@@ -136,8 +160,8 @@ body.home #mainNav.is-scrolled > .container-md,
 body.home #mainNav.is-scrolled > .container-sm,
 body.home #mainNav.is-scrolled > .container-xl,
 body.home #mainNav.is-scrolled > .container-xxl {
-  background: rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.22);
+  border-radius: 16px;
 }
 
 .navbar-toggler {
