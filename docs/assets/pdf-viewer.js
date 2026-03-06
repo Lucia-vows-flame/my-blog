@@ -357,8 +357,8 @@ async function resolveDestToPageNumber(pdfDoc, dest) {
 
 async function renderLinkAnnotations({ pdfDoc, page, viewport, layerEl, onGoToPage, onNamedAction }) {
   layerEl.innerHTML = "";
-  layerEl.style.width = `${Math.floor(viewport.width)}px`;
-  layerEl.style.height = `${Math.floor(viewport.height)}px`;
+  layerEl.style.width = `${Math.ceil(viewport.width)}px`;
+  layerEl.style.height = `${Math.ceil(viewport.height)}px`;
 
   const annotations = await page.getAnnotations({ intent: "display" });
   for (const a of annotations || []) {
@@ -439,6 +439,31 @@ function computeScale({ zoom, viewportAtScale1, containerEl }) {
 
 function formatMode(mode) {
   return mode === "page" ? "page" : "scroll";
+}
+
+function prepareCanvasForViewport({ canvas, ctx, viewport, outputScale }) {
+  const cssWidth = Math.ceil(viewport.width);
+  const cssHeight = Math.ceil(viewport.height);
+  canvas.width = Math.ceil(cssWidth * outputScale);
+  canvas.height = Math.ceil(cssHeight * outputScale);
+  canvas.style.width = `${cssWidth}px`;
+  canvas.style.height = `${cssHeight}px`;
+
+  // Ensure the backing store is fully painted even if the PDF page doesn't draw a background.
+  // (Important when the 2D context is created with `{ alpha: false }`.)
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  return { cssWidth, cssHeight };
+}
+
+async function renderPageToCanvas({ page, viewport, canvas, ctx, outputScale }) {
+  const sizes = prepareCanvasForViewport({ canvas, ctx, viewport, outputScale });
+
+  const transform = outputScale === 1 ? undefined : [outputScale, 0, 0, outputScale, 0, 0];
+  await page.render({ canvasContext: ctx, viewport, transform }).promise;
+  return sizes;
 }
 
 async function main() {
@@ -626,18 +651,13 @@ async function main() {
       const viewport = page.getViewport({ scale, rotation: state.rotate });
 
       const outputScale = window.devicePixelRatio || 1;
-      canvas.width = Math.floor(viewport.width * outputScale);
-      canvas.height = Math.floor(viewport.height * outputScale);
-      canvas.style.width = `${Math.floor(viewport.width)}px`;
-      canvas.style.height = `${Math.floor(viewport.height)}px`;
 
-      annoLayer.style.width = canvas.style.width;
-      annoLayer.style.height = canvas.style.height;
-
-      ctx.setTransform(outputScale, 0, 0, outputScale, 0, 0);
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
-      await page.render({ canvasContext: ctx, viewport }).promise;
+      const { cssWidth, cssHeight } = await renderPageToCanvas({ page, viewport, canvas, ctx, outputScale });
+
+      annoLayer.style.width = `${cssWidth}px`;
+      annoLayer.style.height = `${cssHeight}px`;
 
       await renderLinkAnnotations({
         pdfDoc: state.pdfDoc,
@@ -706,18 +726,19 @@ async function main() {
     const viewport = page.getViewport({ scale, rotation: state.rotate });
 
     const outputScale = window.devicePixelRatio || 1;
-    node.canvas.width = Math.floor(viewport.width * outputScale);
-    node.canvas.height = Math.floor(viewport.height * outputScale);
-    node.canvas.style.width = `${Math.floor(viewport.width)}px`;
-    node.canvas.style.height = `${Math.floor(viewport.height)}px`;
 
-    node.anno.style.width = node.canvas.style.width;
-    node.anno.style.height = node.canvas.style.height;
-
-    node.ctx.setTransform(outputScale, 0, 0, outputScale, 0, 0);
     node.ctx.imageSmoothingEnabled = true;
     node.ctx.imageSmoothingQuality = "high";
-    await page.render({ canvasContext: node.ctx, viewport }).promise;
+    const { cssWidth, cssHeight } = await renderPageToCanvas({
+      page,
+      viewport,
+      canvas: node.canvas,
+      ctx: node.ctx,
+      outputScale,
+    });
+
+    node.anno.style.width = `${cssWidth}px`;
+    node.anno.style.height = `${cssHeight}px`;
 
     await renderLinkAnnotations({
       pdfDoc: state.pdfDoc,

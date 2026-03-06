@@ -110,7 +110,7 @@
   background:
     radial-gradient(700px 220px at 10% 0%, rgba(96, 165, 250, 0.15), transparent 58%),
     radial-gradient(640px 220px at 92% 10%, rgba(52, 211, 153, 0.1), transparent 55%),
-    rgba(255, 255, 255, 0.06);
+    rgba(2, 6, 23, 0.58);
   box-shadow: 0 10px 28px rgba(2, 6, 23, 0.5);
   padding: 10px 12px;
   position: relative;
