@@ -1,6 +1,7 @@
 const POSTS_URL = "data/posts.json";
 const PDF_VIEWER_VERSION = "20260305i";
 const PDF_VIEWER = `pdf.html?v=${PDF_VIEWER_VERSION}`;
+let didInitialRoute = false;
 
 function routeToPost({ id, path }) {
   const params = new URLSearchParams();
@@ -109,6 +110,41 @@ function compareCatNode(a, b) {
   return b.count - a.count || a.name.localeCompare(b.name);
 }
 
+function categoryId(name) {
+  return encodeURIComponent(String(name || "")).replaceAll("%", "_");
+}
+
+function topLevelFromPath(path) {
+  return splitCategoryPath(path)[0] || "";
+}
+
+function countAllCategories(root) {
+  let n = 0;
+  for (const _ of allCategoryPaths(root)) n += 1;
+  return n;
+}
+
+function hashHue(s) {
+  let h = 0;
+  for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return h % 360;
+}
+
+function computeTopLevelPostCounts(posts) {
+  /** @type {Map<string, number>} */
+  const m = new Map();
+  for (const post of posts) {
+    /** @type {Set<string>} */
+    const uniq = new Set();
+    for (const c of post.categories) {
+      const top = topLevelFromPath(c);
+      if (top) uniq.add(top);
+    }
+    for (const top of uniq) m.set(top, (m.get(top) || 0) + 1);
+  }
+  return m;
+}
+
 function getFirstCategoryPath(root) {
   const top = [...root.children.values()].sort(compareCatNode)[0];
   return top?.path || "";
@@ -198,7 +234,7 @@ function renderCategories({ root, activeCategory }) {
 
     const link = document.createElement("a");
     link.className = "cat-link";
-    link.href = `article.html#c=${encodeURIComponent(node.path)}`;
+    link.href = `category.html#c=${encodeURIComponent(node.path)}`;
 
     if (activeCategory && activeCategory === node.path) link.classList.add("is-active");
     else if (isActiveOrAncestor({ activeCategory, nodePath: node.path })) link.classList.add("is-active-ancestor");
@@ -258,6 +294,116 @@ function renderCategories({ root, activeCategory }) {
 function postLink(post) {
   if (isPdfPost(post)) return pdfViewerUrl(post.path);
   return `post.html#id=${encodeURIComponent(post.id)}`;
+}
+
+function renderCategoryIndex({ posts, root, activeCategory }) {
+  const totalEl = qs("cat-total");
+  const chipsEl = qs("cat-chips");
+  const sectionsEl = qs("cat-sections");
+  if (!chipsEl || !sectionsEl) return;
+
+  if (totalEl) totalEl.textContent = String(countAllCategories(root));
+
+  const topCounts = computeTopLevelPostCounts(posts);
+  const activeTop = topLevelFromPath(activeCategory);
+
+  chipsEl.innerHTML = "";
+  const topNodes = [...root.children.values()].sort(compareCatNode);
+  for (const node of topNodes) {
+    const chip = document.createElement("a");
+    chip.className = "cat-chip";
+    chip.href = `#top=${encodeURIComponent(node.name)}`;
+    chip.style.setProperty("--chip-h", String(hashHue(node.name)));
+    if (node.name === activeTop) chip.classList.add("is-active");
+
+    const hash = document.createElement("span");
+    hash.className = "cat-chip__hash";
+    hash.textContent = "#";
+
+    const name = document.createElement("span");
+    name.className = "cat-chip__name";
+    name.textContent = node.name;
+
+    const count = document.createElement("span");
+    count.className = "cat-chip__count";
+    count.textContent = `(${topCounts.get(node.name) || 0})`;
+
+    chip.append(hash, name, count);
+    chipsEl.append(chip);
+  }
+
+  sectionsEl.innerHTML = "";
+
+  const renderTree = (node, level) => {
+    const li = document.createElement("li");
+    li.className = "cat-treeItem";
+    li.style.setProperty("--level", String(level));
+
+    const row = document.createElement("a");
+    row.className = "cat-treeRow";
+    row.href = `#c=${encodeURIComponent(node.path)}`;
+    if (activeCategory && activeCategory === node.path) row.classList.add("is-active");
+    else if (isActiveOrAncestor({ activeCategory, nodePath: node.path })) row.classList.add("is-active-ancestor");
+
+    const dot = document.createElement("span");
+    dot.className = "cat-treeDot";
+    dot.setAttribute("aria-hidden", "true");
+
+    const label = document.createElement("span");
+    label.className = "cat-treeName";
+    label.textContent = node.name;
+
+    const count = document.createElement("span");
+    count.className = "cat-treeCount";
+    count.textContent = `(${node.count})`;
+
+    row.append(dot, label, count);
+    li.append(row);
+
+    if (node.children.size) {
+      const ul = document.createElement("ul");
+      ul.className = "cat-tree";
+      const children = [...node.children.values()].sort(compareCatNode);
+      for (const child of children) ul.append(renderTree(child, level + 1));
+      li.append(ul);
+    }
+
+    return li;
+  };
+
+  for (const top of topNodes) {
+    const section = document.createElement("section");
+    section.className = "cat-section";
+    section.id = `cat-top_${categoryId(top.name)}`;
+    if (top.name === activeTop) section.classList.add("is-active");
+
+    const h = document.createElement("div");
+    h.className = "cat-sectionHead";
+
+    const title = document.createElement("a");
+    title.className = "cat-sectionTitle";
+    title.href = `#c=${encodeURIComponent(top.path)}`;
+    title.textContent = top.name;
+
+    const count = document.createElement("span");
+    count.className = "cat-sectionCount";
+    count.textContent = `(${top.count})`;
+
+    h.append(title, count);
+    section.append(h);
+
+    const list = document.createElement("ul");
+    list.className = "cat-tree";
+    if (top.children.size) {
+      const children = [...top.children.values()].sort(compareCatNode);
+      for (const child of children) list.append(renderTree(child, 0));
+    } else {
+      list.append(renderTree(top, 0));
+    }
+    section.append(list);
+
+    sectionsEl.append(section);
+  }
 }
 
 function renderLatest(posts) {
@@ -547,17 +693,27 @@ function categoryBreadcrumbLinks(path) {
   return parts
     .map((part) => {
       acc = acc ? `${acc}/${part}` : part;
-      return `<a href="article.html#c=${encodeURIComponent(acc)}">${escapeHtml(part)}</a>`;
+      return `<a href="category.html#c=${encodeURIComponent(acc)}">${escapeHtml(part)}</a>`;
     })
     .join(" / ");
 }
 
+function scrollToTopCategory(topName, behavior) {
+  const el = document.getElementById(`cat-top_${categoryId(topName)}`);
+  if (!el) return;
+  try {
+    el.scrollIntoView({ behavior: behavior || "smooth", block: "start" });
+  } catch {
+    el.scrollIntoView(true);
+  }
+}
+
 function route({ posts, categories }) {
   const hash = parseHashParams();
-  let activeCategory = normalizeCategoryPath(hash.c || "");
+  let activeCategory = normalizeCategoryPath(hash.c || hash.top || "");
 
   const isPostPage = Boolean(qs("post-frame"));
-  const isCategoryPage = Boolean(qs("cat-groups"));
+  const isCategoryIndex = Boolean(qs("cat-sections"));
 
   const postId = hash.id || "";
   const postPath = hash.path || "";
@@ -573,14 +729,19 @@ function route({ posts, categories }) {
     renderLatest(posts);
   }
 
-  if (isCategoryPage) {
-    const category = activeCategory || getFirstCategoryPath(categories);
-    if (category) renderCategory(posts, category);
+  if (isCategoryIndex) {
+    renderCategoryIndex({ posts, root: categories, activeCategory });
+    if (hash.top || (!didInitialRoute && hash.c)) {
+      const top = topLevelFromPath(activeCategory);
+      if (top) scrollToTopCategory(top, "smooth");
+    }
   }
 
   if (isPostPage) {
     if (postId || postPath) renderPost(posts, { postId, postPath });
   }
+
+  didInitialRoute = true;
 }
 
 function setupNav() {
@@ -674,7 +835,7 @@ async function main() {
 
 main().catch((err) => {
   console.error(err);
-  const container = qs("latest-list") || qs("cat-groups");
+  const container = qs("latest-list") || qs("cat-sections") || qs("cat-groups");
   if (container) {
     container.innerHTML =
       `<div style="padding:10px;color:rgba(20,20,20,.7)">` +
