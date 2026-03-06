@@ -271,7 +271,7 @@ body.category {
   overflow-x: hidden;
 }
 
-.category-hero {
+header.masthead.category-hero {
   min-height: 52vh;
   display: grid;
   align-items: center;
@@ -876,7 +876,7 @@ body.archive {
   overflow-x: hidden;
 }
 
-.archive-hero {
+header.masthead.archive-hero {
   min-height: 52vh;
   display: grid;
   align-items: center;
