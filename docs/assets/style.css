@@ -297,7 +297,7 @@ body.category .category-hero .site-heading {
 
 .category-main {
   margin-top: 0;
-  padding-top: 0.28rem;
+  padding-top: 0.08rem;
   padding-bottom: 3rem;
   position: relative;
 }
@@ -782,7 +782,7 @@ body.category:not(.pdf-page)::after {
   }
 
   .category-main {
-    padding-top: 0.38rem;
+    padding-top: 0.12rem;
   }
 }
 
@@ -902,7 +902,7 @@ body.archive .archive-hero .site-heading {
 
 .archive-main {
   margin-top: 0;
-  padding-top: 1.35rem;
+  padding-top: 0.08rem;
   padding-bottom: 3rem;
   position: relative;
 }
@@ -1230,7 +1230,7 @@ body.archive:not(.pdf-page)::after {
 
 @media (min-width: 992px) {
   .archive-main {
-    padding-top: 1.7rem;
+    padding-top: 0.12rem;
   }
 }
 
