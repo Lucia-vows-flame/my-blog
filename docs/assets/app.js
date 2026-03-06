@@ -450,7 +450,6 @@ function renderCategoryIndex({ posts, root, activeCategory }) {
 
     const isExpanded = expanded.has(node.path);
     childrenWrap.hidden = !isExpanded;
-    toggle.textContent = isExpanded ? "▾" : "▸";
     toggle.setAttribute("aria-label", isExpanded ? "Collapse" : "Expand");
     toggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
 
@@ -461,7 +460,6 @@ function renderCategoryIndex({ posts, root, activeCategory }) {
       if (next) expanded.add(node.path);
       else expanded.delete(node.path);
       safeLocalStorageSet(`cat.index.expanded:${node.path}`, next ? "1" : "0");
-      toggle.textContent = next ? "▾" : "▸";
       toggle.setAttribute("aria-label", next ? "Collapse" : "Expand");
       toggle.setAttribute("aria-expanded", next ? "true" : "false");
       childrenWrap.hidden = !next;
