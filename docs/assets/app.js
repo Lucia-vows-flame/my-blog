@@ -605,6 +605,135 @@ function groupByYear(posts) {
     .map(([year, items]) => ({ year, items: items.sort(byDateDesc) }));
 }
 
+function archiveDateParts(iso) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.valueOf())) return { year: 1970, month: 1, day: 1 };
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+  };
+}
+
+function formatArchiveMonth(month) {
+  return `${String(month).padStart(2, "0")} 月`;
+}
+
+function formatArchiveEntryDate(iso) {
+  const { month, day } = archiveDateParts(iso);
+  return `${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function groupArchiveByYearMonth(posts) {
+  /** @type {Map<number, Map<number, any[]>>} */
+  const years = new Map();
+
+  for (const post of [...posts].sort(byDateDesc)) {
+    const { year, month } = archiveDateParts(post.date);
+    const months = years.get(year) || new Map();
+    const items = months.get(month) || [];
+    items.push(post);
+    months.set(month, items);
+    years.set(year, months);
+  }
+
+  return [...years.entries()]
+    .sort((a, b) => b[0] - a[0])
+    .map(([year, months]) => ({
+      year,
+      months: [...months.entries()]
+        .sort((a, b) => b[0] - a[0])
+        .map(([month, items]) => ({ month, items: items.sort(byDateDesc) })),
+    }));
+}
+
+function renderArchive(posts) {
+  const timeline = qs("archive-timeline");
+  if (!timeline) return;
+
+  const total = posts.length;
+  for (const el of [qs("archive-total"), qs("archive-total-inline")]) {
+    if (el) el.textContent = String(total);
+  }
+
+  timeline.innerHTML = "";
+  const groups = groupArchiveByYearMonth(posts);
+  timeline.classList.toggle("is-empty", groups.length === 0);
+  if (!groups.length) {
+    const empty = document.createElement("div");
+    empty.className = "archive-empty";
+    empty.textContent = "还没有文章，稍后再来看看。";
+    timeline.append(empty);
+    return;
+  }
+
+  for (const yearGroup of groups) {
+    const yearSection = document.createElement("section");
+    yearSection.className = "archive-year";
+
+    const yearNode = document.createElement("span");
+    yearNode.className = "archive-year__node";
+    yearNode.setAttribute("aria-hidden", "true");
+
+    const yearTitle = document.createElement("h2");
+    yearTitle.className = "archive-year__title";
+    yearTitle.textContent = String(yearGroup.year);
+
+    const yearBody = document.createElement("div");
+    yearBody.className = "archive-year__body";
+
+    for (const monthGroup of yearGroup.months) {
+      const monthSection = document.createElement("section");
+      monthSection.className = "archive-month";
+
+      const monthHead = document.createElement("div");
+      monthHead.className = "archive-month__head";
+
+      const monthNode = document.createElement("span");
+      monthNode.className = "archive-month__node";
+      monthNode.setAttribute("aria-hidden", "true");
+
+      const monthTitle = document.createElement("h3");
+      monthTitle.className = "archive-month__title";
+      monthTitle.textContent = formatArchiveMonth(monthGroup.month);
+
+      monthHead.append(monthNode, monthTitle);
+
+      const list = document.createElement("ul");
+      list.className = "archive-entryList";
+
+      for (const post of monthGroup.items) {
+        const item = document.createElement("li");
+        item.className = "archive-entry";
+
+        const date = document.createElement("time");
+        date.className = "archive-entry__date";
+        date.dateTime = post.date;
+        date.textContent = formatArchiveEntryDate(post.date);
+
+        const link = document.createElement("a");
+        link.className = "archive-entry__title";
+        link.href = postLink(post);
+        link.textContent = post.title;
+        if (isPdfPost(post)) {
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.title = "PDF 将在新窗口打开";
+        }
+
+        item.append(date, link);
+        list.append(item);
+      }
+
+      monthSection.append(monthHead, list);
+      yearBody.append(monthSection);
+    }
+
+    yearSection.append(yearNode, yearTitle, yearBody);
+    timeline.append(yearSection);
+  }
+}
+
 function renderCategory(posts, category) {
   const title = qs("cat-title");
   const meta = qs("cat-meta");
@@ -846,6 +975,7 @@ function route({ posts, categories }) {
 
   const isPostPage = Boolean(qs("post-frame"));
   const isCategoryIndex = Boolean(qs("cat-sections"));
+  const isArchivePage = Boolean(qs("archive-timeline"));
 
   const postId = hash.id || "";
   const postPath = hash.path || "";
@@ -867,6 +997,10 @@ function route({ posts, categories }) {
       const top = topLevelFromPath(activeCategory);
       if (top) scrollToTopCategory(top, "smooth");
     }
+  }
+
+  if (isArchivePage) {
+    renderArchive(posts);
   }
 
   if (isPostPage) {
@@ -967,7 +1101,7 @@ async function main() {
 
 main().catch((err) => {
   console.error(err);
-  const container = qs("latest-list") || qs("cat-sections") || qs("cat-groups");
+  const container = qs("latest-list") || qs("cat-sections") || qs("archive-timeline") || qs("cat-groups");
   if (container) {
     container.innerHTML =
       `<div style="padding:10px;color:rgba(20,20,20,.7)">` +

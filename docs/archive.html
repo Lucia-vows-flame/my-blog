@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>CONTACT</title>
+    <title>ARCHIVE</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css" />
   </head>
-  <body>
+  <body class="archive">
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
       <div class="container-fluid px-4 px-lg-5">
         <a class="navbar-brand" href="./">Auroral</a>
@@ -44,7 +44,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4" href="archive.html">
+              <a class="nav-link px-lg-3 py-3 py-lg-4 active" href="archive.html" aria-current="page">
                 <span class="nav-ico" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
                     <rect width="18" height="18" x="3" y="4" rx="2"></rect>
@@ -70,7 +70,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4 active" href="contact.html" aria-current="page">
+              <a class="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">
                 <span class="nav-ico" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
                     <rect width="20" height="16" x="2" y="4" rx="2"></rect>
@@ -85,28 +85,60 @@
       </div>
     </nav>
 
-    <header class="masthead" style="background-image: url('assets/img/contact-bg.jpg')">
+    <header class="masthead archive-hero" style="background-image: url('assets/img/home_background.png')">
       <div class="container position-relative px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-md-10 col-lg-8 col-xl-7">
             <div class="site-heading">
-              <h1>CONTACT</h1>
-              <span class="subheading">Coming soon</span>
+              <h1>归档</h1>
+              <span class="subheading">沿着时间轴浏览全部文章</span>
             </div>
           </div>
         </div>
       </div>
     </header>
 
-    <main class="container px-4 px-lg-5">
+    <main class="container px-4 px-lg-5 archive-main">
       <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-          <div class="post-frame__wrap">
-            <div class="post-placeholder__inner">
-              <div class="post-placeholder__title">Coming soon</div>
-              <div class="post-placeholder__desc">这里以后会放联系方式/社交账号等内容。</div>
+        <div class="col-md-11 col-lg-10 col-xl-9 col-xxl-8">
+          <section class="archive-card">
+            <div class="archive-card__meta">
+              <span class="archive-card__metaIco" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M6 3.5h8a2 2 0 0 1 2 2V9"></path>
+                  <path d="M10 7.5h8a2 2 0 0 1 2 2V18a2.5 2.5 0 0 1-2.5 2.5H8a2 2 0 0 1-2-2V5.5A2 2 0 0 1 8 3.5z"></path>
+                  <path d="M10 12h6"></path>
+                  <path d="M10 15.5h6"></path>
+                  <path d="M10 19h4"></path>
+                </svg>
+              </span>
+              <div class="archive-card__countWrap">
+                <strong id="archive-total">0</strong>
+                <span>篇文章</span>
+              </div>
             </div>
-          </div>
+
+            <p class="archive-card__desc">目前共计 <strong id="archive-total-inline">0</strong> 篇文章，继续加油！</p>
+
+            <div class="archive-card__rule" aria-hidden="true"></div>
+
+            <div class="archive-card__listHead">
+              <span class="archive-card__listIco" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect width="14" height="16" x="6" y="4" rx="2"></rect>
+                  <path d="M9 8h8"></path>
+                  <path d="M9 12h8"></path>
+                  <path d="M9 16h5"></path>
+                  <path d="M4 7h.01"></path>
+                  <path d="M4 12h.01"></path>
+                  <path d="M4 17h.01"></path>
+                </svg>
+              </span>
+              <span>文章列表</span>
+            </div>
+
+            <div class="archive-timeline" id="archive-timeline"></div>
+          </section>
         </div>
       </div>
     </main>
