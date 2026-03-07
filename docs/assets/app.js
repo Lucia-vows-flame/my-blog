@@ -432,6 +432,10 @@ function renderCategoryIndex({ posts, root, activeCategory }) {
     const hasPosts = directPosts.length > 0;
     const expandable = hasChildren || hasPosts;
 
+    if (expandable) li.classList.add("is-expandable");
+    if (hasChildren) li.classList.add("has-children");
+    if (hasPosts) li.classList.add("has-posts");
+
     toggle.disabled = !expandable;
     if (!expandable) {
       toggle.textContent = "";
