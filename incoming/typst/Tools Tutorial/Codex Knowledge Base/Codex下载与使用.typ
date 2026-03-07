@@ -9,7 +9,7 @@
   // Example: `abstract: [This is my abstract...]`
   //abstract: lorem(55),
   //keywords: ("First keyword", "Second keyword", "etc."),
-  date: "October 3, 2025",
+  date: "March 7, 2026",
 )
 
 #set par(spacing: 1.5em)

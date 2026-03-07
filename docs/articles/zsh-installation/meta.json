@@ -1,0 +1,10 @@
+{
+  "id": "zsh-installation",
+  "title": "zsh 安装",
+  "date": "2026-03-07",
+  "categories": [
+    "Tools Tutorial/Linux Konwledge Base"
+  ],
+  "path": "articles/zsh-installation/doc.pdf",
+  "excerpt": "介绍 zsh oh-my-zsh 主题与终端美化的安装配置流程。"
+}

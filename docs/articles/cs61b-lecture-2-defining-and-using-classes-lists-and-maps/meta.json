@@ -1,0 +1,10 @@
+{
+  "id": "cs61b-lecture-2-defining-and-using-classes-lists-and-maps",
+  "title": "Lecture 2 — Defining and Using Classes, Lists and Maps",
+  "date": "2026-03-07",
+  "categories": [
+    "Data Structure and Algorithm/Slide-by-Slide Lecture Notes/CS61B"
+  ],
+  "path": "articles/cs61b-lecture-2-defining-and-using-classes-lists-and-maps/doc.pdf",
+  "excerpt": "通过 IntelliJ 现场示例讲解 Java 类与对象 实例变量 构造器 静态与实例成员并引入 Lists Sets 和 Maps。"
+}

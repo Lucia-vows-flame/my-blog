@@ -1,0 +1,10 @@
+{
+  "id": "lazyvim-installation-tutorial",
+  "title": "LayzVim安装教程",
+  "date": "2026-03-07",
+  "categories": [
+    "Tools Tutorial/Vim Konwledge Base"
+  ],
+  "path": "articles/lazyvim-installation-tutorial/doc.pdf",
+  "excerpt": "说明 Ubuntu 下安装最新版 Neovim 并部署 LazyVim 的步骤。"
+}

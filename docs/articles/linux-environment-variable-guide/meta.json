@@ -1,0 +1,10 @@
+{
+  "id": "linux-environment-variable-guide",
+  "title": "Linux环境变量配置指南",
+  "date": "2026-03-07",
+  "categories": [
+    "Tools Tutorial/Linux Konwledge Base"
+  ],
+  "path": "articles/linux-environment-variable-guide/doc.pdf",
+  "excerpt": "说明 PATH 的基本语法 追加逻辑 持久化配置与常见陷阱。"
+}

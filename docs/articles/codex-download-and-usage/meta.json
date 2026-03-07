@@ -1,0 +1,10 @@
+{
+  "id": "codex-download-and-usage",
+  "title": "Codex下载与使用",
+  "date": "2026-03-07",
+  "categories": [
+    "Tools Tutorial/Codex Knowledge Base"
+  ],
+  "path": "articles/codex-download-and-usage/doc.pdf",
+  "excerpt": "介绍 Node.js 与 Codex CLI 的安装步骤 并给出基础启动方式。"
+}

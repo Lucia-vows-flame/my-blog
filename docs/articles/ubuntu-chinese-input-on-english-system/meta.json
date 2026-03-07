@@ -1,0 +1,10 @@
+{
+  "id": "ubuntu-chinese-input-on-english-system",
+  "title": "Ubuntu英文系统配置中文输入法",
+  "date": "2026-03-07",
+  "categories": [
+    "Tools Tutorial/Linux Konwledge Base"
+  ],
+  "path": "articles/ubuntu-chinese-input-on-english-system/doc.pdf",
+  "excerpt": "介绍英文 Ubuntu 中安装 ibus 与中文输入法的配置流程。"
+}

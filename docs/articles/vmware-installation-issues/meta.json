@@ -1,0 +1,10 @@
+{
+  "id": "vmware-installation-issues",
+  "title": "VMWare安装时的相关问题",
+  "date": "2026-03-07",
+  "categories": [
+    "Tools Tutorial/Linux Konwledge Base"
+  ],
+  "path": "articles/vmware-installation-issues/doc.pdf",
+  "excerpt": "记录 VMWare 联网 NAT 配置 代理问题与 open-vm-tools 安装排障。"
+}

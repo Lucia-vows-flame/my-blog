@@ -1,0 +1,10 @@
+{
+  "id": "git-common-issues",
+  "title": "Git 常见问题整理",
+  "date": "2026-03-07",
+  "categories": [
+    "Tools Tutorial/Git Knowledge Base"
+  ],
+  "path": "articles/git-common-issues/doc.pdf",
+  "excerpt": "整理 Git 配置 SSH 推送 常见报错与排查方法。"
+}

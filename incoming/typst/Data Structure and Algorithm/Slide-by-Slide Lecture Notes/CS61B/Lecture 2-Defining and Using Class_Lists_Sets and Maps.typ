@@ -20,7 +20,7 @@
     "Collections",
     "Debugging",
   ),
-  date: "October 23, 2025",
+  date: "March 7, 2026",
 )
 #set par(spacing: 1.5em) //设置段落间距
 #set text(
