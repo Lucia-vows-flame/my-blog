@@ -1197,7 +1197,8 @@ body.archive:not(.pdf-page)::after {
   align-items: center;
   gap: 0.42rem;
   margin-bottom: 0.4rem;
-  padding-left: 0.56rem;
+  margin-left: -0.68rem;
+  padding-left: 0.96rem;
 }
 
 .archive-month__head::before {
@@ -1205,7 +1206,7 @@ body.archive:not(.pdf-page)::after {
   position: absolute;
   left: 0;
   top: 50%;
-  width: 0.28rem;
+  width: 0.72rem;
   height: 1px;
   background: linear-gradient(90deg, rgba(73, 177, 245, 0.42), rgba(73, 177, 245, 0.12));
   transform: translateY(-50%);
@@ -1357,11 +1358,12 @@ body.archive:not(.pdf-page)::after {
   }
 
   .archive-month__head {
-    padding-left: 0.44rem;
+    margin-left: -0.54rem;
+    padding-left: 0.78rem;
   }
 
   .archive-month__head::before {
-    width: 0.22rem;
+    width: 0.58rem;
   }
 
   .archive-entry {
