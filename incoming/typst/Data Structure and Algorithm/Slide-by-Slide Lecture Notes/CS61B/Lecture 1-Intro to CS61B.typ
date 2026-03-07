@@ -31,10 +31,10 @@
 )
 #set par(spacing: 1.5em) //设置段落间距
 #set text(
-  font: ("Times New Roman", "Noto Serif SC"),
+  font: ("Merriweather", "Noto Serif CJK SC"),
   size: 12pt,
   lang: "zh",
-) //设置正文字体, 中文使用 Noto Serif SC, 英文使用 Times New Roman
+) //设置正文字体, 中文使用 Noto Serif CJK SC, 英文使用 Merriweather
 #show heading: set text(font: "New Computer Modern", weight: "bold") //设置标题字体,bold表示粗体
 #set heading(numbering: "1.") //设置标题编号格式
 #outline(depth: 4) //设置目录深度

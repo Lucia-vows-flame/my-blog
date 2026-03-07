@@ -15,10 +15,10 @@
 #set par(spacing: 1.5em)
 
 #set text(
-  font: ("Times New Roman", "Noto Serif SC"),
+  font: ("Merriweather", "Noto Serif CJK SC"),
   size: 12pt,
   lang: "zh",
-) //设置正文字体, Times New Roman 是英文使用的字体, Noto Serif SC 是中文使用的字体.
+) //设置正文字体, Merriweather 是英文使用的字体, Noto Serif CJK SC 是中文使用的字体.
 
 #show heading: set text(font: "New Computer Modern", weight: "bold") //设置标题字体,bold表示粗体
 

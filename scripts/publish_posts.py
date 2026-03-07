@@ -18,6 +18,8 @@ ARTICLES = DOCS / "articles"
 INCOMING = ROOT / "incoming"
 INCOMING_TYP = INCOMING / "typst"
 MANIFEST = INCOMING / "manifest.csv"
+LOCAL_FONTS = ROOT / "fonts"
+FONT_FILE_SUFFIXES = (".ttf", ".otf", ".ttc", ".otc", ".woff", ".woff2")
 AUTO_DATE_WORDS = {"auto", "today", "current"}
 MONTH_NAMES = (
     "January",
@@ -241,6 +243,18 @@ def prepare_compile_source(*, typ_path: Path, typst_date_override: str | None) -
     return temp_path, temp_path
 
 
+def collect_local_font_paths(fonts_root: Path) -> list[Path]:
+    if not fonts_root.exists():
+        return []
+
+    font_dirs = {
+        path.parent
+        for path in fonts_root.rglob("*")
+        if path.is_file() and path.suffix.lower() in FONT_FILE_SUFFIXES
+    }
+    return sorted(font_dirs)
+
+
 def compile_typst_to_pdf(
     *,
     typ_path: Path,
@@ -267,6 +281,8 @@ def compile_typst_to_pdf(
             deps_path = Path(tf.name)
 
         cmd = ["typst", "compile", "--deps", str(deps_path), "--root", str(root)]
+        for font_path in collect_local_font_paths(LOCAL_FONTS):
+            cmd.extend(["--font-path", str(font_path)])
         for key, value in typst_inputs.items():
             cmd.extend(["--input", f"{key}={value}"])
         cmd.extend([str(compile_path), str(out_pdf)])
@@ -286,19 +302,53 @@ def compile_typst_to_pdf(
                 pass
 
 
+def extract_typst_dependency_entries(raw_text: str) -> list[str]:
+    stripped = raw_text.strip()
+    if not stripped:
+        return []
+
+    try:
+        payload = json.loads(stripped)
+    except json.JSONDecodeError:
+        payload = None
+    else:
+        entries: list[str] = []
+
+        def collect(value: object) -> None:
+            if isinstance(value, str):
+                entries.append(value)
+                return
+            if isinstance(value, list):
+                for item in value:
+                    collect(item)
+                return
+            if isinstance(value, dict):
+                for key in ("inputs", "dependencies", "files"):
+                    if key in value:
+                        collect(value[key])
+
+        collect(payload)
+        if entries:
+            return entries
+
+    if "\0" in raw_text:
+        return [item.strip() for item in raw_text.split("\0") if item.strip()]
+
+    return [line.strip() for line in raw_text.splitlines() if line.strip()]
+
+
 def enforce_images_location(*, deps_path: Path, root: Path) -> None:
     """
     Enforce: all non-.typ dependencies that live under incoming/typst/ must be
     placed under a `images/` directory under incoming/typst/ (supports multi-level).
+
+    Typst's `--deps` output format changed in newer releases and may now be JSON
+    instead of a plain newline-delimited list. We accept both formats here.
     """
     typ_root = INCOMING_TYP.resolve()
 
-    text = deps_path.read_text(encoding="utf-8", errors="replace")
-    for raw in text.splitlines():
-        raw = raw.strip()
-        if not raw:
-            continue
-
+    raw_text = deps_path.read_text(encoding="utf-8", errors="replace")
+    for raw in extract_typst_dependency_entries(raw_text):
         p = Path(raw)
         if not p.is_absolute():
             p = (root / p).resolve()

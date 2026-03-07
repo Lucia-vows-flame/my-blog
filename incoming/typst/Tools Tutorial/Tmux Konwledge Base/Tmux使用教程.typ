@@ -18,22 +18,14 @@
 #set par(spacing: 1.5em)
 
 #set text(
-  // Prefer CJK fonts that exist on GitHub Actions runner (Ubuntu).
-  // Keep several aliases for local machines.
-  font: (
-    "Noto Serif CJK SC",
-    "Noto Sans CJK SC",
-    "Noto Serif SC",
-    "Noto Sans SC",
-    "Source Han Serif SC",
-    "Source Han Sans SC",
-  ),
+  // Prefer fonts that are stable on GitHub Actions runner (Ubuntu).
+  font: ("Merriweather", "Noto Serif CJK SC", "Noto Sans CJK SC"),
   size: 12pt,
   lang: "zh",
-) //设置正文字体，确保 CI 环境也有中文字体可用。
+) //设置正文字体，确保 CI 环境也能稳定加载仓库内置英文字体与系统中文字体。
 
 #show heading: set text(
-  font: ("New Computer Modern", "Noto Serif CJK SC", "Noto Sans CJK SC"),
+  font: ("New Computer Modern", "Merriweather", "Noto Serif CJK SC", "Noto Sans CJK SC"),
   weight: "bold",
 ) //设置标题字体,bold表示粗体（中文用 CJK 字体兜底）
 
