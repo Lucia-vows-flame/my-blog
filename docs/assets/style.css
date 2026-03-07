@@ -20,6 +20,30 @@ body {
   font-family: var(--blog-font-sans);
 }
 
+@font-face {
+  font-family: "fishblog-iconfont";
+  src: url("vendor/fishblog-iconfont/iconfont.eot?t=1593749046926");
+  src:
+    url("vendor/fishblog-iconfont/iconfont.eot?t=1593749046926#iefix") format("embedded-opentype"),
+    url("vendor/fishblog-iconfont/iconfont.woff2?t=1593749046926") format("woff2"),
+    url("vendor/fishblog-iconfont/iconfont.woff?t=1593749046926") format("woff"),
+    url("vendor/fishblog-iconfont/iconfont.ttf?t=1593749046926") format("truetype"),
+    url("vendor/fishblog-iconfont/iconfont.svg?t=1593749046926#iconfont") format("svg");
+}
+
+.iconfont {
+  font-family: "fishblog-iconfont" !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.iconzhuye::before { content: "\e7bb"; }
+.iconguidang::before { content: "\e689"; }
+.iconfenlei::before { content: "\e669"; }
+.iconzhifeiji::before { content: "\e7d5"; }
+.iconpinglunzu::before { content: "\e765"; }
+
 /* Remove template font hardcodes (0 外链，使用系统字体栈). */
 /* Clean Blog nav defaults are very bold; tone them down. */
 #mainNav {
@@ -62,7 +86,7 @@ body.home:not(.pdf-page)::before {
   opacity: 0;
 }
 
-/* Nav icons (no external icon fonts). */
+/* Nav icons (local icon font + SVG fallback). */
 .nav-ico {
   display: inline-flex;
   width: 1em;
@@ -80,6 +104,15 @@ body.home:not(.pdf-page)::before {
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
+}
+
+.nav-ico--font {
+  font-size: 0.98em;
+  line-height: 1;
+}
+
+.nav-ico--font::before {
+  line-height: 1;
 }
 
 .navbar-nav .nav-link {
