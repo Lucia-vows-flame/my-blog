@@ -5,7 +5,7 @@ typ_file,slug,title,date,excerpt
 #   - 强制规定：图片/附件必须放在 incoming/typst/**/images/** 下（支持多级目录），并在 typ 中用相对路径引用
 # - slug：必填，全站唯一；同时作为目录名与文章 id，建议只用 a-z 0-9 和 -，例如 tmux-tutorial
 # - title：必填，文章标题
-# - date：必填，YYYY-MM-DD，例如 2026-03-04
+# - date：必填，YYYY-MM-DD，例如 2026-03-04；也支持 auto（首次发布时自动取当天，后续保持不变）
 # - 分类：不再通过 CSV 填写。脚本会从源文件的父目录自动生成多级分类（用 / 连接）。
 #   - Typst：取 typ_file 在 incoming/typst/ 下的父目录
 #   - 目录中出现 images/ 时会忽略 images 及其子路径
@@ -17,4 +17,15 @@ typ_file,slug,title,date,excerpt
 
 
 
-Tools Tutorial/Tmux Konwledge Base/Tmux使用教程.typ,tmux-tutorial,Tmux 使用教程,2026-03-04,
+Tools Tutorial/Tmux Konwledge Base/Tmux使用教程.typ,tmux-tutorial,Tmux 使用教程,auto,
+Data Structure and Algorithm/Slide-by-Slide Lecture Notes/CS61B/Lecture 1-Intro to CS61B.typ,cs61b-lecture-1-intro-to-cs61b,Lecture 1 Intro to CS61B,auto,概述 CS61B 的课程目标与学习方式并系统预览数据结构 算法效率 Java 工具链与课程规则。
+Data Structure and Algorithm/Slide-by-Slide Lecture Notes/CS61B/Lecture 2-Defining and Using Class_Lists_Sets and Maps.typ,cs61b-lecture-2-defining-and-using-classes-lists-and-maps,"Lecture 2 — Defining and Using Classes, Lists and Maps",auto,通过 IntelliJ 现场示例讲解 Java 类与对象 实例变量 构造器 静态与实例成员并引入 Lists Sets 和 Maps。
+Tools Tutorial/Codex Knowledge Base/Codex下载与使用.typ,codex-download-and-usage,Codex下载与使用,auto,介绍 Node.js 与 Codex CLI 的安装步骤 并给出基础启动方式。
+Tools Tutorial/Git Knowledge Base/Git 常见问题整理.typ,git-common-issues,Git 常见问题整理,auto,整理 Git 配置 SSH 推送 常见报错与排查方法。
+Tools Tutorial/Linux Konwledge Base/Linux中的PATH、可执行文件与符号链接.typ,linux-path-executables-and-symlinks,Linux中的PATH、可执行文件与符号链接,auto,系统讲解 PATH 的查找机制 可执行文件定位与符号链接的设计思想。
+Tools Tutorial/Linux Konwledge Base/Linux环境变量配置指南.typ,linux-environment-variable-guide,Linux环境变量配置指南,auto,说明 PATH 的基本语法 追加逻辑 持久化配置与常见陷阱。
+Tools Tutorial/Linux Konwledge Base/SSH相关问题.typ,ssh-common-issues,SSH相关问题,auto,涵盖 SSH 服务开启 远程连接问题与基础排障步骤。
+Tools Tutorial/Linux Konwledge Base/Ubuntu英文系统配置中文输入法.typ,ubuntu-chinese-input-on-english-system,Ubuntu英文系统配置中文输入法,auto,介绍英文 Ubuntu 中安装 ibus 与中文输入法的配置流程。
+Tools Tutorial/Linux Konwledge Base/VMWare安装时的相关问题.typ,vmware-installation-issues,VMWare安装时的相关问题,auto,记录 VMWare 联网 NAT 配置 代理问题与 open-vm-tools 安装排障。
+Tools Tutorial/Linux Konwledge Base/zsh安装.typ,zsh-installation,zsh 安装,auto,介绍 zsh oh-my-zsh 主题与终端美化的安装配置流程。
+Tools Tutorial/Vim Konwledge Base/LayzVim安装教程.typ,lazyvim-installation-tutorial,LayzVim安装教程,auto,说明 Ubuntu 下安装最新版 Neovim 并部署 LazyVim 的步骤。

@@ -25,6 +25,7 @@ permissions:
 
 jobs:
   publish:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -73,7 +74,7 @@ jobs:
       - name: Publish posts
         run: |
           set -euo pipefail
-          python3 scripts/publish_posts.py
+          python3 scripts/publish_posts.py --typst-date-mode first-publish --build-timezone Asia/Shanghai --sync-typst-source-date
 
       - name: Show changes
         run: |
@@ -84,7 +85,7 @@ jobs:
         if: ${{ github.event_name == 'push' || inputs.commit_and_push == 'true' }}
         run: |
           set -euo pipefail
-          if [ -z "$(git status --porcelain docs)" ]; then
+          if [ -z "$(git status --porcelain docs incoming/typst)" ]; then
             echo "No changes to commit."
             exit 0
           fi
@@ -94,6 +95,6 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs
+          git add docs incoming/typst
           git commit -m "Publish posts (Typst → PDF)"
           git push origin "HEAD:$branch"

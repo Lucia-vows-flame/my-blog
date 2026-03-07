@@ -7,7 +7,9 @@ import json
 import subprocess
 import tempfile
 from dataclasses import dataclass
+from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +18,21 @@ ARTICLES = DOCS / "articles"
 INCOMING = ROOT / "incoming"
 INCOMING_TYP = INCOMING / "typst"
 MANIFEST = INCOMING / "manifest.csv"
+AUTO_DATE_WORDS = {"auto", "today", "current"}
+MONTH_NAMES = (
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+)
 
 
 @dataclass(frozen=True)
@@ -27,12 +44,43 @@ class Row:
     excerpt: str
 
 
+@dataclass(frozen=True)
+class BuildDateContext:
+    iso: str
+    display: str
+    timezone: str
+
+
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Publish posts from incoming Typst sources (Typst→PDF) into docs/ and rebuild index.")
     p.add_argument("--manifest", default=str(MANIFEST), help="CSV manifest path (default: incoming/manifest.csv)")
     p.add_argument("--typst-root", default="", help="Pass as --root to typst compile (default: each .typ parent)")
     p.add_argument("--skip-compile", action="store_true", help="Skip Typst compilation (assume docs/articles/<slug>/doc.pdf already exists)")
     p.add_argument("--skip-index", action="store_true", help="Skip regenerating docs/data/posts.json")
+    p.add_argument(
+        "--typst-date-mode",
+        choices=("source", "today", "first-publish"),
+        default="source",
+        help=(
+            "How to set the date shown inside the compiled Typst/PDF. "
+            "'source' keeps the source file's own date line; "
+            "'today' always injects the build date; "
+            "'first-publish' uses today's date only for newly published posts and preserves the old date for existing ones."
+        ),
+    )
+    p.add_argument(
+        "--build-timezone",
+        default="Asia/Shanghai",
+        help="IANA timezone used for build-date injection and date=auto (default: Asia/Shanghai)",
+    )
+    p.add_argument(
+        "--sync-typst-source-date",
+        action="store_true",
+        help=(
+            "When used with --typst-date-mode=first-publish, permanently write the locked first-publish date "
+            "back into brand-new Typst source files so the source and published PDF stay in sync."
+        ),
+    )
     return p.parse_args()
 
 
@@ -49,32 +97,29 @@ def read_manifest(path: Path) -> list[Row]:
             raise SystemExit(f"Manifest missing column(s): {', '.join(sorted(missing))}")
 
         for i, rec in enumerate(reader, start=2):
-            # Allow comment lines starting with '#' in the first column (typ_file).
-            # This keeps it convenient to put examples directly inside manifest.csv.
             first = (rec.get("typ_file") or "").strip()
             if first.startswith("#"):
                 continue
 
-            # Skip completely empty rows.
             if not any((rec.get(k) or "").strip() for k in (reader.fieldnames or [])):
                 continue
 
             typ_file = (rec.get("typ_file") or "").strip()
             slug = (rec.get("slug") or "").strip()
             title = (rec.get("title") or "").strip()
-            date = (rec.get("date") or "").strip()
+            date_value = (rec.get("date") or "").strip()
             excerpt = (rec.get("excerpt") or "").strip()
 
             if not slug:
                 raise SystemExit(f"Line {i}: empty slug")
             if not title:
                 raise SystemExit(f"Line {i}: empty title for slug={slug}")
-            if not date:
+            if not date_value:
                 raise SystemExit(f"Line {i}: empty date for slug={slug}")
             if not typ_file:
                 raise SystemExit(f"Line {i}: typ_file required (Typst-only mode) for slug={slug}")
 
-            rows.append(Row(typ_file=typ_file, slug=slug, title=title, date=date, excerpt=excerpt))
+            rows.append(Row(typ_file=typ_file, slug=slug, title=title, date=date_value, excerpt=excerpt))
 
     slugs = [r.slug for r in rows]
     if len(slugs) != len(set(slugs)):
@@ -83,26 +128,148 @@ def read_manifest(path: Path) -> list[Row]:
     return rows
 
 
-def compile_typst_to_pdf(*, typ_path: Path, out_pdf: Path, typst_root: Path | None) -> None:
+def get_build_date_context(timezone_name: str) -> BuildDateContext:
+    try:
+        tz = ZoneInfo(timezone_name)
+    except ZoneInfoNotFoundError as exc:
+        raise SystemExit(
+            "Invalid build timezone. Please use a valid IANA timezone name, for example 'Asia/Shanghai' or 'UTC'.\n"
+            f"Received: {timezone_name}"
+        ) from exc
+
+    today = datetime.now(tz).date()
+    display = format_display_date(today.isoformat())
+    return BuildDateContext(iso=today.isoformat(), display=display, timezone=timezone_name)
+
+
+def format_display_date(iso_date: str) -> str:
+    try:
+        value = date.fromisoformat(iso_date)
+    except ValueError:
+        return iso_date
+    return f"{MONTH_NAMES[value.month - 1]} {value.day}, {value.year}"
+
+
+def build_typst_inputs(build_date: BuildDateContext) -> dict[str, str]:
+    return {
+        "build_date": build_date.display,
+        "build_date_iso": build_date.iso,
+    }
+
+
+def load_existing_meta_date(out_dir: Path) -> str | None:
+    meta_path = out_dir / "meta.json"
+    if not meta_path.exists():
+        return None
+
+    try:
+        data = json.loads(meta_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+    raw = str(data.get("date") or "").strip()
+    return raw or None
+
+
+def resolve_output_date(*, row: Row, build_date: BuildDateContext, existing_date: str | None, typst_date_mode: str) -> str:
+    if typst_date_mode == "first-publish":
+        return existing_date or build_date.iso
+
+    value = row.date.strip()
+    if value.lower() in AUTO_DATE_WORDS:
+        return build_date.iso
+    return value
+
+
+def resolve_typst_date_override(*, build_date: BuildDateContext, existing_date: str | None, typst_date_mode: str) -> str | None:
+    if typst_date_mode == "source":
+        return None
+    if typst_date_mode == "today":
+        return build_date.display
+    if typst_date_mode == "first-publish":
+        return build_date.display if not existing_date else format_display_date(existing_date)
+    raise SystemExit(f"Unsupported --typst-date-mode: {typst_date_mode}")
+
+
+def replace_typst_date_field(source_text: str, display_date: str) -> str:
+    lines = source_text.splitlines(keepends=True)
+    for index, line in enumerate(lines):
+        stripped = line.lstrip()
+        if not stripped.startswith("date:"):
+            continue
+
+        indent = line[: len(line) - len(stripped)]
+        newline = "\n" if line.endswith("\n") else ""
+        lines[index] = f'{indent}date: "{display_date}",{newline}'
+        return "".join(lines)
+    return source_text
+
+
+def sync_typst_source_date(*, typ_path: Path, display_date: str | None, existing_date: str | None, enabled: bool, typst_date_mode: str) -> bool:
+    if not enabled or typst_date_mode != "first-publish" or existing_date or not display_date:
+        return False
+
+    original = typ_path.read_text(encoding="utf-8")
+    patched = replace_typst_date_field(original, display_date)
+    if patched == original:
+        return False
+
+    typ_path.write_text(patched, encoding="utf-8")
+    return True
+
+
+def prepare_compile_source(*, typ_path: Path, typst_date_override: str | None) -> tuple[Path, Path | None]:
+    if not typst_date_override:
+        return typ_path, None
+
+    original = typ_path.read_text(encoding="utf-8")
+    patched = replace_typst_date_field(original, typst_date_override)
+    if patched == original:
+        return typ_path, None
+
+    with tempfile.NamedTemporaryFile(
+        "w",
+        encoding="utf-8",
+        suffix=typ_path.suffix,
+        prefix=f".{typ_path.stem}.build-",
+        dir=typ_path.parent,
+        delete=False,
+    ) as tf:
+        tf.write(patched)
+        temp_path = Path(tf.name)
+
+    return temp_path, temp_path
+
+
+def compile_typst_to_pdf(
+    *,
+    typ_path: Path,
+    out_pdf: Path,
+    typst_root: Path | None,
+    typst_date_override: str | None,
+    typst_inputs: dict[str, str],
+) -> None:
     out_pdf.parent.mkdir(parents=True, exist_ok=True)
     if typst_root is not None:
         root = typst_root
     else:
-        # If the Typst source lives under incoming/typst, prefer that as project root.
-        # This makes it easy to share images across a course folder via absolute paths
-        # (paths starting with `/` in Typst).
         try:
             typ_path.relative_to(INCOMING_TYP)
             root = INCOMING_TYP
         except ValueError:
             root = typ_path.parent
 
+    compile_path, temp_source = prepare_compile_source(typ_path=typ_path, typst_date_override=typst_date_override)
+
     deps_path = None
     try:
         with tempfile.NamedTemporaryFile(prefix="typst-deps-", suffix=".txt", delete=False) as tf:
             deps_path = Path(tf.name)
 
-        cmd = ["typst", "compile", "--deps", str(deps_path), "--root", str(root), str(typ_path), str(out_pdf)]
+        cmd = ["typst", "compile", "--deps", str(deps_path), "--root", str(root)]
+        for key, value in typst_inputs.items():
+            cmd.extend(["--input", f"{key}={value}"])
+        cmd.extend([str(compile_path), str(out_pdf)])
         subprocess.run(cmd, check=True)
 
         enforce_images_location(deps_path=deps_path, root=root)
@@ -110,6 +277,11 @@ def compile_typst_to_pdf(*, typ_path: Path, out_pdf: Path, typst_root: Path | No
         if deps_path is not None:
             try:
                 deps_path.unlink(missing_ok=True)
+            except Exception:
+                pass
+        if temp_source is not None:
+            try:
+                temp_source.unlink(missing_ok=True)
             except Exception:
                 pass
 
@@ -184,11 +356,11 @@ def derive_categories_from_typst_path(*, typ_path: Path) -> list[str]:
     return [cat]
 
 
-def write_meta(*, out_dir: Path, row: Row, categories: list[str]) -> None:
+def write_meta(*, out_dir: Path, row: Row, categories: list[str], date_value: str) -> None:
     meta = {
         "id": row.slug,
         "title": row.title,
-        "date": row.date,
+        "date": date_value,
         "categories": categories,
         "path": f"articles/{row.slug}/doc.pdf",
     }
@@ -203,12 +375,13 @@ def main() -> None:
     rows = read_manifest(manifest)
 
     typst_root = Path(ns.typst_root).resolve() if ns.typst_root else None
+    build_date = get_build_date_context(ns.build_timezone)
+    typst_inputs = build_typst_inputs(build_date)
 
     for row in rows:
         out_dir = ARTICLES / row.slug
         out_dir.mkdir(parents=True, exist_ok=True)
         out_pdf = out_dir / "doc.pdf"
-        categories: list[str] = []
 
         typ_file_norm = row.typ_file.replace("\\", "/")
         typ_path = (INCOMING_TYP / typ_file_norm).resolve()
@@ -218,6 +391,25 @@ def main() -> None:
             raise SystemExit(f"Typst source not found for slug={row.slug}: {row.typ_file}")
 
         categories = derive_categories_from_typst_path(typ_path=typ_path)
+        existing_date = load_existing_meta_date(out_dir)
+        effective_date = resolve_output_date(
+            row=row,
+            build_date=build_date,
+            existing_date=existing_date,
+            typst_date_mode=ns.typst_date_mode,
+        )
+        typst_date_override = resolve_typst_date_override(
+            build_date=build_date,
+            existing_date=existing_date,
+            typst_date_mode=ns.typst_date_mode,
+        )
+        sync_typst_source_date(
+            typ_path=typ_path,
+            display_date=typst_date_override,
+            existing_date=existing_date,
+            enabled=ns.sync_typst_source_date,
+            typst_date_mode=ns.typst_date_mode,
+        )
 
         if ns.skip_compile:
             if not out_pdf.exists():
@@ -226,9 +418,15 @@ def main() -> None:
                     "Either remove --skip-compile, or pre-generate the PDF at the expected path."
                 )
         else:
-            compile_typst_to_pdf(typ_path=typ_path, out_pdf=out_pdf, typst_root=typst_root)
+            compile_typst_to_pdf(
+                typ_path=typ_path,
+                out_pdf=out_pdf,
+                typst_root=typst_root,
+                typst_date_override=typst_date_override,
+                typst_inputs=typst_inputs,
+            )
 
-        write_meta(out_dir=out_dir, row=row, categories=categories)
+        write_meta(out_dir=out_dir, row=row, categories=categories, date_value=effective_date)
 
     if not ns.skip_index:
         subprocess.run(["python3", str(ROOT / "scripts" / "build_posts_index.py")], check=True)
