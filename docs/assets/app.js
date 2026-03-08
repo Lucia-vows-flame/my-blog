@@ -1,5 +1,5 @@
 const POSTS_URL = "data/posts.json";
-const PDF_VIEWER_VERSION = "20260308ah";
+const PDF_VIEWER_VERSION = "20260308ai";
 const PDF_VIEWER = `pdf.html?v=${PDF_VIEWER_VERSION}`;
 let didInitialRoute = false;
 
@@ -75,7 +75,8 @@ function isPdfPost(post) {
 }
 
 function pdfViewerUrl(pdfPath) {
-  return `${PDF_VIEWER}#file=${encodeURIComponent(pdfPath)}`;
+  const bust = Date.now().toString(36);
+  return `pdf.html?v=${PDF_VIEWER_VERSION}&cb=${bust}#file=${encodeURIComponent(pdfPath)}`;
 }
 
 function buildCategoryTree(posts) {
