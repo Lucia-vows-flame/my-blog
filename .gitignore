@@ -9,3 +9,4 @@ __pycache__/
 # Local visual reference repo
 reference/fishblog_tpl_ref/
 TypstFile/
+/fix.md

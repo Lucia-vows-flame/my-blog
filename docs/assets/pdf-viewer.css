@@ -2257,3 +2257,111 @@
 .pdf-page[data-theme="dark"] .pdf-readerMeta__sep {
   color: rgba(167, 181, 205, 0.34);
 }
+
+/* Final pagination simplification */
+.pdf-nav {
+  justify-content: center;
+  gap: 0.72rem;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.pdf-page[data-theme="dark"] .pdf-nav {
+  background: transparent;
+  box-shadow: none;
+}
+
+.pdf-nav .pdf-btn {
+  min-width: 5.1rem;
+}
+
+.pdf-counter {
+  min-height: auto;
+  padding: 0;
+  border-radius: 0;
+  gap: 0.46rem;
+  background: transparent;
+  box-shadow: none;
+}
+
+.pdf-counter__label {
+  display: none;
+}
+
+#page-number.pdf-input {
+  width: 3.35rem;
+  min-height: 2.65rem;
+  padding: 0 0.58rem;
+  border-radius: 0.92rem;
+  font-size: 0.94rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 8px 16px rgba(31, 48, 76, 0.06);
+}
+
+.pdf-counter__sep {
+  color: rgba(93, 107, 128, 0.82);
+  font-family: var(--pdf-font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.pdf-page[data-theme="dark"] .pdf-counter__sep {
+  color: rgba(210, 221, 237, 0.78);
+}
+
+.pdf-counter__count {
+  min-width: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #33435c;
+  font-family: var(--pdf-font-mono);
+  font-size: 0.96rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.pdf-page[data-theme="dark"] .pdf-counter__count {
+  color: rgba(243, 248, 255, 0.92);
+  background: transparent;
+  box-shadow: none;
+}
+
+.pdf-btn:disabled {
+  opacity: 0.34;
+  color: rgba(103, 116, 137, 0.72);
+  border-color: rgba(126, 143, 167, 0.16);
+  background: rgba(229, 236, 244, 0.5);
+  box-shadow: none;
+  filter: saturate(0.72);
+}
+
+.pdf-page[data-theme="dark"] .pdf-btn:disabled {
+  color: rgba(196, 208, 226, 0.5);
+  border-color: rgba(149, 169, 201, 0.14);
+  background: rgba(44, 58, 81, 0.42);
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .pdf-nav {
+    gap: 0.42rem;
+  }
+
+  .pdf-nav .pdf-btn {
+    min-width: 4.3rem;
+    padding: 0 0.82rem;
+  }
+
+  #page-number.pdf-input {
+    width: 3rem;
+  }
+}

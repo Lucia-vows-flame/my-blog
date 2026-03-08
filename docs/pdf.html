@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css?v=20260308o" />
-    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308u" />
+    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308v" />
   </head>
   <body class="pdf-page">
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
@@ -320,10 +320,9 @@
                   <div class="pdf-nav" title="输入页码并回车跳转；←/→ 翻页" role="toolbar" aria-label="PDF page navigation">
                     <button class="pdf-btn" type="button" id="prev-page" title="上一页 (←)">上一页</button>
                     <div class="pdf-counter" aria-label="Page counter">
-                      <span class="pdf-counter__label">页码</span>
-                      <input id="page-number" class="pdf-input" inputmode="numeric" aria-label="Page number" value="1" />
-                      <span class="pdf-counter__sep">/</span>
-                      <span id="page-count" class="pdf-counter__count">?</span>
+                      <input id="page-number" class="pdf-input" inputmode="numeric" aria-label="当前页码" value="1" />
+                      <span class="pdf-counter__sep" aria-hidden="true">/</span>
+                      <span id="page-count" class="pdf-counter__count" aria-label="总页数">?</span>
                     </div>
                     <button class="pdf-btn" type="button" id="next-page" title="下一页 (→)">下一页</button>
                   </div>
@@ -404,7 +403,7 @@
               : "");
         }
       } else {
-        await import(`./assets/pdf-viewer.js?v=20260308u`);
+        await import(`./assets/pdf-viewer.js?v=20260308v`);
       }
     </script>
     <script>
