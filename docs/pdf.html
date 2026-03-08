@@ -2,114 +2,253 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>PDF</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css?v=20260308e" />
-    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260305i" />
+    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308k" />
   </head>
   <body class="pdf-page">
-    <header class="pdf-topbar">
-      <div class="pdf-topbar__inner">
-        <div class="pdf-brand">
-          <span class="pdf-mark" aria-hidden="true"></span>
-          <div class="pdf-brand__text">
-            <span class="pdf-brand__title" id="pdf-title">PDF</span>
-            <span class="pdf-brand__meta" id="pdf-subtitle"></span>
-          </div>
-        </div>
-
-        <div class="pdf-controls" role="toolbar" aria-label="PDF controls">
-          <div class="pdf-controls__row">
-            <div class="pdf-dd" id="dd-mode" title="阅读方式：连续滚动或单页翻页">
-              <span class="pdf-dd__label">模式</span>
-              <button class="pdf-dd__btn" type="button" id="mode-btn" aria-haspopup="listbox" aria-expanded="false"></button>
-              <div class="pdf-dd__menu" id="mode-menu" role="listbox" aria-label="View mode" hidden>
-                <button class="pdf-dd__opt" type="button" role="option" data-value="scroll">滚动（连续）</button>
-                <button class="pdf-dd__opt" type="button" role="option" data-value="page">翻页（单页）</button>
-              </div>
-            </div>
-
-            <div class="pdf-dd" id="dd-theme" title="主题：亮色/暗色/跟随系统">
-              <span class="pdf-dd__label">主题</span>
-              <button class="pdf-dd__btn" type="button" id="theme-btn" aria-haspopup="listbox" aria-expanded="false"></button>
-              <div class="pdf-dd__menu" id="theme-menu" role="listbox" aria-label="Theme" hidden>
-                <button class="pdf-dd__opt" type="button" role="option" data-value="system">跟随系统（推荐）</button>
-                <button class="pdf-dd__opt" type="button" role="option" data-value="light">亮色</button>
-                <button class="pdf-dd__opt" type="button" role="option" data-value="dark">暗色</button>
-              </div>
-            </div>
-
-            <div class="pdf-stepper" title="缩放：适合宽度/适合页面/百分比">
-              <button class="pdf-btn" type="button" id="zoom-out" title="缩小 (-)">−</button>
-              <div class="pdf-dd" id="dd-zoom">
-                <span class="pdf-dd__label">缩放</span>
-                <button class="pdf-dd__btn" type="button" id="zoom-btn" aria-haspopup="listbox" aria-expanded="false"></button>
-                <div class="pdf-dd__menu" id="zoom-menu" role="listbox" aria-label="Zoom" hidden>
-                  <button class="pdf-dd__opt" type="button" role="option" data-value="page-width">适合宽度（推荐）</button>
-                  <button class="pdf-dd__opt" type="button" role="option" data-value="page-fit">适合页面（整页）</button>
-                  <div class="pdf-dd__sep" aria-hidden="true"></div>
-                  <button class="pdf-dd__opt" type="button" role="option" data-value="0.5">50%</button>
-                  <button class="pdf-dd__opt" type="button" role="option" data-value="0.75">75%</button>
-                  <button class="pdf-dd__opt" type="button" role="option" data-value="1">100%</button>
-                  <button class="pdf-dd__opt" type="button" role="option" data-value="1.25">125%</button>
-                  <button class="pdf-dd__opt" type="button" role="option" data-value="1.5">150%</button>
-                  <button class="pdf-dd__opt" type="button" role="option" data-value="2">200%</button>
-                </div>
-              </div>
-              <button class="pdf-btn" type="button" id="zoom-in" title="放大 (+)">+</button>
-            </div>
-          </div>
-
-          <div class="pdf-controls__row">
-            <div class="pdf-nav" title="输入页码并回车跳转；←/→ 翻页">
-              <button class="pdf-btn" type="button" id="prev-page" title="上一页 (←)">‹</button>
-              <div class="pdf-counter" aria-label="Page counter">
-                <span class="pdf-counter__label">页</span>
-                <input id="page-number" class="pdf-input" inputmode="numeric" aria-label="Page number" />
-                <span class="pdf-counter__sep">/</span>
-                <span id="page-count" class="pdf-counter__count">?</span>
-              </div>
-              <button class="pdf-btn" type="button" id="next-page" title="下一页 (→)">›</button>
-            </div>
-
-            <div class="pdf-tools">
-              <button class="pdf-btn" type="button" id="rotate" title="旋转 (R)">⟳</button>
-              <a
-                class="pdf-btn pdf-btn--link pdf-btn--metal"
-                id="open-raw"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="新窗口打开原始 PDF"
-              >
-                原始
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
+      <div class="container-fluid px-4 px-lg-5">
+        <a class="navbar-brand" href="./">Auroral</a>
+        <button class="navbar-toggler" type="button" data-action="nav-toggle" aria-controls="navbarResponsive" aria-expanded="false">
+          菜单
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive" data-nav-collapse>
+          <ul class="navbar-nav ms-auto py-4 py-lg-0">
+            <li class="nav-item">
+              <a class="nav-link px-lg-3 py-3 py-lg-4" href="./">
+                <span class="nav-ico" aria-hidden="true">
+                  <svg viewBox="0 0 1024 1024" focusable="false">
+                    <path d="M940 485 562 105Q540 85 511.5 85.0Q483 85 462 105L84 485Q64 505 64.0 533.5Q64 562 84.5 583.0Q105 604 135 604Q163 604 185 584L511 255L839 584Q858 604 891 604Q917 604 940 584Q950 573 954.0 560.5Q958 548 960 534Q959 519 954.5 507.0Q950 495 940 485ZM511 322Q520 322 529 335L822 626V858Q821 939 741 939H607V624Q607 620 605.5 616.0Q604 612 600 610Q597 604 587 604H433Q429 604 425.0 605.5Q421 607 418.5 609.5Q416 612 414.5 616.0Q413 620 413 624V939H279Q198 939 198 858V630L493 333Q504 323 511 322Z"></path>
+                  </svg>
+                </span>
+                <span>HOME</span>
               </a>
-              <a class="pdf-btn pdf-btn--link pdf-btn--metal" id="download" download title="下载 PDF">下载</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-lg-3 py-3 py-lg-4" href="category.html">
+                <span class="nav-ico" aria-hidden="true">
+                  <svg viewBox="0 0 1024 1024" focusable="false">
+                    <path d="M457 152V410Q457 439 438.0 458.0Q419 477 391 478H148Q120 477 101.5 458.0Q83 439 82 410V152Q83 123 101.5 104.0Q120 85 148 84H394Q420 85 438.5 104.5Q457 124 457 152ZM605 478H851Q879 477 897.5 458.0Q916 439 917 410V152Q916 123 897.5 104.0Q879 85 851 84H605Q577 85 558.5 104.0Q540 123 539 152V410Q542 438 559.5 457.5Q577 477 605 478ZM391 546H148Q120 547 101.5 566.5Q83 586 82 614V869Q83 899 101.5 918.0Q120 937 148 938H394Q422 937 440.5 918.0Q459 899 460 869V614Q457 586 438.0 566.5Q419 547 391 546ZM858 546H614Q586 547 567.5 566.5Q549 586 548 614V869Q549 899 567.5 918.0Q586 937 614 938H860Q888 937 906.5 918.0Q925 899 926 869V614Q924 586 905.0 566.5Q886 547 858 546Z"></path>
+                  </svg>
+                </span>
+                <span>CATEGORY</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-lg-3 py-3 py-lg-4" href="archive.html">
+                <span class="nav-ico" aria-hidden="true">
+                  <svg viewBox="0 0 1024 1024" focusable="false">
+                    <path d="M841 0H183Q127 1 90.0 37.5Q53 74 51 128V896Q53 950 90.0 986.5Q127 1023 183 1024H841Q897 1023 934.0 986.5Q971 950 973 896V128Q971 74 934.0 37.5Q897 1 841 0ZM775 832H249V704H775ZM775 576H249V448H775ZM775 256H249L183 64H841Z"></path>
+                  </svg>
+                </span>
+                <span>ARCHIVE</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">
+                <span class="nav-ico" aria-hidden="true">
+                  <svg viewBox="0 0 1024 1024" focusable="false">
+                    <path d="M900 117Q914 128 912 145L797 831Q795 844 783 851Q777 855 769 855Q764 855 759 853L556 770L448 902Q440 912 426 912Q421 912 416 910Q408 907 403.0 899.5Q398 892 398 883V728L783 255L306 668L130 596Q113 589 112.0 571.0Q111 553 126 545L869 116Q876 112 884.0 112.0Q892 112 900 117Z"></path>
+                  </svg>
+                </span>
+                <span>ABOUT</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">
+                <span class="nav-ico" aria-hidden="true">
+                  <svg viewBox="0 0 1024 1024" focusable="false">
+                    <path d="M699 312Q741 364 741.0 426.0Q741 488 699.0 541.0Q657 594 584.0 624.5Q511 655 426 655Q388 655 348 648Q292 687 224 705Q207 709 185 712H184Q179 712 175.0 708.5Q171 705 170 699L169 696V693L170 691L173 686L189 668Q197 660 200 655L210 642Q217 634 221.5 625.0Q226 616 231 605Q175 573 143.5 526.0Q112 479 112 426Q112 364 154.0 311.5Q196 259 268.5 228.0Q341 197 426.5 197.0Q512 197 584.5 228.0Q657 259 699 312ZM912 541Q912 594 880.5 640.5Q849 687 793 720Q798 730 802.5 739.0Q807 748 814 756L824 769Q827 774 835 782L845 794L853 803L855 808V811L854 814Q853 820 848.5 823.5Q844 827 839 827Q816 823 800 819Q731 802 676 762Q636 769 598 769Q476 769 387 710Q413 712 426 712Q498 712 564.0 692.0Q630 672 682 634Q737 593 767.0 539.5Q797 486 797 426Q797 392 787 359Q845 390 878.5 438.0Q912 486 912 541Z"></path>
+                  </svg>
+                </span>
+                <span>CONTACT</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <header class="masthead pdf-hero" style="background-image: url('assets/img/post-bg.jpg')">
+      <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-lg-11 col-xl-10">
+            <div class="post-heading pdf-heading">
+              <div class="blog-postMeta pdf-heading__chips">
+                <span class="pill">PDF.js</span>
+                <span class="pill">滚动 / 翻页双模式</span>
+                <span class="pill">亮色 / 暗色主题</span>
+                <span class="pill">保留原始链接</span>
+              </div>
+              <h1 id="pdf-title">PDF</h1>
+              <p class="pdf-heading__subtitle" id="pdf-subtitle"></p>
             </div>
           </div>
         </div>
       </div>
     </header>
 
-    <main class="pdf-main">
-      <div class="pdf-stage" id="stage" aria-label="PDF page viewport">
-        <div class="pdf-loading" id="loading">
-          <div class="pdf-loading__spinner" aria-hidden="true"></div>
-          <div class="pdf-loading__text" id="loading-text">正在加载…</div>
-        </div>
-        <div class="pdf-error" id="error" hidden></div>
-        <div class="pdf-view" id="view-page" hidden>
-          <div class="pdf-canvasWrap" id="canvas-wrap">
-            <div class="pdf-pageLayer" id="single-layer">
-              <canvas id="pdf-canvas" class="pdf-canvas"></canvas>
-              <div id="anno-layer" class="pdf-annoLayer" aria-hidden="true"></div>
+    <main class="pdf-shell">
+      <span class="pdf-shell__ornament pdf-shell__ornament--left" aria-hidden="true"></span>
+      <span class="pdf-shell__ornament pdf-shell__ornament--right" aria-hidden="true"></span>
+
+      <div class="container-fluid px-4 px-lg-5">
+        <div class="pdf-layout">
+          <aside class="pdf-sidebar" aria-label="Reader controls">
+            <div class="pdf-card pdf-sidebarCard">
+              <div class="pdf-sidebarCard__tabs" aria-hidden="true">
+                <span class="pdf-sidebarCard__tab is-active">阅读器</span>
+                <span class="pdf-sidebarCard__tab">文件说明</span>
+              </div>
+
+              <section class="pdf-section">
+                <div class="pdf-section__title">阅读模式</div>
+                <p class="pdf-section__desc">连续滚动适合通读长文，单页翻页更接近纸面阅读，两种模式都可随时切换。</p>
+                <div class="pdf-dd" id="dd-mode" title="阅读方式：连续滚动或单页翻页">
+                  <span class="pdf-dd__label">模式</span>
+                  <button class="pdf-dd__btn" type="button" id="mode-btn" aria-haspopup="listbox" aria-expanded="false">
+                    滚动（连续）
+                  </button>
+                  <div class="pdf-dd__menu" id="mode-menu" role="listbox" aria-label="View mode" hidden>
+                    <button class="pdf-dd__opt" type="button" role="option" data-value="scroll">滚动（连续）</button>
+                    <button class="pdf-dd__opt" type="button" role="option" data-value="page">翻页（单页）</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="pdf-section">
+                <div class="pdf-section__title">界面主题</div>
+                <p class="pdf-section__desc">默认跟随系统，也可以手动切换到亮色或暗色，以适配不同的阅读环境。</p>
+                <div class="pdf-dd" id="dd-theme" title="主题：亮色/暗色/跟随系统">
+                  <span class="pdf-dd__label">主题</span>
+                  <button class="pdf-dd__btn" type="button" id="theme-btn" aria-haspopup="listbox" aria-expanded="false">
+                    跟随系统（推荐）
+                  </button>
+                  <div class="pdf-dd__menu" id="theme-menu" role="listbox" aria-label="Theme" hidden>
+                    <button class="pdf-dd__opt" type="button" role="option" data-value="system">跟随系统（推荐）</button>
+                    <button class="pdf-dd__opt" type="button" role="option" data-value="light">亮色</button>
+                    <button class="pdf-dd__opt" type="button" role="option" data-value="dark">暗色</button>
+                  </div>
+                </div>
+              </section>
+
+              <section class="pdf-section">
+                <div class="pdf-section__title">缩放设置</div>
+                <p class="pdf-section__desc">支持适合宽度、适合页面和百分比缩放，方便在大屏和小屏之间快速调整。</p>
+                <div class="pdf-stepper" title="缩放：适合宽度/适合页面/百分比">
+                  <button class="pdf-btn" type="button" id="zoom-out" title="缩小 (-)">−</button>
+                  <div class="pdf-dd" id="dd-zoom">
+                    <span class="pdf-dd__label">缩放</span>
+                    <button class="pdf-dd__btn" type="button" id="zoom-btn" aria-haspopup="listbox" aria-expanded="false">
+                      适合宽度（推荐）
+                    </button>
+                    <div class="pdf-dd__menu" id="zoom-menu" role="listbox" aria-label="Zoom" hidden>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="page-width">适合宽度（推荐）</button>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="page-fit">适合页面（整页）</button>
+                      <div class="pdf-dd__sep" aria-hidden="true"></div>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="0.5">50%</button>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="0.75">75%</button>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="1">100%</button>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="1.25">125%</button>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="1.5">150%</button>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="2">200%</button>
+                    </div>
+                  </div>
+                  <button class="pdf-btn" type="button" id="zoom-in" title="放大 (+)">+</button>
+                </div>
+              </section>
+
+              <section class="pdf-section">
+                <div class="pdf-section__title">文件操作</div>
+                <p class="pdf-section__desc">保留原始 PDF 与下载入口，方便在外部阅读器中继续查看批注、书签与原始链接。</p>
+                <div class="pdf-tools pdf-tools--stack">
+                  <button class="pdf-btn" type="button" id="rotate" title="旋转 (R)">旋转</button>
+                  <a
+                    class="pdf-btn pdf-btn--link pdf-btn--metal"
+                    id="open-raw"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="新窗口打开原始 PDF"
+                  >
+                    原始 PDF
+                  </a>
+                  <a class="pdf-btn pdf-btn--link pdf-btn--metal" id="download" download title="下载 PDF">下载 PDF</a>
+                </div>
+              </section>
+
+              <section class="pdf-note">
+                <div class="pdf-section__title">阅读提示</div>
+                <ul class="pdf-note__list">
+                  <li>支持 PDF 内部跳转与外部链接悬停点击。</li>
+                  <li>页码输入框可直接回车跳转到目标页。</li>
+                  <li>使用键盘 ← / → 可以快速翻页。</li>
+                </ul>
+              </section>
             </div>
-          </div>
-        </div>
-        <div class="pdf-view" id="view-scroll" hidden>
-          <div class="pdf-pages" id="pages" aria-label="PDF pages"></div>
+          </aside>
+
+          <section class="pdf-readerColumn">
+            <div class="pdf-card pdf-readerCard">
+              <div class="pdf-readerCard__header">
+                <div class="pdf-readerCard__intro">
+                  <span class="pdf-readerCard__eyebrow">Article Detail Reader</span>
+                  <h2 class="pdf-readerCard__title">沉浸式 PDF 阅读</h2>
+                  <p class="pdf-readerCard__desc">保留文章详情页的大卡片观感，同时使用 PDF.js 提供现代化的文档阅读体验。</p>
+                </div>
+
+                <div class="pdf-nav" title="输入页码并回车跳转；←/→ 翻页" role="toolbar" aria-label="PDF page navigation">
+                  <button class="pdf-btn" type="button" id="prev-page" title="上一页 (←)">上一页</button>
+                  <div class="pdf-counter" aria-label="Page counter">
+                    <span class="pdf-counter__label">页码</span>
+                    <input id="page-number" class="pdf-input" inputmode="numeric" aria-label="Page number" value="1" />
+                    <span class="pdf-counter__sep">/</span>
+                    <span id="page-count" class="pdf-counter__count">?</span>
+                  </div>
+                  <button class="pdf-btn" type="button" id="next-page" title="下一页 (→)">下一页</button>
+                </div>
+              </div>
+
+              <div class="pdf-stageFrame">
+                <div class="pdf-stage" id="stage" aria-label="PDF page viewport">
+                  <div class="pdf-loading" id="loading">
+                    <div class="pdf-loading__card">
+                      <div class="pdf-loading__spinner" aria-hidden="true"></div>
+                      <div class="pdf-loading__text" id="loading-text">正在加载…</div>
+                    </div>
+                  </div>
+                  <div class="pdf-error" id="error" hidden></div>
+                  <div class="pdf-view" id="view-page" hidden>
+                    <div class="pdf-canvasWrap" id="canvas-wrap">
+                      <div class="pdf-pageLayer" id="single-layer">
+                        <canvas id="pdf-canvas" class="pdf-canvas"></canvas>
+                        <div id="anno-layer" class="pdf-annoLayer" aria-hidden="true"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pdf-view" id="view-scroll" hidden>
+                    <div class="pdf-pages" id="pages" aria-label="PDF pages"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </main>
+
+    <footer class="border-top">
+      <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-10 col-lg-8 col-xl-7">
+            <div class="small text-center text-muted fst-italic">© <span id="footer-year"></span> · Powered by GitHub Pages</div>
+          </div>
+        </div>
+      </div>
+    </footer>
 
     <!-- PDF.js (local, 0 外链). Place files here:
          - docs/assets/vendor/pdfjs/pdf.min.js
@@ -135,20 +274,70 @@
         if (error) {
           error.hidden = false;
           error.innerHTML =
-            `<div style="font-weight:800;font-size:16px;margin-bottom:8px">PDF 阅读器未启用</div>` +
-            `<div style="opacity:.8;line-height:1.6">` +
+            `<div style="font-weight:800;font-size:18px;margin-bottom:10px">PDF 阅读器未启用</div>` +
+            `<div style="opacity:.82;line-height:1.7">` +
             `当前页面配置为 <b>0 外链</b>，需要本地提供 PDF.js 文件：<code>assets/vendor/pdfjs/pdf.min.js</code> 与 <code>assets/vendor/pdfjs/pdf.worker.min.js</code>。` +
             `</div>` +
             (file
-              ? `<div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">` +
+              ? `<div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">` +
                 `<a class="pdf-btn pdf-btn--link pdf-btn--metal" href="${file}" target="_blank" rel="noopener noreferrer">打开原始 PDF</a>` +
-                `<a class="pdf-btn pdf-btn--link pdf-btn--metal" href="${file}" download>下载</a>` +
+                `<a class="pdf-btn pdf-btn--link pdf-btn--metal" href="${file}" download>下载 PDF</a>` +
                 `</div>`
               : "");
         }
       } else {
-        await import(`./assets/pdf-viewer.js?v=20260305i`);
+        await import(`./assets/pdf-viewer.js?v=20260308k`);
       }
+    </script>
+    <script>
+      (() => {
+        const btn = document.querySelector("[data-action='nav-toggle']");
+        const collapse = document.querySelector("[data-nav-collapse]");
+        if (btn instanceof HTMLElement && collapse instanceof HTMLElement) {
+          const close = () => {
+            collapse.classList.remove("show");
+            btn.setAttribute("aria-expanded", "false");
+          };
+
+          btn.addEventListener("click", () => {
+            const isOpen = collapse.classList.contains("show");
+            if (isOpen) close();
+            else {
+              collapse.classList.add("show");
+              btn.setAttribute("aria-expanded", "true");
+            }
+          });
+
+          document.addEventListener(
+            "click",
+            (ev) => {
+              if (!collapse.classList.contains("show")) return;
+              const target = ev.target;
+              if (!(target instanceof Node)) return;
+              if (btn.contains(target) || collapse.contains(target)) return;
+              close();
+            },
+            { capture: true },
+          );
+
+          window.addEventListener("hashchange", close);
+          window.addEventListener("resize", () => {
+            if (window.innerWidth >= 992) close();
+          });
+        }
+
+        const nav = document.querySelector("[data-nav]");
+        if (nav instanceof HTMLElement) {
+          const onScroll = () => {
+            nav.classList.toggle("is-scrolled", window.scrollY > 8);
+          };
+          onScroll();
+          window.addEventListener("scroll", onScroll, { passive: true });
+        }
+
+        const year = document.getElementById("footer-year");
+        if (year) year.textContent = String(new Date().getFullYear());
+      })();
     </script>
   </body>
 </html>

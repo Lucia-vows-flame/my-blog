@@ -426,9 +426,15 @@ async function renderLinkAnnotations({ pdfDoc, page, viewport, layerEl, onGoToPa
 
 function computeScale({ zoom, viewportAtScale1, containerEl }) {
   if (typeof zoom === "number") return zoom;
+
   const pad = 32;
-  const cw = Math.max(200, containerEl.clientWidth - pad);
-  const ch = Math.max(200, containerEl.clientHeight - pad);
+  const rect = typeof containerEl?.getBoundingClientRect === "function" ? containerEl.getBoundingClientRect() : null;
+  const width = Math.max(containerEl?.clientWidth || 0, Math.round(rect?.width || 0));
+  const viewportHeight = Math.max(220, window.innerHeight - Math.max(24, Math.round(rect?.top || 0)) - 24);
+  const height = Math.max(containerEl?.clientHeight || 0, Math.round(rect?.height || 0));
+  const cw = Math.max(200, width - pad);
+  const ch = Math.max(200, Math.min(Math.max(220, height - pad), viewportHeight));
+
   if (zoom === "page-fit") {
     const sx = cw / viewportAtScale1.width;
     const sy = ch / viewportAtScale1.height;
@@ -631,6 +637,7 @@ async function main() {
 
   function showViews() {
     const isPage = state.mode === "page";
+    document.body.dataset.mode = state.mode;
     viewPage.hidden = !isPage;
     viewScroll.hidden = isPage;
   }
