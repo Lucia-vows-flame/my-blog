@@ -259,8 +259,8 @@
 }
 
 .pdf-sidebarCard {
-  position: sticky;
-  top: 1.5rem;
+  position: relative;
+  top: auto;
   padding: 1.25rem 1.3rem 1.4rem;
 }
 
@@ -1807,7 +1807,7 @@
 }
 
 .pdf-sidebarCard {
-  top: 1.15rem;
+  top: auto;
   padding: 1.12rem 1.12rem 1.2rem;
 }
 
