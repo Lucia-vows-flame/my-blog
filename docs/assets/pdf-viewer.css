@@ -2580,9 +2580,6 @@
 /* Final reader flow behavior */
 .pdf-layout,
 .pdf-readerColumn,
-.pdf-readerCard,
-.pdf-stageFrame,
-.pdf-stage,
 .pdf-view,
 #view-page,
 #view-scroll,
@@ -2591,4 +2588,27 @@
   height: auto !important;
   max-height: none !important;
   overflow: visible !important;
+}
+
+.pdf-sidebarCard,
+.pdf-readerCard,
+.pdf-stageFrame,
+.pdf-stage {
+  height: auto !important;
+  max-height: none !important;
+}
+
+.pdf-card,
+.pdf-sidebarCard,
+.pdf-readerCard,
+.pdf-stageFrame,
+.pdf-stage {
+  overflow: hidden !important;
+  isolation: isolate;
+}
+
+.pdf-card::before {
+  inset: 0 0 auto 0;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
 }
