@@ -1,4 +1,12 @@
 @font-face {
+  font-family: "Merriweather";
+  src: url("fonts/merriweather/Merriweather-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Roboto Condensed";
   src: url("fonts/roboto-condensed/RobotoCondensed-Regular.ttf") format("truetype");
   font-style: normal;
@@ -1295,7 +1303,8 @@ body.archive:not(.pdf-page)::after {
 .archive-entry__date {
   color: #888;
   font-size: 0.9rem;
-  font-family: "DIN Condensed", Arial, sans-serif;
+  font-family: "Merriweather", Georgia, serif;
+  font-weight: 400;
   display: inline-block;
   min-width: 3.5rem;
   white-space: nowrap;
