@@ -2512,3 +2512,19 @@
   position: static !important;
   top: auto !important;
 }
+
+/* Final reader flow behavior */
+.pdf-layout,
+.pdf-readerColumn,
+.pdf-readerCard,
+.pdf-stageFrame,
+.pdf-stage,
+.pdf-view,
+#view-page,
+#view-scroll,
+.pdf-canvasWrap,
+.pdf-pages {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
