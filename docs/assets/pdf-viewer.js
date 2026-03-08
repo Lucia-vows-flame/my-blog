@@ -6,6 +6,19 @@ function qs(id) {
   return document.getElementById(id);
 }
 
+function disableSidebarPinning() {
+  const sidebar = document.querySelector(".pdf-sidebar");
+  const sidebarCard = document.querySelector(".pdf-sidebarCard");
+  if (sidebar instanceof HTMLElement) {
+    sidebar.style.position = "static";
+    sidebar.style.top = "auto";
+  }
+  if (sidebarCard instanceof HTMLElement) {
+    sidebarCard.style.position = "static";
+    sidebarCard.style.top = "auto";
+  }
+}
+
 function initKeyboardFocusGating() {
   const root = document.body;
   if (!root) return;
@@ -588,6 +601,8 @@ async function main() {
   const metaTheme = qs("pdf-meta-theme");
   const metaZoom = qs("pdf-meta-zoom");
   const metaPages = qs("pdf-meta-pages");
+
+  disableSidebarPinning();
 
   if (!viewPage || !viewScroll || !canvas || !annoLayer || !pagesEl || !stage) {
     showError("Viewer DOM 不完整。", { file });

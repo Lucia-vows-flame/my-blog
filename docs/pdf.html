@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css?v=20260308o" />
-    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308ad" />
+    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308af" />
   </head>
   <body class="pdf-page">
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
@@ -94,8 +94,8 @@
 
       <div class="container-fluid px-4 px-lg-5">
         <div class="pdf-layout">
-          <aside class="pdf-sidebar" aria-label="Reader controls">
-            <div class="pdf-card pdf-sidebarCard">
+          <aside class="pdf-sidebar" aria-label="Reader controls" style="position: static; top: auto;">
+            <div class="pdf-card pdf-sidebarCard" style="position: static; top: auto;">
               <div class="pdf-sidebarCard__tabs" role="tablist" aria-label="Reader panels">
                 <button
                   class="pdf-sidebarCard__tab is-active"
@@ -407,7 +407,7 @@
               : "");
         }
       } else {
-        await import(`./assets/pdf-viewer.js?v=20260308ad`);
+        await import(`./assets/pdf-viewer.js?v=20260308af`);
       }
     </script>
     <script>
