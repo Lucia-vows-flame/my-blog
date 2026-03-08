@@ -601,6 +601,9 @@ async function main() {
   const metaTheme = qs("pdf-meta-theme");
   const metaZoom = qs("pdf-meta-zoom");
   const metaPages = qs("pdf-meta-pages");
+  const layoutEl = document.querySelector(".pdf-layout");
+  const sidebarEl = document.querySelector(".pdf-sidebar");
+  const sidebarCardEl = document.querySelector(".pdf-sidebarCard");
 
   disableSidebarPinning();
 
@@ -993,6 +996,63 @@ async function main() {
     for (const node of pageNodes.values()) node.renderedKey = null;
   }
 
+  let layoutExpanded = false;
+  let layoutSyncRaf = 0;
+  let layoutRefreshToken = 0;
+
+  async function refreshLayoutRendering() {
+    if (!stateReady || !state?.pdfDoc) return;
+    if (state.mode === "page") {
+      if (state.zoom === "page-width" || state.zoom === "page-fit") renderSinglePage();
+      return;
+    }
+    if (typeof state.zoom === "number") return;
+
+    const anchorPage = state.pageNum;
+    const anchorNode = pageNodes.get(anchorPage)?.el || null;
+    const anchorTopBefore = anchorNode?.getBoundingClientRect?.().top || 0;
+    const token = ++layoutRefreshToken;
+
+    invalidateScrollRenders();
+
+    const tasks = [];
+    for (const [pageNum, node] of pageNodes.entries()) {
+      const rect = node.el.getBoundingClientRect();
+      if (rect.bottom < -window.innerHeight || rect.top > window.innerHeight * 2) continue;
+      tasks.push(renderScrollPage(pageNum).catch(() => {}));
+    }
+    await Promise.all(tasks);
+    if (token !== layoutRefreshToken) return;
+
+    const anchorTopAfter = pageNodes.get(anchorPage)?.el?.getBoundingClientRect?.().top || 0;
+    const delta = anchorTopAfter - anchorTopBefore;
+    if (Math.abs(delta) > 1) window.scrollBy({ top: delta, behavior: "auto" });
+    setupObservers();
+    updateNav();
+  }
+
+  function syncReaderExpansion() {
+    layoutSyncRaf = 0;
+    if (!(layoutEl instanceof HTMLElement) || !(sidebarEl instanceof HTMLElement) || !(sidebarCardEl instanceof HTMLElement)) return;
+
+    const shouldExpand = window.innerWidth > 1100 && sidebarCardEl.getBoundingClientRect().bottom <= 108;
+    if (shouldExpand === layoutExpanded) return;
+
+    layoutExpanded = shouldExpand;
+    layoutEl.classList.toggle("is-reader-expanded", shouldExpand);
+    document.body.classList.toggle("pdf-reader-expanded", shouldExpand);
+    sidebarEl.setAttribute("aria-hidden", shouldExpand ? "true" : "false");
+
+    queueMicrotask(() => {
+      refreshLayoutRendering().catch(() => {});
+    });
+  }
+
+  function requestReaderExpansionSync() {
+    if (layoutSyncRaf) return;
+    layoutSyncRaf = window.requestAnimationFrame(syncReaderExpansion);
+  }
+
   async function renderScrollPage(pageNum) {
     const node = pageNodes.get(pageNum);
     if (!node) return;
@@ -1106,6 +1166,7 @@ async function main() {
       activeObserver?.disconnect();
       setLoadingVisible(false);
       renderSinglePage();
+      requestReaderExpansionSync();
       return;
     }
 
@@ -1116,6 +1177,7 @@ async function main() {
     queueMicrotask(() => {
       const node = pageNodes.get(state.pageNum);
       node?.el?.scrollIntoView({ behavior: "auto", block: "start" });
+      requestReaderExpansionSync();
     });
   }
 
@@ -1187,6 +1249,7 @@ async function main() {
   });
 
   window.addEventListener("resize", () => {
+    requestReaderExpansionSync();
     if (state.mode === "page") {
       if (state.zoom === "page-width" || state.zoom === "page-fit") renderSinglePage();
       return;
@@ -1196,6 +1259,9 @@ async function main() {
       applyModeAndRender();
     }
   });
+
+  window.addEventListener("scroll", requestReaderExpansionSync, { passive: true });
+  requestReaderExpansionSync();
 
   window.addEventListener("keydown", (ev) => {
     if (ev.altKey || ev.ctrlKey || ev.metaKey) return;
