@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Roboto Condensed";
+  src: url("fonts/roboto-condensed/RobotoCondensed-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --blog-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
     "Liberation Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -1264,7 +1272,7 @@ body.archive:not(.pdf-page)::after {
 .archive-entry__date {
   color: #888;
   font-size: 0.9rem;
-  font-family: "DIN Condensed", Arial, sans-serif;
+  font-family: "Roboto Condensed", "DIN Condensed", Arial, sans-serif;
   display: inline-block;
   min-width: 3.5rem;
   white-space: nowrap;
