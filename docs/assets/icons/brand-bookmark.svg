@@ -1,0 +1,41 @@
+<svg width="96" height="112" viewBox="0 0 96 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bookmarkBody" x1="18" y1="6" x2="74" y2="104" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4FEFF"/>
+      <stop offset="0.38" stop-color="#DDF8FB"/>
+      <stop offset="0.72" stop-color="#C7EBF5"/>
+      <stop offset="1" stop-color="#B5D8EA"/>
+    </linearGradient>
+    <linearGradient id="bookmarkEdge" x1="20" y1="10" x2="20" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5DE2D6"/>
+      <stop offset="0.54" stop-color="#3CB9CC"/>
+      <stop offset="1" stop-color="#3A79B3"/>
+    </linearGradient>
+    <linearGradient id="sealFill" x1="48" y1="40" x2="48" y2="82" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5EF0E4"/>
+      <stop offset="0.45" stop-color="#39C5D5"/>
+      <stop offset="1" stop-color="#3566B0"/>
+    </linearGradient>
+    <radialGradient id="pinFill" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 11) rotate(90) scale(10)">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="0.32" stop-color="#ECFCFF"/>
+      <stop offset="0.7" stop-color="#BEEAF2"/>
+      <stop offset="1" stop-color="#76ABC6"/>
+    </radialGradient>
+    <filter id="shadow" x="6" y="2" width="84" height="108" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#07233B" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M21 8C21 5.79086 22.7909 4 25 4H71C73.2091 4 75 5.79086 75 8V96.5C75 98.0686 73.168 99.0007 71.8574 98.0487L48 80.7188L24.1426 98.0487C22.832 99.0007 21 98.0686 21 96.5V8Z" fill="url(#bookmarkBody)"/>
+    <path d="M21 8C21 5.79086 22.7909 4 25 4H31V97.8L24.1426 98.0487C22.832 99.0007 21 98.0686 21 96.5V8Z" fill="url(#bookmarkEdge)" fill-opacity="0.98"/>
+    <path d="M34.5 18H65" stroke="#B7EAF4" stroke-width="2" stroke-linecap="round" opacity="0.92"/>
+    <path d="M34.5 28H61" stroke="#9FD8E8" stroke-width="2" stroke-linecap="round" opacity="0.68"/>
+    <circle cx="48" cy="58" r="18" fill="url(#sealFill)"/>
+    <circle cx="48" cy="58" r="13.6" stroke="#D9FDFF" stroke-width="1.8" opacity="0.98"/>
+    <text x="48" y="58.5" text-anchor="middle" dominant-baseline="middle" fill="#F5FFFF" font-family="Merriweather, 'Times New Roman', serif" font-size="12.8" font-weight="700" letter-spacing="0.01em">Xu</text>
+    <path d="M35 12.5H61" stroke="#F4FFFF" stroke-width="1.4" stroke-linecap="round" opacity="0.98"/>
+  </g>
+  <circle cx="48" cy="11" r="5.1" fill="url(#pinFill)"/>
+  <circle cx="48" cy="11" r="2.25" fill="#61BED3" opacity="0.86"/>
+</svg>

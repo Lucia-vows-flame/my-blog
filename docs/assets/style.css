@@ -141,7 +141,28 @@ html[lang^="zh"] body :where(
 }
 
 #mainNav .navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.72rem;
   font-weight: 600;
+  text-decoration: none;
+}
+
+#mainNav .navbar-brand__mark {
+  width: 1.48rem;
+  height: 1.76rem;
+  flex: 0 0 1.48rem;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.12));
+}
+
+#mainNav .navbar-brand__text {
+  font-family: var(--blog-font-title);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1;
 }
 
 #mainNav .navbar-toggler {
@@ -398,6 +419,12 @@ body.home .home-hero .site-heading {
   padding-top: clamp(4rem, 7vw, 5rem);
 }
 
+@media (min-width: 768px) {
+  body.home .home-hero .site-heading {
+    transform: translateY(-0.8rem);
+  }
+}
+
 /* Glass navbar over hero */
 body.home #mainNav {
   position: fixed;
@@ -418,10 +445,20 @@ body.home #mainNav > .container-xxl {
 }
 
 body.home #mainNav .navbar-brand {
-  color: rgba(255, 255, 255, 0.95);
+  color: rgba(255, 255, 255, 0.96);
   text-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
   position: relative;
   top: 2px;
+}
+
+body.home #mainNav .navbar-brand__mark {
+  width: 1.62rem;
+  height: 1.94rem;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.24));
+}
+
+body.home #mainNav .navbar-brand__text {
+  letter-spacing: 0.08em;
 }
 
 body.home #mainNav .navbar-nav .nav-link {
@@ -1127,6 +1164,20 @@ body.category:not(.pdf-page)::after {
     margin-top: 1.42rem;
     border-left-width: 3px;
     border-radius: 6px 24px 24px 6px;
+  }
+
+  #mainNav .navbar-brand {
+    gap: 0.56rem;
+  }
+
+  #mainNav .navbar-brand__mark {
+    width: 1.3rem;
+    height: 1.56rem;
+  }
+
+  #mainNav .navbar-brand__text {
+    font-size: 0.92rem;
+    letter-spacing: 0.05em;
   }
 
   .home-hero .site-heading .subheading {
