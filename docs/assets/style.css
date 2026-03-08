@@ -16,6 +16,8 @@
   --blog-card-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
   --blog-radius: 14px;
   --blog-ring: 0 0 0 0.25rem rgba(0, 133, 161, 0.25);
+  --blog-panel-scroll-max: min(62vh, 860px);
+  --blog-panel-scroll-max-mobile: min(56vh, 640px);
 }
 
 /* Force "0 外链" system font feel even if template variables exist. */
@@ -568,10 +570,15 @@ body.category:not(.pdf-page)::after {
   border-radius: 8px;
   border: 0;
   min-height: clamp(260px, 36vh, 520px);
+  max-height: var(--blog-panel-scroll-max);
   background: #f9f9f9;
   box-shadow: none;
-  overflow: hidden;
-  padding: 0.35rem 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(73, 177, 245, 0.52) rgba(73, 177, 245, 0.08);
+  padding: 0.35rem 0.35rem 0.35rem 0;
 }
 
 .cat-indexBox::before,
@@ -873,6 +880,12 @@ body.category:not(.pdf-page)::after {
   }
 }
 
+@media (max-width: 767.98px) {
+  .cat-indexBox {
+    max-height: var(--blog-panel-scroll-max-mobile);
+    padding-right: 0.2rem;
+  }
+}
 
 /* ARCHIVE (Auroral-like) */
 body.archive #mainNav {
@@ -1131,7 +1144,13 @@ body.archive:not(.pdf-page)::after {
 .archive-timeline {
   position: relative;
   min-height: 260px;
-  padding: 0.1rem 0 0.75rem 2rem;
+  max-height: var(--blog-panel-scroll-max);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(73, 177, 245, 0.52) rgba(73, 177, 245, 0.08);
+  padding: 0.1rem 0.75rem 0.75rem 2rem;
 }
 
 .archive-timeline::before {
@@ -1302,6 +1321,29 @@ body.archive:not(.pdf-page)::after {
   box-shadow: var(--blog-ring);
 }
 
+.archive-timeline::-webkit-scrollbar,
+.cat-indexBox::-webkit-scrollbar {
+  width: 10px;
+}
+
+.archive-timeline::-webkit-scrollbar-track,
+.cat-indexBox::-webkit-scrollbar-track {
+  background: rgba(73, 177, 245, 0.08);
+  border-radius: 999px;
+}
+
+.archive-timeline::-webkit-scrollbar-thumb,
+.cat-indexBox::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(73, 177, 245, 0.62), rgba(0, 133, 161, 0.46));
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.78);
+}
+
+.archive-timeline::-webkit-scrollbar-thumb:hover,
+.cat-indexBox::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(73, 177, 245, 0.78), rgba(0, 133, 161, 0.6));
+}
+
 @media (min-width: 992px) {
   .archive-main {
     padding-top: 0.72rem;
@@ -1351,7 +1393,9 @@ body.archive:not(.pdf-page)::after {
   }
 
   .archive-timeline {
+    max-height: var(--blog-panel-scroll-max-mobile);
     padding-left: 1.5rem;
+    padding-right: 0.45rem;
   }
 
   .archive-timeline::before {
