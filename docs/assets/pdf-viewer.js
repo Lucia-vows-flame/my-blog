@@ -86,6 +86,19 @@ function formatZoomLabel(z) {
   return String(z || "");
 }
 
+function formatModeLabel(mode) {
+  return normalizeMode(mode) === "page" ? "翻页（单页）" : "滚动（连续）";
+}
+
+function formatThemeLabel(pref, actual = pref) {
+  const resolved = actual === "dark" ? "暗色" : "亮色";
+  return normalizeThemePref(pref) === "system" ? `跟随系统（${resolved}）` : resolved;
+}
+
+function setText(el, value) {
+  if (el) el.textContent = String(value ?? "");
+}
+
 function initDropdown({ rootId, btnId, menuId, initialValue, formatLabel, onChange }) {
   const root = qs(rootId);
   const btn = qs(btnId);
@@ -319,7 +332,7 @@ function showError(message, { file } = {}) {
     : "";
   error.innerHTML =
     `<div style="font-weight:700;margin-bottom:6px">PDF 加载失败</div>` +
-    `<div style="color:rgba(255,255,255,.72);line-height:1.6">` +
+    `<div style="opacity:.84;line-height:1.6">` +
     `${escapeHtml(message)} ${fileHint}` +
     `</div>` +
     (rawLink ? `<div style="margin-top:12px">${rawLink}</div>` : "");
@@ -484,6 +497,8 @@ async function main() {
 
   const themePrefInit = normalizeThemePref(params.theme || safeLocalStorageGet("pdf.theme") || "system");
   let themePref = themePrefInit;
+  let state = null;
+  let stateReady = false;
   /** @type {{setValue:(v:string)=>void, close:()=>void, open:()=>void} | null} */
   let themeDd = null;
   /** @type {{setValue:(v:string)=>void, close:()=>void, open:()=>void} | null} */
@@ -498,6 +513,7 @@ async function main() {
     const actual = themePref === "system" ? getSystemTheme() : themePref;
     document.body.dataset.theme = actual;
     document.body.dataset.themePref = themePref;
+    if (stateReady) updateSummary();
   };
 
   applyTheme(themePrefInit);
@@ -521,7 +537,8 @@ async function main() {
 
   const title = qs("pdf-title");
   const subtitle = qs("pdf-subtitle");
-  if (title) title.textContent = basename(file);
+  const fileBaseName = basename(file);
+  if (title) title.textContent = fileBaseName;
   if (subtitle) subtitle.textContent = file;
 
   const openRaw = qs("open-raw");
@@ -551,11 +568,35 @@ async function main() {
   const zoomOut = qs("zoom-out");
   const rotateBtn = qs("rotate");
   const stage = qs("stage");
+  const statusPage = qs("pdf-status-page");
+  const statusTotal = qs("pdf-status-total");
+  const statusProgress = qs("pdf-status-progress");
+  const progressPercent = qs("pdf-progress-percent");
+  const progressBar = qs("pdf-progress-bar");
+  const progressText = qs("pdf-progress-text");
+  const progressMode = qs("pdf-progress-mode");
+  const fileNamePrimary = qs("pdf-file-name");
+  const filePathPrimary = qs("pdf-file-path");
+  const infoName = qs("pdf-info-name");
+  const infoPages = qs("pdf-info-pages");
+  const infoMode = qs("pdf-info-mode");
+  const infoTheme = qs("pdf-info-theme");
+  const infoZoom = qs("pdf-info-zoom");
+  const infoPath = qs("pdf-info-path");
+  const metaMode = qs("pdf-meta-mode");
+  const metaTheme = qs("pdf-meta-theme");
+  const metaZoom = qs("pdf-meta-zoom");
+  const metaPages = qs("pdf-meta-pages");
 
   if (!viewPage || !viewScroll || !canvas || !annoLayer || !pagesEl || !stage) {
     showError("Viewer DOM 不完整。", { file });
     return;
   }
+
+  setText(fileNamePrimary, fileBaseName);
+  setText(infoName, fileBaseName);
+  setText(filePathPrimary, file);
+  setText(infoPath, file);
 
   const ctx = canvas.getContext("2d", { alpha: false });
   if (!ctx) {
@@ -564,7 +605,7 @@ async function main() {
   }
 
   /** @type {{pdfDoc:any, mode:'scroll'|'page', pageNum:number, zoom:any, rotate:number, rendering:boolean, pending:boolean}} */
-  const state = {
+  state = {
     pdfDoc: null,
     mode: initialMode,
     pageNum: Number.isFinite(initialPage) ? clamp(Math.trunc(initialPage), 1, 999999) : 1,
@@ -587,6 +628,7 @@ async function main() {
   if (pageCount) pageCount.textContent = String(state.pdfDoc.numPages || "?");
   state.pageNum = clamp(state.pageNum, 1, state.pdfDoc.numPages || 1);
   if (pageNumber) pageNumber.value = String(state.pageNum);
+  stateReady = true;
 
   /** @type {Map<number, {el:HTMLElement, canvas:HTMLCanvasElement, ctx:CanvasRenderingContext2D, anno:HTMLElement, renderedKey:string|null}>} */
   const pageNodes = new Map();
@@ -595,22 +637,58 @@ async function main() {
   /** @type {IntersectionObserver|null} */
   let activeObserver = null;
 
+  function updateSummary() {
+    if (!stateReady || !state) return;
+
+    const total = state.pdfDoc?.numPages || 0;
+    const maxPage = Math.max(1, total || 1);
+    const page = clamp(state.pageNum || 1, 1, maxPage);
+    const progress = total ? Math.round((page / maxPage) * 100) : 0;
+    const modeLabel = formatModeLabel(state.mode);
+    const actualTheme = document.body.dataset.theme || getSystemTheme();
+    const themeLabel = formatThemeLabel(themePref, actualTheme);
+    const zoomValue = typeof state.zoom === "number" ? String(state.zoom) : String(state.zoom);
+    const zoomLabel = formatZoomLabel(zoomValue);
+    const pageLabel = total ? `${page} / ${total}` : `${page} / ?`;
+
+    setText(statusPage, page);
+    setText(statusTotal, total || "?");
+    setText(statusProgress, `${progress}%`);
+    setText(progressPercent, `${progress}%`);
+    setText(progressText, total ? `第 ${page} 页，共 ${total} 页` : `第 ${page} 页`);
+    setText(progressMode, modeLabel);
+    setText(infoPages, total || "?");
+    setText(infoMode, modeLabel);
+    setText(infoTheme, themeLabel);
+    setText(infoZoom, zoomLabel);
+    setText(metaMode, modeLabel);
+    setText(metaTheme, themeLabel);
+    setText(metaZoom, zoomLabel);
+    setText(metaPages, pageLabel);
+    if (progressBar) progressBar.style.width = `${progress}%`;
+    if (subtitle) subtitle.textContent = total ? `${file} · ${page}/${total}` : file;
+    document.title = total ? `${fileBaseName} · ${page}/${total}` : fileBaseName;
+  }
+
   function updateNav() {
     if (prevPage) prevPage.disabled = state.pageNum <= 1;
     if (nextPage) nextPage.disabled = state.pageNum >= (state.pdfDoc?.numPages || 1);
     if (pageNumber) pageNumber.value = String(state.pageNum);
+    updateSummary();
   }
 
   function setMode(mode) {
     state.mode = formatMode(mode);
     safeLocalStorageSet("pdf.mode", state.mode);
     modeDd?.setValue(state.mode);
+    updateSummary();
   }
 
   function setZoom(next) {
     state.zoom = parseZoomValue(next);
     safeLocalStorageSet("pdf.zoom", typeof state.zoom === "number" ? String(state.zoom) : state.zoom);
     zoomDd?.setValue(typeof state.zoom === "number" ? String(state.zoom) : String(state.zoom));
+    updateSummary();
   }
 
   function zoomBy(delta) {
@@ -675,8 +753,7 @@ async function main() {
         onNamedAction: (action) => goToNamedAction(action),
       });
 
-      document.title = `${basename(file)} · ${state.pageNum}/${state.pdfDoc.numPages}`;
-      if (subtitle) subtitle.textContent = `${file} · ${state.pageNum}/${state.pdfDoc.numPages}`;
+      updateSummary();
     } finally {
       setLoadingVisible(false);
       state.rendering = false;
@@ -882,6 +959,7 @@ async function main() {
 
   // Ensure theme is applied after dropdown is ready (so button label updates).
   applyTheme(themePref);
+  updateSummary();
 
   prevPage?.addEventListener("click", () => goToPage(state.pageNum - 1));
   nextPage?.addEventListener("click", () => goToPage(state.pageNum + 1));

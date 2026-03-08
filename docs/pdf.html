@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css?v=20260308e" />
-    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308k" />
+    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308n" />
   </head>
   <body class="pdf-page">
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
@@ -78,14 +78,10 @@
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-lg-11 col-xl-10">
             <div class="post-heading pdf-heading">
-              <div class="blog-postMeta pdf-heading__chips">
-                <span class="pill">PDF.js</span>
-                <span class="pill">滚动 / 翻页双模式</span>
-                <span class="pill">亮色 / 暗色主题</span>
-                <span class="pill">保留原始链接</span>
+              <div class="pdf-heading__panel">
+                <h1 id="pdf-title">PDF</h1>
+                <p class="pdf-heading__subtitle" id="pdf-subtitle"></p>
               </div>
-              <h1 id="pdf-title">PDF</h1>
-              <p class="pdf-heading__subtitle" id="pdf-subtitle"></p>
             </div>
           </div>
         </div>
@@ -100,94 +96,200 @@
         <div class="pdf-layout">
           <aside class="pdf-sidebar" aria-label="Reader controls">
             <div class="pdf-card pdf-sidebarCard">
-              <div class="pdf-sidebarCard__tabs" aria-hidden="true">
-                <span class="pdf-sidebarCard__tab is-active">阅读器</span>
-                <span class="pdf-sidebarCard__tab">文件说明</span>
+              <div class="pdf-sidebarCard__tabs" role="tablist" aria-label="Reader panels">
+                <button
+                  class="pdf-sidebarCard__tab is-active"
+                  id="pdf-sidebar-tab-reader"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="pdf-sidebar-panel-reader"
+                  data-sidebar-tab="reader"
+                >
+                  阅读器
+                </button>
+                <button
+                  class="pdf-sidebarCard__tab"
+                  id="pdf-sidebar-tab-overview"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="pdf-sidebar-panel-overview"
+                  data-sidebar-tab="overview"
+                >
+                  文件说明
+                </button>
               </div>
 
-              <section class="pdf-section">
-                <div class="pdf-section__title">阅读模式</div>
-                <p class="pdf-section__desc">连续滚动适合通读长文，单页翻页更接近纸面阅读，两种模式都可随时切换。</p>
-                <div class="pdf-dd" id="dd-mode" title="阅读方式：连续滚动或单页翻页">
-                  <span class="pdf-dd__label">模式</span>
-                  <button class="pdf-dd__btn" type="button" id="mode-btn" aria-haspopup="listbox" aria-expanded="false">
-                    滚动（连续）
-                  </button>
-                  <div class="pdf-dd__menu" id="mode-menu" role="listbox" aria-label="View mode" hidden>
-                    <button class="pdf-dd__opt" type="button" role="option" data-value="scroll">滚动（连续）</button>
-                    <button class="pdf-dd__opt" type="button" role="option" data-value="page">翻页（单页）</button>
+              <div
+                class="pdf-sidebarPanel is-active"
+                id="pdf-sidebar-panel-reader"
+                role="tabpanel"
+                aria-labelledby="pdf-sidebar-tab-reader"
+                data-sidebar-panel="reader"
+              >
+                <section class="pdf-overview">
+                  <div class="pdf-overview__eyebrow">Reader Console</div>
+                  <div class="pdf-overview__title" id="pdf-file-name">PDF 文档</div>
+                  <div class="pdf-overview__path" id="pdf-file-path"></div>
+                  <div class="pdf-statusGrid">
+                    <article class="pdf-statusTile">
+                      <span class="pdf-statusTile__label">当前页</span>
+                      <strong class="pdf-statusTile__value" id="pdf-status-page">1</strong>
+                    </article>
+                    <article class="pdf-statusTile">
+                      <span class="pdf-statusTile__label">总页数</span>
+                      <strong class="pdf-statusTile__value" id="pdf-status-total">?</strong>
+                    </article>
+                    <article class="pdf-statusTile">
+                      <span class="pdf-statusTile__label">阅读进度</span>
+                      <strong class="pdf-statusTile__value" id="pdf-status-progress">0%</strong>
+                    </article>
                   </div>
-                </div>
-              </section>
+                </section>
 
-              <section class="pdf-section">
-                <div class="pdf-section__title">界面主题</div>
-                <p class="pdf-section__desc">默认跟随系统，也可以手动切换到亮色或暗色，以适配不同的阅读环境。</p>
-                <div class="pdf-dd" id="dd-theme" title="主题：亮色/暗色/跟随系统">
-                  <span class="pdf-dd__label">主题</span>
-                  <button class="pdf-dd__btn" type="button" id="theme-btn" aria-haspopup="listbox" aria-expanded="false">
-                    跟随系统（推荐）
-                  </button>
-                  <div class="pdf-dd__menu" id="theme-menu" role="listbox" aria-label="Theme" hidden>
-                    <button class="pdf-dd__opt" type="button" role="option" data-value="system">跟随系统（推荐）</button>
-                    <button class="pdf-dd__opt" type="button" role="option" data-value="light">亮色</button>
-                    <button class="pdf-dd__opt" type="button" role="option" data-value="dark">暗色</button>
-                  </div>
-                </div>
-              </section>
-
-              <section class="pdf-section">
-                <div class="pdf-section__title">缩放设置</div>
-                <p class="pdf-section__desc">支持适合宽度、适合页面和百分比缩放，方便在大屏和小屏之间快速调整。</p>
-                <div class="pdf-stepper" title="缩放：适合宽度/适合页面/百分比">
-                  <button class="pdf-btn" type="button" id="zoom-out" title="缩小 (-)">−</button>
-                  <div class="pdf-dd" id="dd-zoom">
-                    <span class="pdf-dd__label">缩放</span>
-                    <button class="pdf-dd__btn" type="button" id="zoom-btn" aria-haspopup="listbox" aria-expanded="false">
-                      适合宽度（推荐）
+                <section class="pdf-section">
+                  <div class="pdf-section__title">阅读模式</div>
+                  <p class="pdf-section__desc">连续滚动适合通读长文，单页翻页更接近纸面阅读，两种模式都可随时切换。</p>
+                  <div class="pdf-dd" id="dd-mode" title="阅读方式：连续滚动或单页翻页">
+                    <span class="pdf-dd__label">模式</span>
+                    <button class="pdf-dd__btn" type="button" id="mode-btn" aria-haspopup="listbox" aria-expanded="false">
+                      滚动（连续）
                     </button>
-                    <div class="pdf-dd__menu" id="zoom-menu" role="listbox" aria-label="Zoom" hidden>
-                      <button class="pdf-dd__opt" type="button" role="option" data-value="page-width">适合宽度（推荐）</button>
-                      <button class="pdf-dd__opt" type="button" role="option" data-value="page-fit">适合页面（整页）</button>
-                      <div class="pdf-dd__sep" aria-hidden="true"></div>
-                      <button class="pdf-dd__opt" type="button" role="option" data-value="0.5">50%</button>
-                      <button class="pdf-dd__opt" type="button" role="option" data-value="0.75">75%</button>
-                      <button class="pdf-dd__opt" type="button" role="option" data-value="1">100%</button>
-                      <button class="pdf-dd__opt" type="button" role="option" data-value="1.25">125%</button>
-                      <button class="pdf-dd__opt" type="button" role="option" data-value="1.5">150%</button>
-                      <button class="pdf-dd__opt" type="button" role="option" data-value="2">200%</button>
+                    <div class="pdf-dd__menu" id="mode-menu" role="listbox" aria-label="View mode" hidden>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="scroll">滚动（连续）</button>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="page">翻页（单页）</button>
                     </div>
                   </div>
-                  <button class="pdf-btn" type="button" id="zoom-in" title="放大 (+)">+</button>
-                </div>
-              </section>
+                </section>
 
-              <section class="pdf-section">
-                <div class="pdf-section__title">文件操作</div>
-                <p class="pdf-section__desc">保留原始 PDF 与下载入口，方便在外部阅读器中继续查看批注、书签与原始链接。</p>
-                <div class="pdf-tools pdf-tools--stack">
-                  <button class="pdf-btn" type="button" id="rotate" title="旋转 (R)">旋转</button>
-                  <a
-                    class="pdf-btn pdf-btn--link pdf-btn--metal"
-                    id="open-raw"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="新窗口打开原始 PDF"
-                  >
-                    原始 PDF
-                  </a>
-                  <a class="pdf-btn pdf-btn--link pdf-btn--metal" id="download" download title="下载 PDF">下载 PDF</a>
-                </div>
-              </section>
+                <section class="pdf-section">
+                  <div class="pdf-section__title">界面主题</div>
+                  <p class="pdf-section__desc">默认跟随系统，也可以手动切换到亮色或暗色，以适配不同的阅读环境。</p>
+                  <div class="pdf-dd" id="dd-theme" title="主题：亮色/暗色/跟随系统">
+                    <span class="pdf-dd__label">主题</span>
+                    <button class="pdf-dd__btn" type="button" id="theme-btn" aria-haspopup="listbox" aria-expanded="false">
+                      跟随系统（推荐）
+                    </button>
+                    <div class="pdf-dd__menu" id="theme-menu" role="listbox" aria-label="Theme" hidden>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="system">跟随系统（推荐）</button>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="light">亮色</button>
+                      <button class="pdf-dd__opt" type="button" role="option" data-value="dark">暗色</button>
+                    </div>
+                  </div>
+                </section>
 
-              <section class="pdf-note">
-                <div class="pdf-section__title">阅读提示</div>
-                <ul class="pdf-note__list">
-                  <li>支持 PDF 内部跳转与外部链接悬停点击。</li>
-                  <li>页码输入框可直接回车跳转到目标页。</li>
-                  <li>使用键盘 ← / → 可以快速翻页。</li>
-                </ul>
-              </section>
+                <section class="pdf-section">
+                  <div class="pdf-section__title">缩放设置</div>
+                  <p class="pdf-section__desc">支持适合宽度、适合页面和百分比缩放，方便在大屏和小屏之间快速调整。</p>
+                  <div class="pdf-stepper" title="缩放：适合宽度/适合页面/百分比">
+                    <button class="pdf-btn" type="button" id="zoom-out" title="缩小 (-)">−</button>
+                    <div class="pdf-dd" id="dd-zoom">
+                      <span class="pdf-dd__label">缩放</span>
+                      <button class="pdf-dd__btn" type="button" id="zoom-btn" aria-haspopup="listbox" aria-expanded="false">
+                        适合宽度（推荐）
+                      </button>
+                      <div class="pdf-dd__menu" id="zoom-menu" role="listbox" aria-label="Zoom" hidden>
+                        <button class="pdf-dd__opt" type="button" role="option" data-value="page-width">适合宽度（推荐）</button>
+                        <button class="pdf-dd__opt" type="button" role="option" data-value="page-fit">适合页面（整页）</button>
+                        <div class="pdf-dd__sep" aria-hidden="true"></div>
+                        <button class="pdf-dd__opt" type="button" role="option" data-value="0.5">50%</button>
+                        <button class="pdf-dd__opt" type="button" role="option" data-value="0.75">75%</button>
+                        <button class="pdf-dd__opt" type="button" role="option" data-value="1">100%</button>
+                        <button class="pdf-dd__opt" type="button" role="option" data-value="1.25">125%</button>
+                        <button class="pdf-dd__opt" type="button" role="option" data-value="1.5">150%</button>
+                        <button class="pdf-dd__opt" type="button" role="option" data-value="2">200%</button>
+                      </div>
+                    </div>
+                    <button class="pdf-btn" type="button" id="zoom-in" title="放大 (+)">+</button>
+                  </div>
+                </section>
+
+                <section class="pdf-section">
+                  <div class="pdf-section__title">文件操作</div>
+                  <p class="pdf-section__desc">保留原始 PDF 与下载入口，方便在外部阅读器中继续查看批注、书签与原始链接。</p>
+                  <div class="pdf-tools pdf-tools--stack">
+                    <button class="pdf-btn pdf-action pdf-action--ghost" type="button" id="rotate" title="旋转 (R)">旋转 90°</button>
+                    <a
+                      class="pdf-btn pdf-btn--link pdf-action pdf-action--primary"
+                      id="open-raw"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="新窗口打开原始 PDF"
+                    >
+                      打开原始 PDF
+                    </a>
+                    <a class="pdf-btn pdf-btn--link pdf-action pdf-action--secondary" id="download" download title="下载 PDF">下载 PDF</a>
+                  </div>
+                  <p class="pdf-section__hint">如需保留阅读器兼容行为、批注或外链跳转，建议优先使用原始 PDF。</p>
+                </section>
+
+                <section class="pdf-note pdf-progressCard">
+                  <div class="pdf-progressCard__head">
+                    <div class="pdf-section__title">阅读进度</div>
+                    <div class="pdf-progressCard__percent" id="pdf-progress-percent">0%</div>
+                  </div>
+                  <div class="pdf-progress">
+                    <span class="pdf-progress__bar" id="pdf-progress-bar"></span>
+                  </div>
+                  <div class="pdf-progressCard__meta">
+                    <span id="pdf-progress-text">第 1 页，共 ? 页</span>
+                    <span id="pdf-progress-mode">滚动（连续）</span>
+                  </div>
+                </section>
+              </div>
+
+              <div
+                class="pdf-sidebarPanel"
+                id="pdf-sidebar-panel-overview"
+                role="tabpanel"
+                aria-labelledby="pdf-sidebar-tab-overview"
+                data-sidebar-panel="overview"
+                hidden
+              >
+                <section class="pdf-section pdf-section--plain">
+                  <div class="pdf-section__title">文件概览</div>
+                  <div class="pdf-infoList">
+                    <div class="pdf-infoRow">
+                      <span>文件名</span>
+                      <strong id="pdf-info-name">—</strong>
+                    </div>
+                    <div class="pdf-infoRow">
+                      <span>总页数</span>
+                      <strong id="pdf-info-pages">?</strong>
+                    </div>
+                    <div class="pdf-infoRow">
+                      <span>当前模式</span>
+                      <strong id="pdf-info-mode">滚动（连续）</strong>
+                    </div>
+                    <div class="pdf-infoRow">
+                      <span>当前主题</span>
+                      <strong id="pdf-info-theme">跟随系统</strong>
+                    </div>
+                    <div class="pdf-infoRow">
+                      <span>当前缩放</span>
+                      <strong id="pdf-info-zoom">适合宽度（推荐）</strong>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="pdf-section pdf-section--plain">
+                  <div class="pdf-section__title">完整路径</div>
+                  <div class="pdf-fileCard">
+                    <code id="pdf-info-path"></code>
+                  </div>
+                </section>
+
+                <section class="pdf-note pdf-note--alt">
+                  <div class="pdf-section__title">阅读说明</div>
+                  <ul class="pdf-note__list">
+                    <li>PDF 内部目录跳转与外部链接均保留可点击区域。</li>
+                    <li>输入页码后按回车可跳转，键盘 ← / → 也支持翻页。</li>
+                    <li>当页面较窄时，推荐使用“适合宽度”获得更稳定的版面。</li>
+                    <li>如需外部阅读器的完整能力，可随时切换到原始 PDF。</li>
+                  </ul>
+                </section>
+              </div>
             </div>
           </aside>
 
@@ -197,22 +299,53 @@
                 <div class="pdf-readerCard__intro">
                   <span class="pdf-readerCard__eyebrow">Article Detail Reader</span>
                   <h2 class="pdf-readerCard__title">沉浸式 PDF 阅读</h2>
-                  <p class="pdf-readerCard__desc">保留文章详情页的大卡片观感，同时使用 PDF.js 提供现代化的文档阅读体验。</p>
+                  <p class="pdf-readerCard__desc">保留 clone 文章详情页的大卡片层次，并用 PDF.js 提供滚动 / 翻页双模式、亮暗主题和文档内跳转能力。</p>
+                  <div class="pdf-readerMeta" aria-label="PDF metadata">
+                    <span class="pdf-readerMeta__item">
+                      <span class="pdf-readerMeta__key">模式</span>
+                      <strong id="pdf-meta-mode">滚动（连续）</strong>
+                    </span>
+                    <span class="pdf-readerMeta__sep">|</span>
+                    <span class="pdf-readerMeta__item">
+                      <span class="pdf-readerMeta__key">主题</span>
+                      <strong id="pdf-meta-theme">跟随系统</strong>
+                    </span>
+                    <span class="pdf-readerMeta__sep">|</span>
+                    <span class="pdf-readerMeta__item">
+                      <span class="pdf-readerMeta__key">缩放</span>
+                      <strong id="pdf-meta-zoom">适合宽度（推荐）</strong>
+                    </span>
+                    <span class="pdf-readerMeta__sep">|</span>
+                    <span class="pdf-readerMeta__item">
+                      <span class="pdf-readerMeta__key">页数</span>
+                      <strong id="pdf-meta-pages">1 / ?</strong>
+                    </span>
+                  </div>
                 </div>
 
-                <div class="pdf-nav" title="输入页码并回车跳转；←/→ 翻页" role="toolbar" aria-label="PDF page navigation">
-                  <button class="pdf-btn" type="button" id="prev-page" title="上一页 (←)">上一页</button>
-                  <div class="pdf-counter" aria-label="Page counter">
-                    <span class="pdf-counter__label">页码</span>
-                    <input id="page-number" class="pdf-input" inputmode="numeric" aria-label="Page number" value="1" />
-                    <span class="pdf-counter__sep">/</span>
-                    <span id="page-count" class="pdf-counter__count">?</span>
+                <div class="pdf-readerCard__navWrap">
+                  <div class="pdf-nav" title="输入页码并回车跳转；←/→ 翻页" role="toolbar" aria-label="PDF page navigation">
+                    <button class="pdf-btn" type="button" id="prev-page" title="上一页 (←)">上一页</button>
+                    <div class="pdf-counter" aria-label="Page counter">
+                      <span class="pdf-counter__label">页码</span>
+                      <input id="page-number" class="pdf-input" inputmode="numeric" aria-label="Page number" value="1" />
+                      <span class="pdf-counter__sep">/</span>
+                      <span id="page-count" class="pdf-counter__count">?</span>
+                    </div>
+                    <button class="pdf-btn" type="button" id="next-page" title="下一页 (→)">下一页</button>
                   </div>
-                  <button class="pdf-btn" type="button" id="next-page" title="下一页 (→)">下一页</button>
                 </div>
               </div>
 
               <div class="pdf-stageFrame">
+                <div class="pdf-stageFrame__top">
+                  <div class="pdf-stageFrame__caption">
+                    <span class="pdf-stageFrame__dot" aria-hidden="true"></span>
+                    <span>Document Canvas</span>
+                  </div>
+                  <div class="pdf-stageFrame__caption pdf-stageFrame__caption--muted">支持 PDF 内链、外链、双模式阅读与主题切换</div>
+                </div>
+
                 <div class="pdf-stage" id="stage" aria-label="PDF page viewport">
                   <div class="pdf-loading" id="loading">
                     <div class="pdf-loading__card">
@@ -280,13 +413,13 @@
             `</div>` +
             (file
               ? `<div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">` +
-                `<a class="pdf-btn pdf-btn--link pdf-btn--metal" href="${file}" target="_blank" rel="noopener noreferrer">打开原始 PDF</a>` +
-                `<a class="pdf-btn pdf-btn--link pdf-btn--metal" href="${file}" download>下载 PDF</a>` +
+                `<a class="pdf-btn pdf-btn--link pdf-action pdf-action--primary" href="${file}" target="_blank" rel="noopener noreferrer">打开原始 PDF</a>` +
+                `<a class="pdf-btn pdf-btn--link pdf-action pdf-action--secondary" href="${file}" download>下载 PDF</a>` +
                 `</div>`
               : "");
         }
       } else {
-        await import(`./assets/pdf-viewer.js?v=20260308k`);
+        await import(`./assets/pdf-viewer.js?v=20260308n`);
       }
     </script>
     <script>
@@ -333,6 +466,30 @@
           };
           onScroll();
           window.addEventListener("scroll", onScroll, { passive: true });
+        }
+
+        const tabs = [...document.querySelectorAll("[data-sidebar-tab]")].filter((node) => node instanceof HTMLButtonElement);
+        const panels = [...document.querySelectorAll("[data-sidebar-panel]")].filter((node) => node instanceof HTMLElement);
+        if (tabs.length && panels.length) {
+          const setActiveTab = (name) => {
+            for (const tab of tabs) {
+              const active = tab.dataset.sidebarTab === name;
+              tab.classList.toggle("is-active", active);
+              tab.setAttribute("aria-selected", active ? "true" : "false");
+              tab.tabIndex = active ? 0 : -1;
+            }
+            for (const panel of panels) {
+              const active = panel.dataset.sidebarPanel === name;
+              panel.hidden = !active;
+              panel.classList.toggle("is-active", active);
+            }
+          };
+
+          for (const tab of tabs) {
+            tab.addEventListener("click", () => setActiveTab(tab.dataset.sidebarTab || "reader"));
+          }
+
+          setActiveTab("reader");
         }
 
         const year = document.getElementById("footer-year");
