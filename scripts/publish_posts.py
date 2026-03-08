@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -18,8 +19,13 @@ ARTICLES = DOCS / "articles"
 INCOMING = ROOT / "incoming"
 INCOMING_TYP = INCOMING / "typst"
 MANIFEST = INCOMING / "manifest.csv"
-LOCAL_FONTS = ROOT / "fonts"
+LOCAL_FONT_ROOTS = (ROOT / "fonts",)
 FONT_FILE_SUFFIXES = (".ttf", ".otf", ".ttc", ".otc", ".woff", ".woff2")
+WEB_FONT_ASSETS = (
+    ("merriweather", ("Merriweather-Regular.ttf", "README.md", "LICENSE.txt")),
+    ("roboto-condensed", ("RobotoCondensed-Regular.ttf", "README.md", "LICENSE.txt")),
+    ("lxgw-wenkai", ("LXGWWenKai-Light.ttf", "LXGWWenKai-Regular.ttf", "LXGWWenKai-Medium.ttf", "README.md", "OFL.txt")),
+)
 AUTO_DATE_WORDS = {"auto", "today", "current"}
 MONTH_NAMES = (
     "January",
@@ -243,16 +249,36 @@ def prepare_compile_source(*, typ_path: Path, typst_date_override: str | None) -
     return temp_path, temp_path
 
 
-def collect_local_font_paths(fonts_root: Path) -> list[Path]:
-    if not fonts_root.exists():
-        return []
-
-    font_dirs = {
-        path.parent
-        for path in fonts_root.rglob("*")
-        if path.is_file() and path.suffix.lower() in FONT_FILE_SUFFIXES
-    }
+def collect_local_font_paths(font_roots: tuple[Path, ...]) -> list[Path]:
+    font_dirs: set[Path] = set()
+    for fonts_root in font_roots:
+        if not fonts_root.exists():
+            continue
+        font_dirs.update(
+            path.parent
+            for path in fonts_root.rglob("*")
+            if path.is_file() and path.suffix.lower() in FONT_FILE_SUFFIXES
+        )
     return sorted(font_dirs)
+
+
+def sync_web_fonts() -> None:
+    docs_fonts_root = DOCS / "assets" / "fonts"
+    if docs_fonts_root.exists():
+        shutil.rmtree(docs_fonts_root)
+    docs_fonts_root.mkdir(parents=True, exist_ok=True)
+
+    for directory_name, file_names in WEB_FONT_ASSETS:
+        source_dir = ROOT / "fonts" / directory_name
+        if not source_dir.exists():
+            raise SystemExit(f"Missing font directory: {source_dir}")
+        target_dir = docs_fonts_root / directory_name
+        target_dir.mkdir(parents=True, exist_ok=True)
+        for file_name in file_names:
+            source_file = source_dir / file_name
+            if not source_file.exists():
+                raise SystemExit(f"Missing font asset: {source_file}")
+            shutil.copy2(source_file, target_dir / file_name)
 
 
 def compile_typst_to_pdf(
@@ -281,7 +307,7 @@ def compile_typst_to_pdf(
             deps_path = Path(tf.name)
 
         cmd = ["typst", "compile", "--deps", str(deps_path), "--root", str(root)]
-        for font_path in collect_local_font_paths(LOCAL_FONTS):
+        for font_path in collect_local_font_paths(LOCAL_FONT_ROOTS):
             cmd.extend(["--font-path", str(font_path)])
         for key, value in typst_inputs.items():
             cmd.extend(["--input", f"{key}={value}"])
@@ -421,6 +447,7 @@ def write_meta(*, out_dir: Path, row: Row, categories: list[str], date_value: st
 
 def main() -> None:
     ns = parse_args()
+    sync_web_fonts()
     manifest = Path(ns.manifest).resolve()
     rows = read_manifest(manifest)
 

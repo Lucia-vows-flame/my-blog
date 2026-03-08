@@ -8,6 +8,7 @@ on:
     paths:
       - "incoming/**"
       - "scripts/**"
+      - "fonts/**"
       - ".github/workflows/publish-posts.yml"
   workflow_dispatch:
     inputs:

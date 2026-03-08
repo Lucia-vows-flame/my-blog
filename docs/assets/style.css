@@ -7,6 +7,46 @@
 }
 
 @font-face {
+  font-family: "LXGW WenKai Book";
+  src: url("fonts/lxgw-wenkai/LXGWWenKai-Light.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+1100-11FF, U+2E80-2EFF, U+2F00-2FDF, U+3000-303F, U+3040-30FF, U+3100-312F, U+31A0-31BF,
+    U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE6F, U+FF00-FFEF;
+}
+
+@font-face {
+  font-family: "LXGW WenKai";
+  src: url("fonts/lxgw-wenkai/LXGWWenKai-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+1100-11FF, U+2E80-2EFF, U+2F00-2FDF, U+3000-303F, U+3040-30FF, U+3100-312F, U+31A0-31BF,
+    U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE6F, U+FF00-FFEF;
+}
+
+@font-face {
+  font-family: "LXGW WenKai";
+  src: url("fonts/lxgw-wenkai/LXGWWenKai-Medium.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  unicode-range: U+1100-11FF, U+2E80-2EFF, U+2F00-2FDF, U+3000-303F, U+3040-30FF, U+3100-312F, U+31A0-31BF,
+    U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE6F, U+FF00-FFEF;
+}
+
+@font-face {
+  font-family: "LXGW WenKai";
+  src: url("fonts/lxgw-wenkai/LXGWWenKai-Medium.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  unicode-range: U+1100-11FF, U+2E80-2EFF, U+2F00-2FDF, U+3000-303F, U+3040-30FF, U+3100-312F, U+31A0-31BF,
+    U+3200-33FF, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE10-FE1F, U+FE30-FE6F, U+FF00-FFEF;
+}
+
+@font-face {
   font-family: "Roboto Condensed";
   src: url("fonts/roboto-condensed/RobotoCondensed-Regular.ttf") format("truetype");
   font-style: normal;
@@ -15,26 +55,35 @@
 }
 
 :root {
-  --blog-font-cjk: "Source Han Sans SC", "Source Han Sans CN", "Source Han Sans", "Noto Sans CJK SC",
-    "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  --blog-font-sans: var(--blog-font-cjk), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, "Noto Sans", "Liberation Sans", sans-serif;
-  --blog-font-serif: "Merriweather", var(--blog-font-cjk), ui-serif, Georgia, Cambria, "Times New Roman", Times,
-    serif;
+  --blog-font-cjk-body: "LXGW WenKai Book", "LXGW WenKai", "LXGW WenKai GB", "Kaiti SC", "STKaiti", "KaiTi",
+    "Noto Serif CJK SC", "Noto Serif SC", serif;
+  --blog-font-cjk-display: "LXGW WenKai", "LXGW WenKai GB", "Kaiti SC", "STKaiti", "KaiTi",
+    "Noto Serif CJK SC", "Noto Serif SC", serif;
+  --blog-font-cjk: var(--blog-font-cjk-body);
+  --blog-font-sans: "Merriweather", var(--blog-font-cjk-body), system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --blog-font-title: "Merriweather", var(--blog-font-cjk-display), ui-serif, Georgia, Cambria,
+    "Times New Roman", Times, serif;
+  --blog-font-serif: var(--blog-font-title);
 
   --blog-card-bg: rgba(255, 255, 255, 0.92);
   --blog-card-border: rgba(0, 0, 0, 0.08);
   --blog-card-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
   --blog-radius: 14px;
+  --blog-paper-soft: rgba(255, 251, 245, 0.94);
+  --blog-paper-warm: rgba(247, 239, 228, 0.9);
+  --blog-paper-line: rgba(164, 129, 88, 0.22);
+  --blog-seal: rgba(195, 74, 54, 0.9);
   --blog-ring: 0 0 0 0.25rem rgba(0, 133, 161, 0.25);
   --blog-panel-scroll-max: min(62vh, 860px);
   --blog-panel-scroll-max-mobile: min(56vh, 640px);
 }
 
-/* Force "0 外链" system font feel even if template variables exist. */
+/* Use bundled local fonts for mixed Chinese/English text. */
 :root {
   --bs-body-font-family: var(--blog-font-sans);
   --bs-font-sans-serif: var(--blog-font-sans);
+  --bs-btn-font-family: var(--blog-font-sans);
 }
 
 body {
@@ -44,6 +93,38 @@ body {
 html[lang^="zh"] body,
 html[lang^="zh"] body :where(h1, h2, h3, h4, h5, h6, p, li, a, span, button, label, summary, figcaption, blockquote, dt, dd, th, td, input, textarea, select) {
   font-family: var(--blog-font-sans);
+}
+
+html[lang^="zh"] body {
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+
+html[lang^="zh"] body :where(p, li, dd, td, th, blockquote, figcaption) {
+  letter-spacing: 0.014em;
+  line-height: 1.88;
+}
+
+html[lang^="zh"] body :where(
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .category-card__meta,
+  .category-card__listHead,
+  .blog-sidebar__title,
+  .archive-year__title,
+  .archive-month__title,
+  .archive-entry__date,
+  header.masthead .site-heading .subheading,
+  header.masthead .page-heading .subheading,
+  header.masthead .post-heading .subheading,
+  header.masthead .post-heading .meta
+) {
+  font-family: var(--blog-font-title);
+  letter-spacing: 0.028em;
 }
 
 /* Remove template font hardcodes (0 外链，使用系统字体栈). */
@@ -75,7 +156,9 @@ header.masthead .site-heading .subheading,
 header.masthead .page-heading .subheading,
 header.masthead .post-heading .subheading,
 header.masthead .post-heading .meta {
-  font-family: var(--blog-font-sans);
+  font-family: var(--blog-font-title);
+  font-weight: 500;
+  letter-spacing: 0.08em;
 }
 
 /* Subtle background texture without hurting readability. */
@@ -170,27 +253,149 @@ body.home:not(.pdf-page)::before {
 }
 
 .home-hero .site-heading {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  row-gap: 0.08rem;
   text-shadow: 0 10px 38px rgba(0, 0, 0, 0.55);
+  max-width: min(88vw, 940px);
+}
+
+.home-hero .site-heading::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0.48rem;
+  width: min(25rem, 84%);
+  height: clamp(2.2rem, 5vw, 3.1rem);
+  transform: translateX(-50%);
+  background:
+    linear-gradient(80deg, transparent 0 26%, rgba(255, 247, 233, 0.82) 26.6% 27.25%, transparent 27.85% 100%),
+    linear-gradient(100deg, transparent 0 72.15%, rgba(255, 247, 233, 0.82) 72.75% 73.4%, transparent 74% 100%);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.16));
+  opacity: 0.94;
+  pointer-events: none;
+}
+
+.home-hero .site-heading::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0.22rem;
+  width: 1.08rem;
+  height: 1.08rem;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(circle at 34% 34%, rgba(255, 255, 255, 0.98), rgba(239, 232, 221, 0.96) 34%, rgba(181, 164, 142, 0.95) 67%, rgba(122, 105, 84, 0.94) 100%);
+  box-shadow:
+    0 10px 18px rgba(0, 0, 0, 0.18),
+    0 0 0 5px rgba(255, 243, 221, 0.12);
+  pointer-events: none;
 }
 
 .home-hero .site-heading h1 {
-  font-weight: 800;
-  letter-spacing: 0.6px;
+  position: relative;
+  display: inline-block;
+  padding: 0.34em 1.38em 0.42em 1.72em;
+  margin-top: 1.62rem;
+  font-family: var(--blog-font-title);
+  font-weight: 600;
+  letter-spacing: 0.055em;
+  line-height: 1.18;
   white-space: nowrap;
   font-size: clamp(18px, 5vw, 56px);
+  min-width: min(82vw, 18.2ch);
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(255, 251, 245, 0.3), rgba(244, 234, 221, 0.12)),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12), transparent 14%, transparent 86%, rgba(255, 255, 255, 0.05)),
+    repeating-linear-gradient(180deg, rgba(162, 128, 92, 0.035) 0 1px, transparent 1px 11px);
+  border-top: 1px solid rgba(255, 255, 255, 0.42);
+  border-right: 1px solid rgba(255, 255, 255, 0.11);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  border-left: 4px solid rgba(195, 74, 54, 0.82);
+  border-radius: 6px 34px 34px 6px;
+  backdrop-filter: blur(6px) saturate(1.08);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.26),
+    0 10px 20px rgba(120, 95, 74, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 0 0 1px rgba(164, 129, 88, 0.08);
+  text-shadow: 0 18px 34px rgba(0, 0, 0, 0.34), 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .home-hero .site-heading .subheading {
-  margin-top: 0.5rem;
+  margin-top: 0.9rem;
+  padding: 0.22rem 0.8rem 0.26rem;
   color: rgba(255, 255, 255, 0.92);
-  opacity: 0.95;
-  letter-spacing: 0.2px;
-  font-family: var(--blog-font-sans);
+  opacity: 0.97;
+  letter-spacing: 0.14em;
+  font-family: var(--blog-font-title);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.4vw, 1.12rem);
+  background: linear-gradient(180deg, rgba(255, 251, 245, 0.1), rgba(255, 251, 245, 0.02));
+  border-radius: 999px;
+  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.home-hero .site-heading h1::before {
+  content: "";
+  position: absolute;
+  left: 0.76rem;
+  top: 50%;
+  width: 0.46rem;
+  height: 0.46rem;
+  border-radius: 999px;
+  background: var(--blog-seal);
+  box-shadow: 0 0 0 4px rgba(195, 74, 54, 0.14);
+  transform: translateY(-50%);
+}
+
+.home-hero .site-heading h1::after,
+body.category .category-hero .site-heading h1::after,
+body.archive .archive-hero .site-heading h1::after {
+  content: "";
+  display: block;
+  width: min(11.5rem, 42%);
+  height: 1px;
+  margin: 0.52rem auto 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent);
+  opacity: 0.88;
+}
+
+.home-hero .site-heading h1::after {
+  width: calc(100% - 1.35rem);
+  margin-top: 0.82rem;
+  background: linear-gradient(90deg, rgba(255, 246, 238, 0), rgba(255, 246, 238, 0.96) 16%, rgba(255, 246, 238, 0.96) 84%, rgba(255, 246, 238, 0));
+}
+
+body.category .category-hero .site-heading h1,
+body.archive .archive-hero .site-heading h1 {
+  position: relative;
+  display: inline-block;
+  font-family: var(--blog-font-title);
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: 0.08em;
+  text-shadow: 0 16px 30px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+body.category .category-hero .site-heading .subheading,
+body.archive .archive-hero .site-heading .subheading {
+  font-family: var(--blog-font-title);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.86;
+  letter-spacing: 0.12em;
+  text-shadow: 0 5px 16px rgba(0, 0, 0, 0.22);
 }
 
 /* Give the hero some breathing room under the fixed navbar. */
 body.home .home-hero .site-heading {
-  padding-top: 3.5rem;
+  padding-top: clamp(4rem, 7vw, 5rem);
 }
 
 /* Glass navbar over hero */
@@ -353,6 +558,7 @@ header.masthead.category-hero {
 
 body.category .category-hero .site-heading {
   padding-top: 3.25rem;
+  max-width: min(84vw, 860px);
   text-shadow: 0 10px 38px rgba(0, 0, 0, 0.55);
 }
 
@@ -448,8 +654,9 @@ body.category:not(.pdf-page)::after {
   justify-content: center;
   gap: 8px;
   color: rgba(33, 37, 41, 0.78);
+  font-family: var(--blog-font-title);
   font-size: 1.5rem;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.05em;
   margin-bottom: 1.45rem;
   padding-bottom: 0.4rem;
   border-bottom: 0;
@@ -570,8 +777,9 @@ body.category:not(.pdf-page)::after {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: 900;
-  letter-spacing: 0.2px;
+  font-family: var(--blog-font-title);
+  font-weight: 700;
+  letter-spacing: 0.08em;
   color: rgba(13, 110, 253, 0.95);
   margin: 0 0 8px;
 }
@@ -897,6 +1105,37 @@ body.category:not(.pdf-page)::after {
 }
 
 @media (max-width: 767.98px) {
+  .home-hero .site-heading {
+    max-width: min(94vw, 38rem);
+  }
+
+  .home-hero .site-heading::before {
+    top: 0.62rem;
+    width: min(88%, 19rem);
+    height: 2.1rem;
+  }
+
+  .home-hero .site-heading::after {
+    top: 0.36rem;
+    width: 0.92rem;
+    height: 0.92rem;
+  }
+
+  .home-hero .site-heading h1 {
+    min-width: min(88vw, 19ch);
+    padding: 0.34em 1.04em 0.4em 1.38em;
+    margin-top: 1.42rem;
+    border-left-width: 3px;
+    border-radius: 6px 24px 24px 6px;
+  }
+
+  .home-hero .site-heading .subheading {
+    max-width: 92%;
+    padding-left: 0.72rem;
+    padding-right: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+
   .cat-indexBox {
     max-height: var(--blog-panel-scroll-max-mobile);
     padding-right: 0.2rem;
@@ -988,6 +1227,7 @@ header.masthead.archive-hero {
 
 body.archive .archive-hero .site-heading {
   padding-top: 3.25rem;
+  max-width: min(84vw, 860px);
   text-shadow: 0 10px 38px rgba(0, 0, 0, 0.55);
 }
 
@@ -1218,11 +1458,12 @@ body.archive:not(.pdf-page)::after {
 .archive-year__title {
   margin: 0 0 0.8rem;
   font-size: clamp(1.7rem, 2.3vw, 2.05rem);
-  line-height: 1.1;
-  font-family: var(--blog-font-sans);
-  font-weight: 700;
+  line-height: 1.12;
+  font-family: var(--blog-font-title);
+  font-weight: 500;
   color: rgba(38, 44, 49, 0.92);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.075em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.38);
 }
 
 .archive-year__body {
@@ -1271,12 +1512,12 @@ body.archive:not(.pdf-page)::after {
 
 .archive-month__title {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   line-height: 1.1;
-  font-family: var(--blog-font-sans);
-  font-weight: 700;
-  color: rgba(73, 177, 245, 0.82);
-  letter-spacing: 0.04em;
+  font-family: var(--blog-font-title);
+  font-weight: 500;
+  color: rgba(73, 177, 245, 0.84);
+  letter-spacing: 0.12em;
 }
 
 .archive-entryList {
@@ -1288,9 +1529,9 @@ body.archive:not(.pdf-page)::after {
 .archive-entry {
   position: relative;
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  align-items: baseline;
-  gap: 16px;
+  grid-template-columns: 92px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
   padding: 0.68rem 0 0.68rem 0;
 }
 
@@ -1311,17 +1552,60 @@ body.archive:not(.pdf-page)::after {
 }
 
 .archive-entry__date {
-  color: #888;
-  font-size: 0.9rem;
-  font-family: var(--blog-font-sans);
-  font-weight: 400;
-  display: inline-block;
-  min-width: 3.5rem;
+  position: relative;
+  color: rgba(92, 74, 60, 0.96);
+  font-size: 0.96rem;
+  font-family: var(--blog-font-title);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.18rem 0.56rem 0.22rem 0.82rem;
+  min-width: 4.35rem;
   white-space: nowrap;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.1em;
   font-variant-numeric: oldstyle-nums;
   font-feature-settings: "onum" 1;
   line-height: normal;
+  background: linear-gradient(180deg, var(--blog-paper-soft), var(--blog-paper-warm));
+  border: 1px solid var(--blog-paper-line);
+  border-left: 3px solid rgba(195, 74, 54, 0.78);
+  border-radius: 0 12px 12px 0;
+  box-shadow:
+    0 8px 20px rgba(120, 98, 74, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.76);
+  transform-origin: left center;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.46);
+}
+
+.archive-entry:nth-child(odd) .archive-entry__date {
+  transform: rotate(-2deg);
+}
+
+.archive-entry:nth-child(even) .archive-entry__date {
+  transform: rotate(1.25deg);
+}
+
+.archive-entry__date::before {
+  content: "";
+  position: absolute;
+  left: 0.34rem;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--blog-seal);
+  box-shadow: 0 0 0 3px rgba(195, 74, 54, 0.14);
+  transform: translateY(-50%);
+}
+
+.archive-entry__date::after {
+  content: "";
+  position: absolute;
+  inset: 2px 3px 2px 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.54);
+  border-radius: 0 10px 10px 0;
+  pointer-events: none;
 }
 
 .archive-entry__title {
@@ -1329,8 +1613,10 @@ body.archive:not(.pdf-page)::after {
   color: rgba(73, 177, 245, 0.96);
   text-decoration: none;
   font-size: 0.98rem;
-  font-weight: 500;
-  line-height: 1.45;
+  font-weight: 400;
+  line-height: 1.56;
+  letter-spacing: 0.018em;
+  padding-top: 0.04rem;
   transition: color 140ms ease, transform 140ms ease;
 }
 
@@ -1447,8 +1733,8 @@ body.archive:not(.pdf-page)::after {
   }
 
   .archive-entry {
-    grid-template-columns: 54px minmax(0, 1fr);
-    gap: 10px;
+    grid-template-columns: 70px minmax(0, 1fr);
+    gap: 12px;
     padding: 0.58rem 0;
   }
 
@@ -1462,9 +1748,24 @@ body.archive:not(.pdf-page)::after {
   }
 
   .archive-entry__date {
-    font-size: 0.84rem;
-    min-width: 3.1rem;
+    font-size: 0.8rem;
+    min-width: 0;
+    padding: 0.14rem 0.42rem 0.16rem 0.62rem;
+    letter-spacing: 0.06em;
     line-height: normal;
+    transform: none;
+  }
+
+  .archive-entry:nth-child(odd) .archive-entry__date,
+  .archive-entry:nth-child(even) .archive-entry__date {
+    transform: none;
+  }
+
+  .archive-entry__date::before {
+    left: 0.26rem;
+    width: 3px;
+    height: 3px;
+    box-shadow: 0 0 0 2px rgba(195, 74, 54, 0.12);
   }
 
   .archive-entry__title {
@@ -1543,8 +1844,9 @@ body.archive .navbar-toggler {
 }
 
 .blog-sidebar__title {
-  font-weight: 700;
-  letter-spacing: 0.2px;
+  font-family: var(--blog-font-title);
+  font-weight: 500;
+  letter-spacing: 0.09em;
   margin: 0 0 10px;
 }
 
@@ -1608,6 +1910,7 @@ body.archive .navbar-toggler {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  letter-spacing: 0.012em;
 }
 
 .cat-count {
@@ -1617,7 +1920,7 @@ body.archive .navbar-toggler {
 
 .cat-link.is-active,
 .cat-link.is-active-ancestor {
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .cat-children {

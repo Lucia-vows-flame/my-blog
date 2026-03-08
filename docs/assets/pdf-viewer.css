@@ -1,6 +1,6 @@
 :root {
   --pdf-font-ui: var(--blog-font-sans), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --pdf-font-display: var(--blog-font-cjk), "Merriweather", Georgia, serif;
+  --pdf-font-display: var(--blog-font-title), Georgia, serif;
   --pdf-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
   --pdf-bg: #f8f4f1;
@@ -159,7 +159,10 @@
   margin-bottom: 0.75rem;
   font-family: var(--pdf-font-display);
   font-size: clamp(2.4rem, 4vw, 4.25rem);
-  letter-spacing: 0.02em;
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: 0.05em;
+  text-shadow: 0 16px 30px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.16);
   text-wrap: balance;
 }
 
@@ -167,9 +170,12 @@
 .pdf-heading__subtitle {
   margin: 0;
   max-width: 54rem;
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(255, 255, 255, 0.88);
+  font-family: var(--pdf-font-display);
+  letter-spacing: 0.065em;
   font-size: 1.02rem;
-  line-height: 1.9;
+  font-weight: 500;
+  line-height: 1.92;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.24);
   word-break: break-word;
 }
@@ -1112,7 +1118,8 @@
   color: var(--pdf-text-strong);
   font-family: var(--pdf-font-display);
   font-size: 1.5rem;
-  line-height: 1.35;
+  line-height: 1.42;
+  letter-spacing: 0.022em;
   word-break: break-word;
 }
 
@@ -1158,7 +1165,8 @@
   color: var(--pdf-text-strong);
   font-family: var(--pdf-font-display);
   font-size: 1.05rem;
-  line-height: 1.2;
+  line-height: 1.28;
+  letter-spacing: 0.02em;
 }
 
 .pdf-section + .pdf-section,
