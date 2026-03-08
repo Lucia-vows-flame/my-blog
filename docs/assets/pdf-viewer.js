@@ -579,13 +579,11 @@ async function main() {
   const outlineEmpty = qs("pdf-outline-empty");
   const outlineScroller = qs("pdf-outline-scroller");
   const fileNamePrimary = qs("pdf-file-name");
-  const filePathPrimary = qs("pdf-file-path");
   const infoName = qs("pdf-info-name");
   const infoPages = qs("pdf-info-pages");
   const infoMode = qs("pdf-info-mode");
   const infoTheme = qs("pdf-info-theme");
   const infoZoom = qs("pdf-info-zoom");
-  const infoPath = qs("pdf-info-path");
   const metaMode = qs("pdf-meta-mode");
   const metaTheme = qs("pdf-meta-theme");
   const metaZoom = qs("pdf-meta-zoom");
@@ -598,8 +596,6 @@ async function main() {
 
   setText(fileNamePrimary, fileBaseName);
   setText(infoName, fileBaseName);
-  setText(filePathPrimary, file);
-  setText(infoPath, file);
 
   const ctx = canvas.getContext("2d", { alpha: false });
   if (!ctx) {

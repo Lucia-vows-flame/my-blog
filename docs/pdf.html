@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css?v=20260308o" />
-    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308x" />
+    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308ab" />
   </head>
   <body class="pdf-page">
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
@@ -130,7 +130,6 @@
               >
                 <section class="pdf-overview">
                   <div class="pdf-overview__title" id="pdf-file-name">PDF 文档</div>
-                  <div class="pdf-overview__path" id="pdf-file-path"></div>
                   <div class="pdf-statusGrid">
                     <article class="pdf-statusTile">
                       <span class="pdf-statusTile__label">当前页</span>
@@ -277,13 +276,6 @@
                   </div>
                 </section>
 
-                <section class="pdf-section pdf-section--plain">
-                  <div class="pdf-section__title">完整路径</div>
-                  <div class="pdf-fileCard">
-                    <code id="pdf-info-path"></code>
-                  </div>
-                </section>
-
               </div>
             </div>
           </aside>
@@ -318,13 +310,25 @@
 
                 <div class="pdf-readerCard__navWrap">
                   <div class="pdf-nav" title="输入页码并回车跳转；←/→ 翻页" role="toolbar" aria-label="PDF page navigation">
-                    <button class="pdf-btn" type="button" id="prev-page" title="上一页 (←)">上一页</button>
+                    <button class="pdf-btn pdf-btn--icon" type="button" id="prev-page" title="上一页 (←)" aria-label="上一页">
+                      <span class="pdf-nav__icon" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
+                          <path d="M9.75 3.5 5.25 8l4.5 4.5" />
+                        </svg>
+                      </span>
+                    </button>
                     <div class="pdf-counter" aria-label="Page counter">
                       <input id="page-number" class="pdf-input" inputmode="numeric" aria-label="当前页码" value="1" />
                       <span class="pdf-counter__sep" aria-hidden="true">/</span>
                       <span id="page-count" class="pdf-counter__count" aria-label="总页数">?</span>
                     </div>
-                    <button class="pdf-btn" type="button" id="next-page" title="下一页 (→)">下一页</button>
+                    <button class="pdf-btn pdf-btn--icon" type="button" id="next-page" title="下一页 (→)" aria-label="下一页">
+                      <span class="pdf-nav__icon" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
+                          <path d="m6.25 3.5 4.5 4.5-4.5 4.5" />
+                        </svg>
+                      </span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -403,7 +407,7 @@
               : "");
         }
       } else {
-        await import(`./assets/pdf-viewer.js?v=20260308x`);
+        await import(`./assets/pdf-viewer.js?v=20260308ab`);
       }
     </script>
     <script>
