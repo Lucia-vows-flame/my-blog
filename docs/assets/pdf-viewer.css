@@ -2507,7 +2507,8 @@
 }
 
 /* Final sidebar flow behavior */
+.pdf-sidebar,
 .pdf-sidebarCard {
-  position: relative;
-  top: auto;
+  position: static !important;
+  top: auto !important;
 }
