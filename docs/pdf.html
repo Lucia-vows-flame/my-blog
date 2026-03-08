@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css?v=20260308e" />
-    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308p" />
+    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308r" />
   </head>
   <body class="pdf-page">
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
@@ -129,7 +129,6 @@
                 data-sidebar-panel="toc"
               >
                 <section class="pdf-overview">
-                  <div class="pdf-overview__eyebrow">Article Outline</div>
                   <div class="pdf-overview__title" id="pdf-file-name">PDF 文档</div>
                   <div class="pdf-overview__path" id="pdf-file-path"></div>
                   <div class="pdf-statusGrid">
@@ -150,7 +149,6 @@
 
                 <section class="pdf-section pdf-tocCard">
                   <div class="pdf-section__title">文章目录</div>
-                  <p class="pdf-section__desc">基于 PDF 内置书签生成，可折叠层级并跳转到对应页，就像 clone 项目的文章目录一样。</p>
                   <div class="pdf-tocScroller" id="pdf-outline-scroller">
                     <div class="pdf-toc" id="pdf-outline" role="tree" aria-label="PDF outline"></div>
                     <div class="pdf-tocEmpty" id="pdf-outline-empty" hidden>
@@ -184,7 +182,6 @@
               >
                 <section class="pdf-section pdf-section--plain">
                   <div class="pdf-section__title">阅读模式</div>
-                  <p class="pdf-section__desc">连续滚动适合通读长文，单页翻页更接近纸面阅读，两种模式都可随时切换。</p>
                   <div class="pdf-dd" id="dd-mode" title="阅读方式：连续滚动或单页翻页">
                     <span class="pdf-dd__label">模式</span>
                     <button class="pdf-dd__btn" type="button" id="mode-btn" aria-haspopup="listbox" aria-expanded="false">
@@ -199,7 +196,6 @@
 
                 <section class="pdf-section">
                   <div class="pdf-section__title">界面主题</div>
-                  <p class="pdf-section__desc">默认跟随系统，也可以手动切换到亮色或暗色，以适配不同的阅读环境。</p>
                   <div class="pdf-dd" id="dd-theme" title="主题：亮色/暗色/跟随系统">
                     <span class="pdf-dd__label">主题</span>
                     <button class="pdf-dd__btn" type="button" id="theme-btn" aria-haspopup="listbox" aria-expanded="false">
@@ -215,7 +211,6 @@
 
                 <section class="pdf-section">
                   <div class="pdf-section__title">缩放设置</div>
-                  <p class="pdf-section__desc">支持适合宽度、适合页面和百分比缩放，方便在大屏和小屏之间快速调整。</p>
                   <div class="pdf-stepper" title="缩放：适合宽度/适合页面/百分比">
                     <button class="pdf-btn" type="button" id="zoom-out" title="缩小 (-)">−</button>
                     <div class="pdf-dd" id="dd-zoom">
@@ -241,7 +236,6 @@
 
                 <section class="pdf-section">
                   <div class="pdf-section__title">文件操作</div>
-                  <p class="pdf-section__desc">保留原始 PDF 与下载入口，方便在外部阅读器中继续查看批注、书签与原始链接。</p>
                   <div class="pdf-tools pdf-tools--stack">
                     <button class="pdf-btn pdf-action pdf-action--ghost" type="button" id="rotate" title="旋转 (R)">旋转 90°</button>
                     <a
@@ -255,7 +249,6 @@
                     </a>
                     <a class="pdf-btn pdf-btn--link pdf-action pdf-action--secondary" id="download" download title="下载 PDF">下载 PDF</a>
                   </div>
-                  <p class="pdf-section__hint">如需保留阅读器兼容行为、批注或外链跳转，建议优先使用原始 PDF。</p>
                 </section>
 
                 <section class="pdf-section pdf-section--plain">
@@ -291,15 +284,6 @@
                   </div>
                 </section>
 
-                <section class="pdf-note pdf-note--alt">
-                  <div class="pdf-section__title">阅读说明</div>
-                  <ul class="pdf-note__list">
-                    <li>PDF 内部目录跳转与外部链接均保留可点击区域。</li>
-                    <li>输入页码后按回车可跳转，键盘 ← / → 也支持翻页。</li>
-                    <li>当页面较窄时，推荐使用“适合宽度”获得更稳定的版面。</li>
-                    <li>如需外部阅读器的完整能力，可随时切换到原始 PDF。</li>
-                  </ul>
-                </section>
               </div>
             </div>
           </aside>
@@ -308,9 +292,7 @@
             <div class="pdf-card pdf-readerCard">
               <div class="pdf-readerCard__header">
                 <div class="pdf-readerCard__intro">
-                  <span class="pdf-readerCard__eyebrow">Article Detail Reader</span>
                   <h2 class="pdf-readerCard__title">沉浸式 PDF 阅读</h2>
-                  <p class="pdf-readerCard__desc">保留 clone 文章详情页的大卡片层次，并用 PDF.js 提供滚动 / 翻页双模式、亮暗主题和文档内跳转能力。</p>
                   <div class="pdf-readerMeta" aria-label="PDF metadata">
                     <span class="pdf-readerMeta__item">
                       <span class="pdf-readerMeta__key">模式</span>
@@ -349,14 +331,6 @@
               </div>
 
               <div class="pdf-stageFrame">
-                <div class="pdf-stageFrame__top">
-                  <div class="pdf-stageFrame__caption">
-                    <span class="pdf-stageFrame__dot" aria-hidden="true"></span>
-                    <span>Document Canvas</span>
-                  </div>
-                  <div class="pdf-stageFrame__caption pdf-stageFrame__caption--muted">支持 PDF 内链、外链、双模式阅读与主题切换</div>
-                </div>
-
                 <div class="pdf-stage" id="stage" aria-label="PDF page viewport">
                   <div class="pdf-loading" id="loading">
                     <div class="pdf-loading__card">
@@ -388,7 +362,7 @@
       <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-md-10 col-lg-8 col-xl-7">
-            <div class="small text-center text-muted fst-italic">© <span id="footer-year"></span> · Powered by GitHub Pages</div>
+            <div class="small text-center text-muted fst-italic">© <span id="footer-year"></span></div>
           </div>
         </div>
       </div>
@@ -418,9 +392,9 @@
         if (error) {
           error.hidden = false;
           error.innerHTML =
-            `<div style="font-weight:800;font-size:18px;margin-bottom:10px">PDF 阅读器未启用</div>` +
+            `<div style="font-weight:800;font-size:18px;margin-bottom:10px">阅读器暂不可用</div>` +
             `<div style="opacity:.82;line-height:1.7">` +
-            `当前页面配置为 <b>0 外链</b>，需要本地提供 PDF.js 文件：<code>assets/vendor/pdfjs/pdf.min.js</code> 与 <code>assets/vendor/pdfjs/pdf.worker.min.js</code>。` +
+            `缺少依赖文件：<code>assets/vendor/pdfjs/pdf.min.js</code> 与 <code>assets/vendor/pdfjs/pdf.worker.min.js</code>。` +
             `</div>` +
             (file
               ? `<div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">` +
@@ -430,7 +404,7 @@
               : "");
         }
       } else {
-        await import(`./assets/pdf-viewer.js?v=20260308p`);
+        await import(`./assets/pdf-viewer.js?v=20260308r`);
       }
     </script>
     <script>

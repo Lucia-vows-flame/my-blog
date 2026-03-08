@@ -1,6 +1,6 @@
 :root {
   --pdf-font-ui: var(--blog-font-sans), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --pdf-font-display: "Merriweather", Georgia, serif;
+  --pdf-font-display: var(--blog-font-cjk), "Merriweather", Georgia, serif;
   --pdf-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
   --pdf-bg: #f8f4f1;
@@ -2139,4 +2139,113 @@
   .pdf-stage {
     border-radius: 20px;
   }
+}
+
+/* Final typography unification: reader meta row + toc overview card. */
+.pdf-overview__eyebrow {
+  color: #ff8a7a;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.pdf-overview__title {
+  margin-top: 0.42rem;
+  color: #31425d;
+  font-size: 1.34rem;
+  line-height: 1.28;
+  letter-spacing: 0.01em;
+}
+
+.pdf-page[data-theme="dark"] .pdf-overview__title {
+  color: rgba(244, 248, 255, 0.96);
+}
+
+.pdf-overview__path {
+  margin-top: 0.38rem;
+  color: rgba(97, 111, 133, 0.78);
+  font-size: 0.82rem;
+  line-height: 1.64;
+}
+
+.pdf-page[data-theme="dark"] .pdf-overview__path {
+  color: rgba(196, 208, 226, 0.72);
+}
+
+.pdf-statusGrid {
+  margin-top: 0.88rem;
+  gap: 0.56rem;
+}
+
+.pdf-statusTile__label {
+  color: rgba(109, 122, 143, 0.82);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.pdf-page[data-theme="dark"] .pdf-statusTile__label {
+  color: rgba(191, 204, 224, 0.68);
+}
+
+.pdf-statusTile__value {
+  margin-top: 0.24rem;
+  color: #2f405b;
+  font-size: 0.96rem;
+  font-weight: 600;
+}
+
+.pdf-page[data-theme="dark"] .pdf-statusTile__value {
+  color: rgba(243, 248, 255, 0.95);
+}
+
+.pdf-readerCard__desc {
+  color: rgba(101, 114, 135, 0.88);
+}
+
+.pdf-page[data-theme="dark"] .pdf-readerCard__desc {
+  color: rgba(202, 214, 232, 0.78);
+}
+
+.pdf-readerMeta {
+  margin-top: 0.66rem;
+  gap: 0.26rem 0.46rem;
+  color: rgba(102, 116, 137, 0.86);
+  font-size: 0.84rem;
+  line-height: 1.58;
+}
+
+.pdf-page[data-theme="dark"] .pdf-readerMeta {
+  color: rgba(196, 208, 225, 0.74);
+}
+
+.pdf-readerMeta__item {
+  gap: 0.32rem;
+}
+
+.pdf-readerMeta__key {
+  color: rgba(118, 131, 152, 0.82);
+  font-weight: 500;
+}
+
+.pdf-page[data-theme="dark"] .pdf-readerMeta__key {
+  color: rgba(184, 198, 219, 0.68);
+}
+
+.pdf-readerMeta__item strong {
+  color: #33445f;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.pdf-page[data-theme="dark"] .pdf-readerMeta__item strong {
+  color: rgba(244, 248, 255, 0.92);
+}
+
+.pdf-readerMeta__sep {
+  color: rgba(161, 173, 191, 0.52);
+}
+
+.pdf-page[data-theme="dark"] .pdf-readerMeta__sep {
+  color: rgba(167, 181, 205, 0.34);
 }
