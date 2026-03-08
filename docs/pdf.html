@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css?v=20260308e" />
-    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308n" />
+    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260308p" />
   </head>
   <body class="pdf-page">
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
@@ -99,37 +99,37 @@
               <div class="pdf-sidebarCard__tabs" role="tablist" aria-label="Reader panels">
                 <button
                   class="pdf-sidebarCard__tab is-active"
-                  id="pdf-sidebar-tab-reader"
+                  id="pdf-sidebar-tab-toc"
                   type="button"
                   role="tab"
                   aria-selected="true"
+                  aria-controls="pdf-sidebar-panel-toc"
+                  data-sidebar-tab="toc"
+                >
+                  文章目录
+                </button>
+                <button
+                  class="pdf-sidebarCard__tab"
+                  id="pdf-sidebar-tab-reader"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
                   aria-controls="pdf-sidebar-panel-reader"
                   data-sidebar-tab="reader"
                 >
                   阅读器
                 </button>
-                <button
-                  class="pdf-sidebarCard__tab"
-                  id="pdf-sidebar-tab-overview"
-                  type="button"
-                  role="tab"
-                  aria-selected="false"
-                  aria-controls="pdf-sidebar-panel-overview"
-                  data-sidebar-tab="overview"
-                >
-                  文件说明
-                </button>
               </div>
 
               <div
                 class="pdf-sidebarPanel is-active"
-                id="pdf-sidebar-panel-reader"
+                id="pdf-sidebar-panel-toc"
                 role="tabpanel"
-                aria-labelledby="pdf-sidebar-tab-reader"
-                data-sidebar-panel="reader"
+                aria-labelledby="pdf-sidebar-tab-toc"
+                data-sidebar-panel="toc"
               >
                 <section class="pdf-overview">
-                  <div class="pdf-overview__eyebrow">Reader Console</div>
+                  <div class="pdf-overview__eyebrow">Article Outline</div>
                   <div class="pdf-overview__title" id="pdf-file-name">PDF 文档</div>
                   <div class="pdf-overview__path" id="pdf-file-path"></div>
                   <div class="pdf-statusGrid">
@@ -148,7 +148,41 @@
                   </div>
                 </section>
 
-                <section class="pdf-section">
+                <section class="pdf-section pdf-tocCard">
+                  <div class="pdf-section__title">文章目录</div>
+                  <p class="pdf-section__desc">基于 PDF 内置书签生成，可折叠层级并跳转到对应页，就像 clone 项目的文章目录一样。</p>
+                  <div class="pdf-tocScroller" id="pdf-outline-scroller">
+                    <div class="pdf-toc" id="pdf-outline" role="tree" aria-label="PDF outline"></div>
+                    <div class="pdf-tocEmpty" id="pdf-outline-empty" hidden>
+                      当前 PDF 没有内置目录书签，暂时无法显示文章目录。
+                    </div>
+                  </div>
+                </section>
+
+                <section class="pdf-note pdf-progressCard">
+                  <div class="pdf-progressCard__head">
+                    <div class="pdf-section__title">阅读进度</div>
+                    <div class="pdf-progressCard__percent" id="pdf-progress-percent">0%</div>
+                  </div>
+                  <div class="pdf-progress">
+                    <span class="pdf-progress__bar" id="pdf-progress-bar"></span>
+                  </div>
+                  <div class="pdf-progressCard__meta">
+                    <span id="pdf-progress-text">第 1 页，共 ? 页</span>
+                    <span id="pdf-progress-mode">滚动（连续）</span>
+                  </div>
+                </section>
+              </div>
+
+              <div
+                class="pdf-sidebarPanel"
+                id="pdf-sidebar-panel-reader"
+                role="tabpanel"
+                aria-labelledby="pdf-sidebar-tab-reader"
+                data-sidebar-panel="reader"
+                hidden
+              >
+                <section class="pdf-section pdf-section--plain">
                   <div class="pdf-section__title">阅读模式</div>
                   <p class="pdf-section__desc">连续滚动适合通读长文，单页翻页更接近纸面阅读，两种模式都可随时切换。</p>
                   <div class="pdf-dd" id="dd-mode" title="阅读方式：连续滚动或单页翻页">
@@ -224,29 +258,6 @@
                   <p class="pdf-section__hint">如需保留阅读器兼容行为、批注或外链跳转，建议优先使用原始 PDF。</p>
                 </section>
 
-                <section class="pdf-note pdf-progressCard">
-                  <div class="pdf-progressCard__head">
-                    <div class="pdf-section__title">阅读进度</div>
-                    <div class="pdf-progressCard__percent" id="pdf-progress-percent">0%</div>
-                  </div>
-                  <div class="pdf-progress">
-                    <span class="pdf-progress__bar" id="pdf-progress-bar"></span>
-                  </div>
-                  <div class="pdf-progressCard__meta">
-                    <span id="pdf-progress-text">第 1 页，共 ? 页</span>
-                    <span id="pdf-progress-mode">滚动（连续）</span>
-                  </div>
-                </section>
-              </div>
-
-              <div
-                class="pdf-sidebarPanel"
-                id="pdf-sidebar-panel-overview"
-                role="tabpanel"
-                aria-labelledby="pdf-sidebar-tab-overview"
-                data-sidebar-panel="overview"
-                hidden
-              >
                 <section class="pdf-section pdf-section--plain">
                   <div class="pdf-section__title">文件概览</div>
                   <div class="pdf-infoList">
@@ -419,7 +430,7 @@
               : "");
         }
       } else {
-        await import(`./assets/pdf-viewer.js?v=20260308n`);
+        await import(`./assets/pdf-viewer.js?v=20260308p`);
       }
     </script>
     <script>
@@ -489,7 +500,7 @@
             tab.addEventListener("click", () => setActiveTab(tab.dataset.sidebarTab || "reader"));
           }
 
-          setActiveTab("reader");
+          setActiveTab("toc");
         }
 
         const year = document.getElementById("footer-year");

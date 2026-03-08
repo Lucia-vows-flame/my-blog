@@ -575,6 +575,9 @@ async function main() {
   const progressBar = qs("pdf-progress-bar");
   const progressText = qs("pdf-progress-text");
   const progressMode = qs("pdf-progress-mode");
+  const outlineRoot = qs("pdf-outline");
+  const outlineEmpty = qs("pdf-outline-empty");
+  const outlineScroller = qs("pdf-outline-scroller");
   const fileNamePrimary = qs("pdf-file-name");
   const filePathPrimary = qs("pdf-file-path");
   const infoName = qs("pdf-info-name");
@@ -636,6 +639,188 @@ async function main() {
   let renderObserver = null;
   /** @type {IntersectionObserver|null} */
   let activeObserver = null;
+  /** @type {Map<string, {wrapper:HTMLElement, button:HTMLButtonElement, parentId:string|null, page:number|null}>} */
+  const outlineMap = new Map();
+  /** @type {{id:string,parentId:string|null,title:string,page:number|null,url:string,action:string,depth:number,children:any[]}[]} */
+  let outlineLinear = [];
+  let activeOutlineId = "";
+
+  function flattenOutline(items, target = []) {
+    for (const item of items) {
+      target.push(item);
+      if (item.children?.length) flattenOutline(item.children, target);
+    }
+    return target;
+  }
+
+  async function buildOutlineItems(items, parentId = null, depth = 0, path = []) {
+    const nodes = [];
+    for (let i = 0; i < (items || []).length; i += 1) {
+      const item = items[i];
+      const id = `outline-${[...path, i].join("-")}`;
+      const page = item?.dest ? await resolveDestToPageNumber(state.pdfDoc, item.dest) : null;
+      const children = item?.items?.length ? await buildOutlineItems(item.items, id, depth + 1, [...path, i]) : [];
+      nodes.push({
+        id,
+        parentId,
+        depth,
+        title: String(item?.title || "未命名章节").trim() || "未命名章节",
+        page,
+        url: String(item?.url || item?.unsafeUrl || ""),
+        action: String(item?.action || ""),
+        children,
+      });
+    }
+    return nodes;
+  }
+
+  function setOutlineExpanded(id, expanded) {
+    const entry = outlineMap.get(id);
+    if (!entry) return;
+    entry.wrapper.classList.toggle("is-expanded", expanded);
+  }
+
+  function ensureOutlineAncestorsExpanded(id) {
+    let currentId = id;
+    while (currentId) {
+      const entry = outlineMap.get(currentId);
+      if (!entry) break;
+      entry.wrapper.classList.add("is-expanded");
+      currentId = entry.parentId || "";
+    }
+  }
+
+  function pickActiveOutlineId(pageNum) {
+    let match = "";
+    let first = "";
+    for (const item of outlineLinear) {
+      if (!Number.isFinite(item.page) || item.page < 1) continue;
+      if (!first) first = item.id;
+      if (item.page <= pageNum) match = item.id;
+    }
+    return match || first;
+  }
+
+  function updateOutlineActive({ scroll = true } = {}) {
+    if (!outlineLinear.length) return;
+    const nextId = pickActiveOutlineId(state.pageNum);
+    if (!nextId && !activeOutlineId) return;
+
+    for (const [id, entry] of outlineMap.entries()) {
+      entry.button.classList.toggle("is-active", id === nextId);
+    }
+
+    if (nextId) {
+      ensureOutlineAncestorsExpanded(nextId);
+      if (scroll && nextId !== activeOutlineId && outlineScroller?.offsetParent !== null) {
+        const entry = outlineMap.get(nextId);
+        entry?.button?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
+      }
+    }
+
+    activeOutlineId = nextId;
+  }
+
+  function renderOutlineNode(item) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "pdf-tocNode";
+    wrapper.dataset.id = item.id;
+    if (item.depth <= 0) wrapper.classList.add("is-expanded");
+
+    const row = document.createElement("div");
+    row.className = "pdf-tocRow";
+
+    const toggle = document.createElement("button");
+    toggle.className = "pdf-tocToggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-label", item.children.length ? `展开或折叠 ${item.title}` : `${item.title}`);
+    toggle.disabled = !item.children.length;
+    toggle.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      if (!item.children.length) return;
+      const expanded = !wrapper.classList.contains("is-expanded");
+      setOutlineExpanded(item.id, expanded);
+    });
+
+    const button = document.createElement("button");
+    button.className = "pdf-tocButton";
+    button.type = "button";
+    button.style.setProperty("--depth", String(item.depth));
+    button.setAttribute("role", "treeitem");
+    button.setAttribute("aria-label", item.page ? `${item.title}，第 ${item.page} 页` : item.title);
+    button.innerHTML =
+      `<span class="pdf-tocLabel">${escapeHtml(item.title)}</span>` +
+      (item.page ? `<span class="pdf-tocPage">P. ${item.page}</span>` : "");
+    button.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      if (Number.isFinite(item.page) && item.page) {
+        goToPage(item.page);
+        return;
+      }
+      if (item.url) {
+        window.open(item.url, "_blank", "noopener,noreferrer");
+        return;
+      }
+      if (item.action) {
+        goToNamedAction(item.action);
+        return;
+      }
+      if (item.children.length) {
+        const expanded = !wrapper.classList.contains("is-expanded");
+        setOutlineExpanded(item.id, expanded);
+      }
+    });
+
+    row.append(toggle, button);
+    wrapper.append(row);
+
+    outlineMap.set(item.id, { wrapper, button, parentId: item.parentId, page: item.page });
+
+    if (item.children.length) {
+      const childrenEl = document.createElement("div");
+      childrenEl.className = "pdf-tocChildren";
+      childrenEl.setAttribute("role", "group");
+      for (const child of item.children) {
+        childrenEl.append(renderOutlineNode(child));
+      }
+      wrapper.append(childrenEl);
+    }
+
+    return wrapper;
+  }
+
+  function renderOutline(items) {
+    if (!outlineRoot || !outlineEmpty) return;
+    outlineMap.clear();
+    outlineLinear = flattenOutline(items, []);
+    activeOutlineId = "";
+    outlineRoot.innerHTML = "";
+
+    if (!outlineLinear.length) {
+      outlineRoot.hidden = true;
+      outlineEmpty.hidden = false;
+      return;
+    }
+
+    outlineRoot.hidden = false;
+    outlineEmpty.hidden = true;
+    const frag = document.createDocumentFragment();
+    for (const item of items) frag.append(renderOutlineNode(item));
+    outlineRoot.append(frag);
+    updateOutlineActive({ scroll: false });
+  }
+
+  async function loadOutline() {
+    if (!outlineRoot || !outlineEmpty) return;
+    try {
+      const outline = await state.pdfDoc.getOutline();
+      const items = outline?.length ? await buildOutlineItems(outline) : [];
+      renderOutline(items);
+    } catch {
+      renderOutline([]);
+    }
+  }
 
   function updateSummary() {
     if (!stateReady || !state) return;
@@ -668,6 +853,7 @@ async function main() {
     if (progressBar) progressBar.style.width = `${progress}%`;
     if (subtitle) subtitle.textContent = total ? `${file} · ${page}/${total}` : file;
     document.title = total ? `${fileBaseName} · ${page}/${total}` : fileBaseName;
+    updateOutlineActive();
   }
 
   function updateNav() {
@@ -921,6 +1107,8 @@ async function main() {
       node?.el?.scrollIntoView({ behavior: "auto", block: "start" });
     });
   }
+
+  await loadOutline();
 
   modeDd = initDropdown({
     rootId: "dd-mode",
