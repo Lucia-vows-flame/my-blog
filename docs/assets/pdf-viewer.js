@@ -601,11 +601,9 @@ async function main() {
   const metaTheme = qs("pdf-meta-theme");
   const metaZoom = qs("pdf-meta-zoom");
   const metaPages = qs("pdf-meta-pages");
-  const layoutEl = document.querySelector(".pdf-layout");
-  const sidebarEl = document.querySelector(".pdf-sidebar");
-  const sidebarCardEl = document.querySelector(".pdf-sidebarCard");
 
   disableSidebarPinning();
+  document.body.classList.remove("pdf-reader-expanded");
 
   if (!viewPage || !viewScroll || !canvas || !annoLayer || !pagesEl || !stage) {
     showError("Viewer DOM 不完整。", { file });
@@ -996,12 +994,39 @@ async function main() {
     for (const node of pageNodes.values()) node.renderedKey = null;
   }
 
-  let layoutExpanded = false;
-  let layoutSyncRaf = 0;
   let layoutRefreshToken = 0;
+  let readerDocked = window.innerWidth > 1100;
+
+  function usesDockedReaderLayout() {
+    return window.innerWidth > 1100;
+  }
+
+  function getScrollViewport() {
+    if (state.mode !== "scroll" || !usesDockedReaderLayout()) return null;
+    return stage instanceof HTMLElement ? stage : null;
+  }
+
+  function getAnchorOffset(node, rootEl) {
+    const rect = node?.getBoundingClientRect?.();
+    if (!rect) return 0;
+    if (!(rootEl instanceof HTMLElement)) return rect.top;
+    const rootRect = rootEl.getBoundingClientRect();
+    return rect.top - rootRect.top + rootEl.scrollTop;
+  }
+
+  function isNodeNearViewport(nodeEl, rootEl) {
+    const rect = nodeEl.getBoundingClientRect();
+    if (!(rootEl instanceof HTMLElement)) {
+      return !(rect.bottom < -window.innerHeight || rect.top > window.innerHeight * 2);
+    }
+    const rootRect = rootEl.getBoundingClientRect();
+    const margin = Math.max(280, rootEl.clientHeight);
+    return !(rect.bottom < rootRect.top - margin || rect.top > rootRect.bottom + margin);
+  }
 
   async function refreshLayoutRendering() {
     if (!stateReady || !state?.pdfDoc) return;
+    const rootEl = getScrollViewport();
     if (state.mode === "page") {
       if (state.zoom === "page-width" || state.zoom === "page-fit") renderSinglePage();
       return;
@@ -1010,47 +1035,27 @@ async function main() {
 
     const anchorPage = state.pageNum;
     const anchorNode = pageNodes.get(anchorPage)?.el || null;
-    const anchorTopBefore = anchorNode?.getBoundingClientRect?.().top || 0;
+    const anchorOffsetBefore = anchorNode ? getAnchorOffset(anchorNode, rootEl) : 0;
     const token = ++layoutRefreshToken;
 
     invalidateScrollRenders();
 
     const tasks = [];
     for (const [pageNum, node] of pageNodes.entries()) {
-      const rect = node.el.getBoundingClientRect();
-      if (rect.bottom < -window.innerHeight || rect.top > window.innerHeight * 2) continue;
+      if (!isNodeNearViewport(node.el, rootEl)) continue;
       tasks.push(renderScrollPage(pageNum).catch(() => {}));
     }
     await Promise.all(tasks);
     if (token !== layoutRefreshToken) return;
 
-    const anchorTopAfter = pageNodes.get(anchorPage)?.el?.getBoundingClientRect?.().top || 0;
-    const delta = anchorTopAfter - anchorTopBefore;
-    if (Math.abs(delta) > 1) window.scrollBy({ top: delta, behavior: "auto" });
+    const anchorOffsetAfter = pageNodes.get(anchorPage)?.el ? getAnchorOffset(pageNodes.get(anchorPage).el, rootEl) : 0;
+    const delta = anchorOffsetAfter - anchorOffsetBefore;
+    if (Math.abs(delta) > 1) {
+      if (rootEl instanceof HTMLElement) rootEl.scrollTop += delta;
+      else window.scrollBy({ top: delta, behavior: "auto" });
+    }
     setupObservers();
     updateNav();
-  }
-
-  function syncReaderExpansion() {
-    layoutSyncRaf = 0;
-    if (!(layoutEl instanceof HTMLElement) || !(sidebarEl instanceof HTMLElement) || !(sidebarCardEl instanceof HTMLElement)) return;
-
-    const shouldExpand = window.innerWidth > 1100 && sidebarCardEl.getBoundingClientRect().bottom <= 108;
-    if (shouldExpand === layoutExpanded) return;
-
-    layoutExpanded = shouldExpand;
-    layoutEl.classList.toggle("is-reader-expanded", shouldExpand);
-    document.body.classList.toggle("pdf-reader-expanded", shouldExpand);
-    sidebarEl.setAttribute("aria-hidden", shouldExpand ? "true" : "false");
-
-    queueMicrotask(() => {
-      refreshLayoutRendering().catch(() => {});
-    });
-  }
-
-  function requestReaderExpansionSync() {
-    if (layoutSyncRaf) return;
-    layoutSyncRaf = window.requestAnimationFrame(syncReaderExpansion);
   }
 
   async function renderScrollPage(pageNum) {
@@ -1091,9 +1096,34 @@ async function main() {
     });
   }
 
+  function scrollPageNodeIntoView(pageNum, behavior = "smooth") {
+    const node = pageNodes.get(pageNum);
+    const pageEl = node?.el;
+    if (!(pageEl instanceof HTMLElement)) return;
+
+    const rootEl = getScrollViewport();
+    if (!(rootEl instanceof HTMLElement)) {
+      pageEl.scrollIntoView({ behavior, block: "start" });
+      return;
+    }
+
+    const rootRect = rootEl.getBoundingClientRect();
+    const pageRect = pageEl.getBoundingClientRect();
+    const nextTop = rootEl.scrollTop + (pageRect.top - rootRect.top) - 18;
+    rootEl.scrollTo({ top: Math.max(0, nextTop), behavior });
+  }
+
   function setupObservers() {
     if (renderObserver) renderObserver.disconnect();
     if (activeObserver) activeObserver.disconnect();
+
+    const observerRoot = getScrollViewport();
+    const renderRootMargin = observerRoot instanceof HTMLElement
+      ? `${Math.round(Math.max(360, observerRoot.clientHeight * 0.9))}px 0px`
+      : "800px 0px";
+    const activeRootMargin = observerRoot instanceof HTMLElement
+      ? "-10% 0px -62% 0px"
+      : "-45% 0px -50% 0px";
 
     renderObserver = new IntersectionObserver(
       (entries) => {
@@ -1107,7 +1137,7 @@ async function main() {
           });
         }
       },
-      { root: null, rootMargin: "800px 0px", threshold: 0.01 },
+      { root: observerRoot, rootMargin: renderRootMargin, threshold: 0.01 },
     );
 
     activeObserver = new IntersectionObserver(
@@ -1127,7 +1157,7 @@ async function main() {
           syncHash();
         }
       },
-      { root: null, rootMargin: "-45% 0px -50% 0px", threshold: [0.05, 0.1, 0.2, 0.35, 0.5, 0.7] },
+      { root: observerRoot, rootMargin: activeRootMargin, threshold: [0.05, 0.1, 0.2, 0.35, 0.5, 0.7] },
     );
 
     for (const node of pageNodes.values()) {
@@ -1144,8 +1174,7 @@ async function main() {
       renderSinglePage();
       return;
     }
-    const node = pageNodes.get(pageNum);
-    node?.el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    scrollPageNodeIntoView(pageNum, "smooth");
     syncHash();
   }
 
@@ -1166,7 +1195,6 @@ async function main() {
       activeObserver?.disconnect();
       setLoadingVisible(false);
       renderSinglePage();
-      requestReaderExpansionSync();
       return;
     }
 
@@ -1175,9 +1203,7 @@ async function main() {
     setLoadingVisible(false);
     // Scroll to the current page after DOM ready.
     queueMicrotask(() => {
-      const node = pageNodes.get(state.pageNum);
-      node?.el?.scrollIntoView({ behavior: "auto", block: "start" });
-      requestReaderExpansionSync();
+      scrollPageNodeIntoView(state.pageNum, "auto");
     });
   }
 
@@ -1249,19 +1275,30 @@ async function main() {
   });
 
   window.addEventListener("resize", () => {
-    requestReaderExpansionSync();
+    const nextDocked = usesDockedReaderLayout();
+    const dockChanged = nextDocked !== readerDocked;
+    readerDocked = nextDocked;
+
     if (state.mode === "page") {
       if (state.zoom === "page-width" || state.zoom === "page-fit") renderSinglePage();
       return;
     }
+
+    if (dockChanged) {
+      setupObservers();
+      queueMicrotask(() => {
+        scrollPageNodeIntoView(state.pageNum, "auto");
+      });
+    }
+
     if (state.zoom === "page-width" || state.zoom === "page-fit") {
       invalidateScrollRenders();
       applyModeAndRender();
+      return;
     }
-  });
 
-  window.addEventListener("scroll", requestReaderExpansionSync, { passive: true });
-  requestReaderExpansionSync();
+    updateNav();
+  });
 
   window.addEventListener("keydown", (ev) => {
     if (ev.altKey || ev.ctrlKey || ev.metaKey) return;
