@@ -1,5 +1,5 @@
 const POSTS_URL = "data/posts.json";
-const PDF_VIEWER_VERSION = "20260309ae";
+const PDF_VIEWER_VERSION = "20260309af";
 const PDF_VIEWER = `pdf.html?v=${PDF_VIEWER_VERSION}`;
 let didInitialRoute = false;
 

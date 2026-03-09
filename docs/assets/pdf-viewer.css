@@ -2956,8 +2956,9 @@
 }
 
 
-/* Reader sidebar soft immersive panel */
+/* Reader sidebar pixel-polish panel */
 .pdf-sidebarCard.is-reader-active {
+  padding: 24px 20px;
   border: 1px solid rgba(0, 0, 0, 0.03);
   border-radius: 16px;
   background: #ffffff;
@@ -2984,7 +2985,7 @@
 .pdf-sidebarCard.is-reader-active .pdf-sidebarCard__tabs {
   gap: 18px;
   margin-bottom: 0;
-  padding-bottom: 16px;
+  padding-bottom: 18px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
@@ -3026,14 +3027,14 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -17px;
+  bottom: -19px;
   height: 2px;
   border-radius: 999px;
   background: linear-gradient(90deg, #3b82f6, rgba(59, 130, 246, 0.58));
 }
 
 .pdf-sidebarPanel--reader {
-  padding-top: 18px;
+  padding-top: 24px;
   color: #334155;
 }
 
@@ -3062,7 +3063,7 @@
 
 .pdf-sidebarPanel--reader .pdf-section__title {
   margin: 0 0 12px;
-  color: #94a3b8;
+  color: #64748b;
   font-size: 12px;
   font-weight: 600;
   line-height: 1.35;
@@ -3070,7 +3071,7 @@
 }
 
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-section__title {
-  color: rgba(148, 163, 184, 0.78);
+  color: rgba(203, 213, 225, 0.84);
 }
 
 .pdf-sidebarPanel--reader .pdf-dd--reader,
@@ -3083,9 +3084,9 @@
   width: 100%;
   padding: 0 2.75rem 0 1rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #f8fafc;
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14), 0 1px 1px rgba(255, 255, 255, 0.82);
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
   color: #334155;
   font-size: 0.97rem;
   font-weight: 500;
@@ -3100,7 +3101,7 @@
 
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-dd__btn {
   background: rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
   color: rgba(226, 232, 240, 0.92);
 }
 
@@ -3109,14 +3110,14 @@
 .pdf-sidebarPanel--reader .pdf-dd__btn:focus-visible {
   transform: none;
   background: #f1f5f9;
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18), 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18), 0 0 0 3px rgba(59, 130, 246, 0.08);
 }
 
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-dd__btn:hover,
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-dd__btn[aria-expanded="true"],
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-dd__btn:focus-visible {
   background: rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18), 0 0 0 3px rgba(59, 130, 246, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2), 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 .pdf-sidebarPanel--reader .pdf-dd__btn::after {
@@ -3191,56 +3192,80 @@
 
 .pdf-sidebarPanel--reader .pdf-stepper--reader {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
   align-items: center;
-  gap: 10px;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  background: #f8fafc;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-stepper--reader {
+  border-color: rgba(148, 163, 184, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .pdf-sidebarPanel--reader .pdf-stepper--reader > .pdf-btn,
-.pdf-sidebarPanel--reader .pdf-readerPanelStep {
-  width: 44px;
-  min-width: 44px;
-  height: 44px;
-  min-height: 44px;
+.pdf-sidebarPanel--reader .pdf-readerPanelStep,
+.pdf-sidebarPanel--reader .pdf-stepper--reader .pdf-dd__btn {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  min-height: 40px;
   padding: 0;
   border: none;
-  border-radius: 10px;
-  background: #f8fafc;
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14), 0 1px 1px rgba(255, 255, 255, 0.82);
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
   color: #334155;
-  font-size: 1.15rem;
+  font-size: 1rem;
   font-weight: 500;
   line-height: 1;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-stepper--reader > .pdf-btn,
-.pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-readerPanelStep {
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-readerPanelStep,
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-stepper--reader .pdf-dd__btn {
+  background: transparent;
   color: rgba(226, 232, 240, 0.92);
+  box-shadow: none;
+}
+
+.pdf-sidebarPanel--reader .pdf-stepper--reader .pdf-dd__btn {
+  justify-content: flex-start;
+  text-align: left;
+  padding: 0 2.15rem 0 0.95rem;
 }
 
 .pdf-sidebarPanel--reader .pdf-stepper--reader > .pdf-btn:hover,
 .pdf-sidebarPanel--reader .pdf-stepper--reader > .pdf-btn:focus-visible,
 .pdf-sidebarPanel--reader .pdf-readerPanelStep:hover,
-.pdf-sidebarPanel--reader .pdf-readerPanelStep:focus-visible {
+.pdf-sidebarPanel--reader .pdf-readerPanelStep:focus-visible,
+.pdf-sidebarPanel--reader .pdf-stepper--reader .pdf-dd__btn:hover,
+.pdf-sidebarPanel--reader .pdf-stepper--reader .pdf-dd__btn[aria-expanded="true"],
+.pdf-sidebarPanel--reader .pdf-stepper--reader .pdf-dd__btn:focus-visible {
   transform: none;
-  background: #f1f5f9;
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18), 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: #e2e8f0;
+  box-shadow: none;
 }
 
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-stepper--reader > .pdf-btn:hover,
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-stepper--reader > .pdf-btn:focus-visible,
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-readerPanelStep:hover,
-.pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-readerPanelStep:focus-visible {
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18), 0 0 0 3px rgba(59, 130, 246, 0.14);
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-readerPanelStep:focus-visible,
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-stepper--reader .pdf-dd__btn:hover,
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-stepper--reader .pdf-dd__btn[aria-expanded="true"],
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-stepper--reader .pdf-dd__btn:focus-visible {
+  background: rgba(148, 163, 184, 0.2);
 }
 
 .pdf-sidebarPanel--reader .pdf-dd--zoom {
-  flex: 1;
-  width: 0;
+  flex: initial;
+  width: auto;
   min-width: 0;
 }
 
@@ -3261,14 +3286,12 @@
   min-height: 44px;
   height: 44px;
   padding: 0 14px;
-  border: none;
   border-radius: 10px;
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  box-shadow: none;
   text-decoration: none;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .pdf-sidebarPanel--reader .pdf-action:hover,
@@ -3278,35 +3301,40 @@
 
 .pdf-sidebarPanel--reader .pdf-action--ghost,
 .pdf-sidebarPanel--reader .pdf-action--secondary {
-  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
   color: #475569 !important;
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-action--ghost,
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-action--secondary {
-  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(255, 255, 255, 0.04);
   color: rgba(226, 232, 240, 0.88) !important;
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
 .pdf-sidebarPanel--reader .pdf-action--ghost:hover,
 .pdf-sidebarPanel--reader .pdf-action--ghost:focus-visible,
 .pdf-sidebarPanel--reader .pdf-action--secondary:hover,
 .pdf-sidebarPanel--reader .pdf-action--secondary:focus-visible {
-  background: #f1f5f9;
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18), 0 8px 18px rgba(15, 23, 42, 0.06);
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
 }
 
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-action--ghost:hover,
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-action--ghost:focus-visible,
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-action--secondary:hover,
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-action--secondary:focus-visible {
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18), 0 12px 24px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(148, 163, 184, 0.3);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
 }
 
 .pdf-sidebarPanel--reader .pdf-action--primary {
+  border: none;
   background: #3b82f6;
   color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
@@ -3361,7 +3389,7 @@
 
 .pdf-sidebarPanel--reader .pdf-infoRow > strong {
   min-width: 0;
-  color: #334155;
+  color: #0f172a;
   font-size: 0.92rem;
   font-weight: 500;
   line-height: 1.65;
@@ -3369,36 +3397,42 @@
 }
 
 .pdf-page[data-theme="dark"] .pdf-sidebarPanel--reader .pdf-infoRow > strong {
-  color: rgba(226, 232, 240, 0.94);
+  color: rgba(248, 250, 252, 0.96);
 }
 
 @media (max-width: 1100px) {
   .pdf-sidebarCard.is-reader-active {
+    padding: 22px 18px;
     border-radius: 14px;
   }
 
   .pdf-sidebarCard.is-reader-active .pdf-sidebarCard__tabs {
     gap: 16px;
-    padding-bottom: 14px;
+    padding-bottom: 16px;
   }
 
   .pdf-sidebarPanel--reader {
-    padding-top: 16px;
+    padding-top: 20px;
   }
 }
 
 @media (max-width: 700px) {
+  .pdf-sidebarCard.is-reader-active {
+    padding: 20px 16px;
+  }
+
   .pdf-sidebarPanel--reader .pdf-stepper--reader {
-    grid-template-columns: 42px minmax(0, 1fr) 42px;
-    gap: 8px;
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
   }
 
   .pdf-sidebarPanel--reader .pdf-stepper--reader > .pdf-btn,
   .pdf-sidebarPanel--reader .pdf-readerPanelStep,
+  .pdf-sidebarPanel--reader .pdf-stepper--reader .pdf-dd__btn,
   .pdf-sidebarPanel--reader .pdf-action,
   .pdf-sidebarPanel--reader .pdf-dd__btn {
     min-height: 42px;
     height: 42px;
   }
 }
+
 
