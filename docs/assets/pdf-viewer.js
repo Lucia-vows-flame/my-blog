@@ -868,10 +868,19 @@ async function main() {
     updateOutlineActive();
   }
 
+  function syncPageNumberWidth() {
+    if (!(pageNumber instanceof HTMLInputElement)) return;
+    const totalDigits = String(state.pdfDoc?.numPages || "").length;
+    const currentDigits = String(state.pageNum || "").length;
+    const digits = Math.max(2, totalDigits, currentDigits);
+    pageNumber.style.width = `${digits + 0.55}ch`;
+  }
+
   function updateNav() {
     if (prevPage) prevPage.disabled = state.pageNum <= 1;
     if (nextPage) nextPage.disabled = state.pageNum >= (state.pdfDoc?.numPages || 1);
     if (pageNumber) pageNumber.value = String(state.pageNum);
+    syncPageNumberWidth();
     updateSummary();
   }
 
