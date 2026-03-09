@@ -10,7 +10,7 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css?v=20260308o" />
-    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260309aa" />
+    <link rel="stylesheet" href="assets/pdf-viewer.css?v=20260309ab" />
   </head>
   <body class="pdf-page">
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
@@ -381,27 +381,25 @@
     <script>
       window.__PDFJS_LOAD_FAILED__ = false;
     </script>
-    <script src="assets/vendor/pdfjs/pdf.min.js" onerror="window.__PDFJS_LOAD_FAILED__ = true;"></script>
+    <script id="pdfjs-lib" src="assets/vendor/pdfjs/pdf.min.js" onerror="window.__PDFJS_LOAD_FAILED__ = true;"></script>
     <script type="module">
       const params = new URLSearchParams((location.hash || "").replace(/^#/, ""));
       const file = params.get("file") ? decodeURIComponent(params.get("file")) : "";
 
       const openRaw = document.getElementById("open-raw");
       const download = document.getElementById("download");
+      const loading = document.getElementById("loading");
+      const error = document.getElementById("error");
       if (openRaw && file) openRaw.href = file;
       if (download && file) download.href = file;
 
-      if (window.__PDFJS_LOAD_FAILED__ || !window.pdfjsLib) {
-        const loading = document.getElementById("loading");
-        const error = document.getElementById("error");
+      function showReaderBootstrapError(message) {
         if (loading) loading.hidden = true;
         if (error) {
           error.hidden = false;
           error.innerHTML =
             `<div style="font-weight:800;font-size:18px;margin-bottom:10px">阅读器暂不可用</div>` +
-            `<div style="opacity:.82;line-height:1.7">` +
-            `缺少依赖文件：<code>assets/vendor/pdfjs/pdf.min.js</code> 与 <code>assets/vendor/pdfjs/pdf.worker.min.js</code>。` +
-            `</div>` +
+            `<div style="opacity:.82;line-height:1.7">${message}</div>` +
             (file
               ? `<div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">` +
                 `<a class="pdf-btn pdf-btn--link pdf-action pdf-action--primary" href="${file}" target="_blank" rel="noopener noreferrer">打开原始 PDF</a>` +
@@ -409,8 +407,51 @@
                 `</div>`
               : "");
         }
-      } else {
-        await import(`./assets/pdf-viewer.js?v=20260309aa`);
+      }
+
+      async function waitForPdfJsReady() {
+        if (window.__PDFJS_LOAD_FAILED__) {
+          throw new Error("缺少依赖文件：<code>assets/vendor/pdfjs/pdf.min.js</code> 与 <code>assets/vendor/pdfjs/pdf.worker.min.js</code>。");
+        }
+        if (window.pdfjsLib) return;
+
+        const script = document.getElementById("pdfjs-lib");
+        if (!(script instanceof HTMLScriptElement)) {
+          throw new Error("未找到 PDF.js 启动脚本。<br>请检查 <code>assets/vendor/pdfjs/pdf.min.js</code> 是否存在。");
+        }
+
+        await new Promise((resolve, reject) => {
+          let settled = false;
+          const finish = (fn, value) => {
+            if (settled) return;
+            settled = true;
+            script.removeEventListener("load", onLoad);
+            script.removeEventListener("error", onError);
+            fn(value);
+          };
+          const onLoad = () => finish(resolve);
+          const onError = () => finish(reject, new Error("PDF.js 脚本加载失败，请稍后刷新重试。"));
+
+          script.addEventListener("load", onLoad, { once: true });
+          script.addEventListener("error", onError, { once: true });
+
+          window.setTimeout(() => {
+            if (window.pdfjsLib) finish(resolve);
+            else finish(reject, new Error("PDF.js 初始化超时；页面可能还在使用旧缓存，请强制刷新后重试。"));
+          }, 8000);
+        });
+
+        if (window.__PDFJS_LOAD_FAILED__ || !window.pdfjsLib) {
+          throw new Error("PDF.js 未能成功初始化，请强制刷新页面后重试。");
+        }
+      }
+
+      try {
+        await waitForPdfJsReady();
+        await import(`./assets/pdf-viewer.js?v=20260309ab`);
+      } catch (err) {
+        console.error(err);
+        showReaderBootstrapError(String(err?.message || err || "PDF 阅读器启动失败。"));
       }
     </script>
     <script>
