@@ -3486,3 +3486,246 @@
     border-radius: 14px;
   }
 }
+
+
+/* Editorial polish for TOC sidebar card */
+.pdf-sidebarCard {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-overview {
+  margin-bottom: 1.08rem;
+  padding: 0.08rem 0 1.24rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-overview {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-overview__title {
+  margin-top: 0.2rem;
+  color: #1e293b;
+  font-size: 1.52rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-overview__title {
+  color: rgba(226, 232, 240, 0.94);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-statusGrid {
+  margin-top: 0.96rem;
+  gap: 0.68rem;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-statusTile {
+  border: none;
+  border-radius: 8px;
+  background: #f8fafc;
+  box-shadow: none;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-statusTile {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-statusTile__label {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-statusTile__label {
+  color: rgba(148, 163, 184, 0.82);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-statusTile__value {
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-statusTile__value {
+  color: rgba(226, 232, 240, 0.94);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocCard {
+  margin-top: 0.1rem;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocCard > .pdf-section__title {
+  margin: 0 0 0.92rem;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocCard > .pdf-section__title {
+  color: rgba(148, 163, 184, 0.82);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocScroller {
+  margin-top: 0;
+  padding-right: 0.12rem;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-toc {
+  gap: 0.16rem;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocChildren {
+  gap: 0.16rem;
+  margin-left: 0.54rem;
+  padding-left: 0.82rem;
+  border-left: 1px solid #f1f5f9;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocChildren {
+  border-left-color: rgba(255, 255, 255, 0.06);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocButton {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.72rem;
+  width: 100%;
+  padding: 0.36rem 0.72rem 0.36rem calc(var(--depth, 0) * 0.56rem + 0.34rem);
+  border-left: 3px solid transparent;
+  border-radius: 0 8px 8px 0;
+  background: transparent;
+  color: #475569;
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.48;
+  box-shadow: none;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocButton {
+  color: rgba(203, 213, 225, 0.82);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocButton:hover {
+  transform: none;
+  background: #f8fafc;
+  color: #334155;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(226, 232, 240, 0.92);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocButton.is-active {
+  background: #f0f9ff;
+  color: #0369a1;
+  font-weight: 500;
+  border-left-color: #0ea5e9;
+  box-shadow: none;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocButton.is-active {
+  background: rgba(14, 165, 233, 0.14);
+  color: rgba(125, 211, 252, 0.96);
+  border-left-color: #38bdf8;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  letter-spacing: 0.005em;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocPage {
+  flex: 0 0 auto;
+  margin-left: auto;
+  margin-top: 0.08rem;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-tocPage {
+  color: rgba(148, 163, 184, 0.78);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-progressCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "text percent"
+    "bar bar"
+    "mode mode";
+  gap: 0.62rem 0.9rem;
+  padding-top: 1.08rem;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-progressCard__head,
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-progressCard__meta {
+  display: contents;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-progressCard__head .pdf-section__title {
+  display: none;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] #pdf-progress-text {
+  grid-area: text;
+  align-self: center;
+  color: #64748b;
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] #pdf-progress-text {
+  color: rgba(148, 163, 184, 0.84);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-progressCard__percent {
+  grid-area: percent;
+  justify-self: end;
+  align-self: center;
+  color: #0ea5e9;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-progressCard__percent {
+  color: #38bdf8;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-progress {
+  grid-area: bar;
+  height: 6px;
+  margin: 0;
+  border-radius: 999px;
+  background: #f1f5f9;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-progress {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] .pdf-progress__bar {
+  border-radius: 999px;
+}
+
+.pdf-sidebarPanel[data-sidebar-panel="toc"] #pdf-progress-mode {
+  grid-area: mode;
+  justify-self: end;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarPanel[data-sidebar-panel="toc"] #pdf-progress-mode {
+  color: rgba(148, 163, 184, 0.78);
+}
