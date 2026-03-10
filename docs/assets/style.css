@@ -2164,6 +2164,130 @@ body.archive .navbar-toggler {
   font-variant-numeric: tabular-nums;
 }
 
+/* Archive: minimalist typography refresh (fix.md) */
+body.archive .archive-card__rule {
+  border-top: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+body.archive .archive-card__listHead {
+  color: #1e293b;
+}
+
+body.archive .archive-card__listIco {
+  color: #93c5fd;
+}
+
+body.archive .archive-timeline::before {
+  background: #e2e8f0;
+}
+
+body.archive .archive-year__title {
+  color: #0f172a;
+}
+
+body.archive .archive-month__title {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.84rem;
+  letter-spacing: 0.1em;
+}
+
+body.archive .archive-month__head::before {
+  background: #e2e8f0;
+}
+
+body.archive .archive-year__node,
+body.archive .archive-entry::before {
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  box-shadow: none;
+}
+
+body.archive .archive-year__node {
+  left: -2.25rem;
+  top: 0.12rem;
+}
+
+body.archive .archive-month__node {
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  box-shadow: none;
+}
+
+body.archive .archive-entry:hover::before {
+  border-color: #3b82f6;
+}
+
+body.archive .archive-entry + .archive-entry {
+  border-top: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+body.archive .archive-entry__date {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: none;
+  text-shadow: none;
+  transform: none;
+  padding: 2px 8px;
+  min-width: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+body.archive .archive-entry__date::before,
+body.archive .archive-entry__date::after {
+  content: none !important;
+  display: none !important;
+}
+
+body.archive .archive-entry:nth-child(odd) .archive-entry__date,
+body.archive .archive-entry:nth-child(even) .archive-entry__date {
+  transform: none;
+}
+
+body.archive .archive-entry__title {
+  color: #334155;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  will-change: transform;
+}
+
+body.archive .archive-entry__title:hover {
+  color: #2563eb;
+  transform: translateX(4px);
+}
+
+body.archive .archive-scroll {
+  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-width: thin;
+}
+
+body.archive .archive-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+body.archive .archive-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body.archive .archive-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+  border: 0;
+}
+
+body.archive .archive-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
 /* Nav icon remap after adding TAGS page */
 #mainNav .navbar-nav > li:nth-child(4) .nav-ico {
   --nav-icon: url("icons/nav-tags.svg");
