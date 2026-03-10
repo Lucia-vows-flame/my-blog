@@ -6,5 +6,10 @@
     "Tools Tutorial/Linux Konwledge Base"
   ],
   "path": "articles/ssh-common-issues/doc.pdf",
-  "excerpt": "涵盖 SSH 服务开启 远程连接问题与基础排障步骤。"
+  "excerpt": "涵盖 SSH 服务开启 远程连接问题与基础排障步骤。",
+  "tags": [
+    "Linux",
+    "SSH",
+    "Network"
+  ]
 }

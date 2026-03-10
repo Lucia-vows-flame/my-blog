@@ -6,5 +6,10 @@
     "Tools Tutorial/Linux Konwledge Base"
   ],
   "path": "articles/linux-path-executables-and-symlinks/doc.pdf",
-  "excerpt": "系统讲解 PATH 的查找机制 可执行文件定位与符号链接的设计思想。"
+  "excerpt": "系统讲解 PATH 的查找机制 可执行文件定位与符号链接的设计思想。",
+  "tags": [
+    "Linux",
+    "Shell",
+    "PATH"
+  ]
 }

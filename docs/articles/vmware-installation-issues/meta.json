@@ -6,5 +6,10 @@
     "Tools Tutorial/Linux Konwledge Base"
   ],
   "path": "articles/vmware-installation-issues/doc.pdf",
-  "excerpt": "记录 VMWare 联网 NAT 配置 代理问题与 open-vm-tools 安装排障。"
+  "excerpt": "记录 VMWare 联网 NAT 配置 代理问题与 open-vm-tools 安装排障。",
+  "tags": [
+    "Linux",
+    "VMWare",
+    "Network"
+  ]
 }

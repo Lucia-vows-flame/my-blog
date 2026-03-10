@@ -6,5 +6,10 @@
     "Tools Tutorial/Linux Konwledge Base"
   ],
   "path": "articles/linux-environment-variable-guide/doc.pdf",
-  "excerpt": "说明 PATH 的基本语法 追加逻辑 持久化配置与常见陷阱。"
+  "excerpt": "说明 PATH 的基本语法 追加逻辑 持久化配置与常见陷阱。",
+  "tags": [
+    "Linux",
+    "Shell",
+    "Environment"
+  ]
 }

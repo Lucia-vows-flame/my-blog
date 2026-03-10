@@ -8,7 +8,12 @@
         "Tools Tutorial/Codex Knowledge Base"
       ],
       "path": "articles/codex-download-and-usage/doc.pdf",
-      "excerpt": "介绍 Node.js 与 Codex CLI 的安装步骤 并给出基础启动方式。"
+      "excerpt": "介绍 Node.js 与 Codex CLI 的安装步骤 并给出基础启动方式。",
+      "tags": [
+        "Codex",
+        "AI",
+        "CLI"
+      ]
     },
     {
       "id": "cs61b-lecture-1-intro-to-cs61b",
@@ -18,7 +23,12 @@
         "Data Structure and Algorithm/Slide-by-Slide Lecture Notes/CS61B"
       ],
       "path": "articles/cs61b-lecture-1-intro-to-cs61b/doc.pdf",
-      "excerpt": "概述 CS61B 的课程目标与学习方式并系统预览数据结构 算法效率 Java 工具链与课程规则。"
+      "excerpt": "概述 CS61B 的课程目标与学习方式并系统预览数据结构 算法效率 Java 工具链与课程规则。",
+      "tags": [
+        "CS61B",
+        "Java",
+        "Data Structure"
+      ]
     },
     {
       "id": "cs61b-lecture-2-defining-and-using-classes-lists-and-maps",
@@ -28,7 +38,12 @@
         "Data Structure and Algorithm/Slide-by-Slide Lecture Notes/CS61B"
       ],
       "path": "articles/cs61b-lecture-2-defining-and-using-classes-lists-and-maps/doc.pdf",
-      "excerpt": "通过 IntelliJ 现场示例讲解 Java 类与对象 实例变量 构造器 静态与实例成员并引入 Lists Sets 和 Maps。"
+      "excerpt": "通过 IntelliJ 现场示例讲解 Java 类与对象 实例变量 构造器 静态与实例成员并引入 Lists Sets 和 Maps。",
+      "tags": [
+        "CS61B",
+        "Java",
+        "OOP"
+      ]
     },
     {
       "id": "git-common-issues",
@@ -38,7 +53,12 @@
         "Tools Tutorial/Git Knowledge Base"
       ],
       "path": "articles/git-common-issues/doc.pdf",
-      "excerpt": "整理 Git 配置 SSH 推送 常见报错与排查方法。"
+      "excerpt": "整理 Git 配置 SSH 推送 常见报错与排查方法。",
+      "tags": [
+        "Git",
+        "SSH",
+        "Linux"
+      ]
     },
     {
       "id": "lazyvim-installation-tutorial",
@@ -48,7 +68,12 @@
         "Tools Tutorial/Vim Konwledge Base"
       ],
       "path": "articles/lazyvim-installation-tutorial/doc.pdf",
-      "excerpt": "说明 Ubuntu 下安装最新版 Neovim 并部署 LazyVim 的步骤。"
+      "excerpt": "说明 Ubuntu 下安装最新版 Neovim 并部署 LazyVim 的步骤。",
+      "tags": [
+        "Linux",
+        "Neovim",
+        "Editor"
+      ]
     },
     {
       "id": "linux-environment-variable-guide",
@@ -58,7 +83,12 @@
         "Tools Tutorial/Linux Konwledge Base"
       ],
       "path": "articles/linux-environment-variable-guide/doc.pdf",
-      "excerpt": "说明 PATH 的基本语法 追加逻辑 持久化配置与常见陷阱。"
+      "excerpt": "说明 PATH 的基本语法 追加逻辑 持久化配置与常见陷阱。",
+      "tags": [
+        "Linux",
+        "Shell",
+        "Environment"
+      ]
     },
     {
       "id": "linux-path-executables-and-symlinks",
@@ -68,7 +98,12 @@
         "Tools Tutorial/Linux Konwledge Base"
       ],
       "path": "articles/linux-path-executables-and-symlinks/doc.pdf",
-      "excerpt": "系统讲解 PATH 的查找机制 可执行文件定位与符号链接的设计思想。"
+      "excerpt": "系统讲解 PATH 的查找机制 可执行文件定位与符号链接的设计思想。",
+      "tags": [
+        "Linux",
+        "Shell",
+        "PATH"
+      ]
     },
     {
       "id": "ssh-common-issues",
@@ -78,7 +113,12 @@
         "Tools Tutorial/Linux Konwledge Base"
       ],
       "path": "articles/ssh-common-issues/doc.pdf",
-      "excerpt": "涵盖 SSH 服务开启 远程连接问题与基础排障步骤。"
+      "excerpt": "涵盖 SSH 服务开启 远程连接问题与基础排障步骤。",
+      "tags": [
+        "Linux",
+        "SSH",
+        "Network"
+      ]
     },
     {
       "id": "tmux-tutorial",
@@ -87,7 +127,12 @@
       "categories": [
         "Tools Tutorial/Tmux Konwledge Base"
       ],
-      "path": "articles/tmux-tutorial/doc.pdf"
+      "path": "articles/tmux-tutorial/doc.pdf",
+      "tags": [
+        "Linux",
+        "Tmux",
+        "Terminal"
+      ]
     },
     {
       "id": "ubuntu-chinese-input-on-english-system",
@@ -97,7 +142,12 @@
         "Tools Tutorial/Linux Konwledge Base"
       ],
       "path": "articles/ubuntu-chinese-input-on-english-system/doc.pdf",
-      "excerpt": "介绍英文 Ubuntu 中安装 ibus 与中文输入法的配置流程。"
+      "excerpt": "介绍英文 Ubuntu 中安装 ibus 与中文输入法的配置流程。",
+      "tags": [
+        "Ubuntu",
+        "Linux",
+        "Input Method"
+      ]
     },
     {
       "id": "vmware-installation-issues",
@@ -107,7 +157,12 @@
         "Tools Tutorial/Linux Konwledge Base"
       ],
       "path": "articles/vmware-installation-issues/doc.pdf",
-      "excerpt": "记录 VMWare 联网 NAT 配置 代理问题与 open-vm-tools 安装排障。"
+      "excerpt": "记录 VMWare 联网 NAT 配置 代理问题与 open-vm-tools 安装排障。",
+      "tags": [
+        "Linux",
+        "VMWare",
+        "Network"
+      ]
     },
     {
       "id": "zsh-installation",
@@ -117,7 +172,12 @@
         "Tools Tutorial/Linux Konwledge Base"
       ],
       "path": "articles/zsh-installation/doc.pdf",
-      "excerpt": "介绍 zsh oh-my-zsh 主题与终端美化的安装配置流程。"
+      "excerpt": "介绍 zsh oh-my-zsh 主题与终端美化的安装配置流程。",
+      "tags": [
+        "Linux",
+        "zsh",
+        "Shell"
+      ]
     }
   ]
 }

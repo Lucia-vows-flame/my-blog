@@ -6,12 +6,12 @@
     <meta http-equiv="Cache-Control" content="no-store, max-age=0" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>文章</title>
+    <title>TAG</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link rel="stylesheet" href="assets/clean-blog.css" />
     <link rel="stylesheet" href="assets/style.css?v=20260310tags5" />
   </head>
-  <body>
+  <body class="tags tag-detail">
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
       <div class="container-fluid px-4 px-lg-5">
         <a class="navbar-brand" href="./" aria-label="Geoffrey Xu home"><img class="navbar-brand__mark" src="assets/icons/brand-bookmark.svg?v=20260308p" alt="" aria-hidden="true" /><span class="navbar-brand__text">Geoffrey Xu</span></a>
@@ -19,7 +19,7 @@
           菜单
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive" data-nav-collapse>
-                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+          <ul class="navbar-nav ms-auto py-4 py-lg-0">
             <li class="nav-item">
               <a class="nav-link px-lg-3 py-3 py-lg-4" href="./">
                 <span class="nav-ico" aria-hidden="true">
@@ -51,7 +51,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4" href="tags.html">
+              <a class="nav-link px-lg-3 py-3 py-lg-4 active" href="tags.html" aria-current="page">
                 <span class="nav-ico" aria-hidden="true">
                   <svg viewBox="0 0 1024 1024" focusable="false">
                     <path d="M451.8 549.8a64 64 0 1 1 0-90.5a64 64 0 0 1 0 90.5Zm71.3-361.7H274.7A96 96 0 0 0 179 284v248.4a96 96 0 0 0 28.1 67.9L534 927.2a96 96 0 0 0 135.8 0l157.4-157.4a96 96 0 0 0 0-135.8L591 197.7a96 96 0 0 0-67.9-28.1ZM788 730.8L630.6 888.2a40 40 0 0 1-56.6 0L247.1 561.4A40 40 0 0 1 235 532.4V284a40 40 0 0 1 39.7-40h248.4a40 40 0 0 1 28.3 11.7L788 492.4a40 40 0 0 1 0 56.6Z"></path>
@@ -85,40 +85,43 @@
       </div>
     </nav>
 
-    <header class="masthead" style="background-image: url('assets/img/post-bg.jpg')">
+    <header class="masthead tags-hero" style="background-image: url('assets/img/home_background.png')">
       <div class="container position-relative px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-md-10 col-lg-8 col-xl-7">
-            <div class="post-heading">
-              <h1 id="post-title">文章</h1>
-              <div class="blog-postMeta" id="post-meta"></div>
+            <div class="site-heading">
+              <h1>TAG</h1>
+              <span class="subheading">多维标签索引与交叉筛选</span>
             </div>
           </div>
         </div>
       </div>
     </header>
 
-    <main class="container px-4 px-lg-5">
+    <main class="container px-4 px-lg-5 tags-main">
       <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-          <div class="post-frame__wrap" id="post-frame-wrap">
-            <div id="post-placeholder" class="post-placeholder" hidden></div>
-            <iframe
-              id="post-frame"
-              class="post-frame"
-              title="post"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            ></iframe>
-          </div>
-        </div>
+        <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-11">
+          <section class="tags-card">
+            <div class="tags-card__meta">
+              <span class="tags-card__metaIco" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path style="fill: currentColor; stroke: none" d="M17.63,5.84C17.27,5.33 16.67,5 16,5H5C3.9,5 3,5.9 3,7V17C3,18.11 3.9,19 5,19H16C16.67,19 17.27,18.67 17.63,18.16L21,12L17.63,5.84M16,17H5V7H16L18.72,12L16,17M8,9H14V11H8V9M8,13H13V15H8V13Z"></path>
+                </svg>
+              </span>
+              <span>目前共计</span>
+              <strong id="tag-total">0</strong>
+              <span>个标签</span>
+            </div>
 
-        <aside class="col-lg-4 blog-sidebar">
-          <div class="blog-sidebar__card">
-            <div class="blog-sidebar__title">分类</div>
-            <ul class="cat-list" id="cat-list"></ul>
-          </div>
-        </aside>
+            <p class="tags-card__desc" id="tag-current">点击任意标签，查看该标签下的全部文章。</p>
+
+            <div class="tags-card__cloud">
+              <div class="tag-cloud" id="tag-cloud" aria-label="Tag cloud"></div>
+            </div>
+
+            <section class="tags-results" id="tag-results" hidden></section>
+          </section>
+        </div>
       </div>
     </main>
 

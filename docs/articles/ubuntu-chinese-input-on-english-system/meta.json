@@ -6,5 +6,10 @@
     "Tools Tutorial/Linux Konwledge Base"
   ],
   "path": "articles/ubuntu-chinese-input-on-english-system/doc.pdf",
-  "excerpt": "介绍英文 Ubuntu 中安装 ibus 与中文输入法的配置流程。"
+  "excerpt": "介绍英文 Ubuntu 中安装 ibus 与中文输入法的配置流程。",
+  "tags": [
+    "Ubuntu",
+    "Linux",
+    "Input Method"
+  ]
 }

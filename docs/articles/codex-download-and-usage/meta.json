@@ -6,5 +6,10 @@
     "Tools Tutorial/Codex Knowledge Base"
   ],
   "path": "articles/codex-download-and-usage/doc.pdf",
-  "excerpt": "介绍 Node.js 与 Codex CLI 的安装步骤 并给出基础启动方式。"
+  "excerpt": "介绍 Node.js 与 Codex CLI 的安装步骤 并给出基础启动方式。",
+  "tags": [
+    "Codex",
+    "AI",
+    "CLI"
+  ]
 }

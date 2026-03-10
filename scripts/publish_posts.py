@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -43,6 +44,25 @@ MONTH_NAMES = (
 )
 
 
+def parse_tags(raw: str) -> tuple[str, ...]:
+    if not raw:
+        return ()
+
+    seen: set[str] = set()
+    tags: list[str] = []
+    for part in re.split(r"[;；]+", raw):
+        tag = " ".join(part.strip().split())
+        if not tag:
+            continue
+        key = tag.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        tags.append(tag)
+
+    return tuple(tags)
+
+
 @dataclass(frozen=True)
 class Row:
     typ_file: str
@@ -50,6 +70,7 @@ class Row:
     title: str
     date: str
     excerpt: str
+    tags: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -117,6 +138,7 @@ def read_manifest(path: Path) -> list[Row]:
             title = (rec.get("title") or "").strip()
             date_value = (rec.get("date") or "").strip()
             excerpt = (rec.get("excerpt") or "").strip()
+            tags = parse_tags((rec.get("tags") or "").strip())
 
             if not slug:
                 raise SystemExit(f"Line {i}: empty slug")
@@ -127,7 +149,7 @@ def read_manifest(path: Path) -> list[Row]:
             if not typ_file:
                 raise SystemExit(f"Line {i}: typ_file required (Typst-only mode) for slug={slug}")
 
-            rows.append(Row(typ_file=typ_file, slug=slug, title=title, date=date_value, excerpt=excerpt))
+            rows.append(Row(typ_file=typ_file, slug=slug, title=title, date=date_value, excerpt=excerpt, tags=tags))
 
     slugs = [r.slug for r in rows]
     if len(slugs) != len(set(slugs)):
@@ -442,6 +464,8 @@ def write_meta(*, out_dir: Path, row: Row, categories: list[str], date_value: st
     }
     if row.excerpt:
         meta["excerpt"] = row.excerpt
+    if row.tags:
+        meta["tags"] = list(row.tags)
     (out_dir / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 

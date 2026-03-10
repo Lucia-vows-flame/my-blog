@@ -5,5 +5,10 @@
   "categories": [
     "Tools Tutorial/Tmux Konwledge Base"
   ],
-  "path": "articles/tmux-tutorial/doc.pdf"
+  "path": "articles/tmux-tutorial/doc.pdf",
+  "tags": [
+    "Linux",
+    "Tmux",
+    "Terminal"
+  ]
 }

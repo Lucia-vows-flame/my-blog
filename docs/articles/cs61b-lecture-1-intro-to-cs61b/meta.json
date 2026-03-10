@@ -6,5 +6,10 @@
     "Data Structure and Algorithm/Slide-by-Slide Lecture Notes/CS61B"
   ],
   "path": "articles/cs61b-lecture-1-intro-to-cs61b/doc.pdf",
-  "excerpt": "概述 CS61B 的课程目标与学习方式并系统预览数据结构 算法效率 Java 工具链与课程规则。"
+  "excerpt": "概述 CS61B 的课程目标与学习方式并系统预览数据结构 算法效率 Java 工具链与课程规则。",
+  "tags": [
+    "CS61B",
+    "Java",
+    "Data Structure"
+  ]
 }

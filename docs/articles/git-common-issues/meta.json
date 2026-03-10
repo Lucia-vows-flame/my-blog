@@ -6,5 +6,10 @@
     "Tools Tutorial/Git Knowledge Base"
   ],
   "path": "articles/git-common-issues/doc.pdf",
-  "excerpt": "整理 Git 配置 SSH 推送 常见报错与排查方法。"
+  "excerpt": "整理 Git 配置 SSH 推送 常见报错与排查方法。",
+  "tags": [
+    "Git",
+    "SSH",
+    "Linux"
+  ]
 }

@@ -21,6 +21,7 @@ class Post:
     categories: list[str]
     path: str
     excerpt: str = ""
+    tags: list[str] | None = None
 
     def to_json(self) -> dict[str, Any]:
         data: dict[str, Any] = {
@@ -32,6 +33,8 @@ class Post:
         }
         if self.excerpt:
             data["excerpt"] = self.excerpt
+        if self.tags:
+            data["tags"] = self.tags
         return data
 
 
@@ -63,8 +66,16 @@ def load_posts() -> list[Post]:
         else:
             raise SystemExit(f"Invalid categories in {meta_path}: expected string or string[]")
 
+        tags_raw = data.get("tags", [])
+        if isinstance(tags_raw, str):
+            tags = [tags_raw] if tags_raw else []
+        elif isinstance(tags_raw, list) and all(isinstance(x, str) for x in tags_raw):
+            tags = [str(x) for x in tags_raw if str(x).strip()]
+        else:
+            raise SystemExit(f"Invalid tags in {meta_path}: expected string or string[]")
+
         excerpt = str(data.get("excerpt", "") or "")
-        posts.append(Post(id=post_id, title=title, date=date, categories=categories, path=path, excerpt=excerpt))
+        posts.append(Post(id=post_id, title=title, date=date, categories=categories, path=path, excerpt=excerpt, tags=tags))
 
     ids = [p.id for p in posts]
     if len(ids) != len(set(ids)):

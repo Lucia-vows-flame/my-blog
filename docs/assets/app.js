@@ -1,5 +1,5 @@
 const POSTS_URL = "data/posts.json";
-const PDF_VIEWER_VERSION = "20260309ai";
+const PDF_VIEWER_VERSION = "20260310tags5";
 const PDF_VIEWER = `pdf.html?v=${PDF_VIEWER_VERSION}`;
 let didInitialRoute = false;
 
@@ -40,6 +40,30 @@ function splitCategoryPath(path) {
   return p ? p.split("/") : [];
 }
 
+function normalizeTagName(raw) {
+  if (typeof raw !== "string") return "";
+  return raw.trim().replace(/\s+/g, " ");
+}
+
+function tagKey(raw) {
+  return normalizeTagName(raw).toLowerCase();
+}
+
+function normalizeTagList(raw) {
+  const source = Array.isArray(raw) ? raw : typeof raw === "string" ? raw.split(/[;；]+/) : [];
+  const seen = new Set();
+  const tags = [];
+  for (const item of source) {
+    const tag = normalizeTagName(item);
+    if (!tag) continue;
+    const key = tagKey(tag);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    tags.push(tag);
+  }
+  return tags;
+}
+
 function formatDate(iso) {
   const date = new Date(iso);
   if (Number.isNaN(date.valueOf())) return iso;
@@ -66,6 +90,7 @@ function normalizePost(raw) {
     date: String(raw.date || "1970-01-01"),
     path: String(raw.path || ""),
     categories,
+    tags: normalizeTagList(raw.tags),
     excerpt: typeof raw.excerpt === "string" ? raw.excerpt : "",
   };
 }
@@ -140,6 +165,7 @@ const CATEGORY_CHIP_COLORS = [
   "#ff4949",
   "#fc6423",
 ];
+const TAG_VISUAL_CACHE = new Map();
 
 function hexToRgba(hex, alpha) {
   const s = String(hex || "").trim();
@@ -186,6 +212,44 @@ function computePostsByExactCategory(posts) {
 
   for (const arr of m.values()) arr.sort(byDateDesc);
   return m;
+}
+
+function compareTags(a, b) {
+  return b.count - a.count || a.name.localeCompare(b.name, "zh-Hans-CN", { sensitivity: "base" });
+}
+
+function buildTagIndex(posts) {
+  /** @type {Map<string, { key: string, name: string, count: number, posts: any[] }>} */
+  const m = new Map();
+
+  for (const post of posts) {
+    const uniq = new Set(post.tags.map(tagKey));
+    for (const key of uniq) {
+      if (!key) continue;
+      const name = post.tags.find((tag) => tagKey(tag) === key) || "";
+      const current = m.get(key) || { key, name, count: 0, posts: [] };
+      current.count += 1;
+      current.posts.push(post);
+      m.set(key, current);
+    }
+  }
+
+  const tags = [...m.values()].sort(compareTags);
+  for (const tag of tags) tag.posts.sort(byDateDesc);
+  return tags;
+}
+
+function getTagVisual(tag, maxCount) {
+  const key = tag.key;
+  if (TAG_VISUAL_CACHE.has(key)) return TAG_VISUAL_CACHE.get(key);
+
+  const color = pickRandomCategoryChipColor();
+  const ratio = maxCount > 1 ? (tag.count - 1) / (maxCount - 1) : 0.5;
+  const fontSize = (1.02 + ratio * 0.74 + Math.random() * 0.16).toFixed(2);
+  const rotate = ((Math.random() * 12) - 6).toFixed(2);
+  const visual = { color, fontSize, rotate };
+  TAG_VISUAL_CACHE.set(key, visual);
+  return visual;
 }
 
 function getFirstCategoryPath(root) {
@@ -739,6 +803,127 @@ function renderArchive(posts) {
   }
 }
 
+function renderTagsPage(posts, activeTag) {
+  const totalEl = qs("tag-total");
+  const currentEl = qs("tag-current");
+  const cloudEl = qs("tag-cloud");
+  const resultsEl = qs("tag-results");
+  if (!cloudEl || !resultsEl) return;
+
+  const tags = buildTagIndex(posts);
+  const maxCount = tags.reduce((max, item) => Math.max(max, item.count), 1);
+  const activeKey = tagKey(activeTag);
+  const selected = tags.find((item) => item.key === activeKey) || null;
+
+  document.title = selected ? `${selected.name} · TAGS` : "TAGS";
+  if (totalEl) totalEl.textContent = String(tags.length);
+  if (currentEl) {
+    currentEl.innerHTML = selected
+      ? `当前筛选：<strong># ${escapeHtml(selected.name)}</strong> · 共 ${selected.count} 篇文章`
+      : "点击任意标签，查看该标签下的全部文章。";
+  }
+
+  cloudEl.innerHTML = "";
+  if (!tags.length) {
+    const empty = document.createElement("div");
+    empty.className = "tags-empty";
+    empty.textContent = "还没有可用标签，先发布几篇文章吧。";
+    cloudEl.append(empty);
+    resultsEl.hidden = true;
+    resultsEl.innerHTML = "";
+    return;
+  }
+
+  for (const tag of tags) {
+    const chip = document.createElement("a");
+    chip.className = "tag-cloud__item";
+    chip.href = tagHref(tag.name);
+    chip.title = `${tag.name} · ${tag.count} 篇文章`;
+    if (selected && tag.key === selected.key) chip.classList.add("is-active");
+
+    const visual = getTagVisual(tag, maxCount);
+    chip.style.setProperty("--tag-color", visual.color);
+    chip.style.setProperty("--tag-bg", hexToRgba(visual.color, 0.12));
+    chip.style.setProperty("--tag-shadow", hexToRgba(visual.color, 0.18));
+    chip.style.setProperty("--tag-size", `${visual.fontSize}rem`);
+    chip.style.setProperty("--tag-rotate", `${visual.rotate}deg`);
+
+    const hash = document.createElement("span");
+    hash.className = "tag-cloud__hash";
+    hash.textContent = "#";
+
+    const label = document.createElement("span");
+    label.className = "tag-cloud__label";
+    label.textContent = tag.name;
+
+    chip.append(hash, label);
+    cloudEl.append(chip);
+  }
+
+  resultsEl.innerHTML = "";
+  if (!selected) {
+    resultsEl.hidden = true;
+    return;
+  }
+
+  resultsEl.hidden = false;
+
+  const head = document.createElement("div");
+  head.className = "tags-results__head";
+  head.innerHTML =
+    `<div class="tags-results__titleWrap">` +
+    `<span class="tags-results__hash">#</span>` +
+    `<h2 class="tags-results__title">${escapeHtml(selected.name)}</h2>` +
+    `<span class="tags-results__count">${selected.count} 篇文章</span>` +
+    `</div>` +
+    `<a class="tags-results__reset" href="tags.html">查看全部标签</a>`;
+  resultsEl.append(head);
+
+  const scroll = document.createElement("div");
+  scroll.className = "tags-results__scroll";
+
+  const list = document.createElement("ul");
+  list.className = "tags-postList";
+
+  for (const post of selected.posts) {
+    const item = document.createElement("li");
+    item.className = "tags-post";
+
+    const date = document.createElement("time");
+    date.className = "tags-post__date";
+    date.dateTime = post.date;
+    date.textContent = formatDate(post.date);
+
+    const body = document.createElement("div");
+    body.className = "tags-post__body";
+
+    const title = document.createElement("a");
+    title.className = "tags-post__title";
+    title.href = postLink(post);
+    title.textContent = post.title;
+    if (isPdfPost(post)) {
+      title.target = "_blank";
+      title.rel = "noopener noreferrer";
+      title.title = "PDF 将在新窗口打开";
+    }
+
+    const meta = document.createElement("div");
+    meta.className = "tags-post__meta";
+    meta.innerHTML = post.categories.map((category) => categoryBreadcrumbLinks(category)).join(" · ");
+
+    const tagRow = document.createElement("div");
+    tagRow.className = "tags-post__tags";
+    tagRow.innerHTML = renderTagLinks(post.tags, selected.name);
+
+    body.append(title, meta, tagRow);
+    item.append(date, body);
+    list.append(item);
+  }
+
+  scroll.append(list);
+  resultsEl.append(scroll);
+}
+
 function renderCategory(posts, category) {
   const title = qs("cat-title");
   const meta = qs("cat-meta");
@@ -783,6 +968,13 @@ function renderCategory(posts, category) {
       pm.className = "post-meta";
       pm.innerHTML = `发表于 ${escapeHtml(formatDate(post.date))}${cats ? ` · ${cats}` : ""}`;
       wrap.append(pm);
+
+      if (post.tags && post.tags.length) {
+        const tags = document.createElement("div");
+        tags.className = "post-tags";
+        tags.innerHTML = renderTagLinks(post.tags, "");
+        wrap.append(tags);
+      }
 
       groups.append(wrap);
 
@@ -876,6 +1068,7 @@ function renderPost(posts, { postId, postPath }) {
 
   if (meta) {
     const cats = post.categories.map((c) => categoryBreadcrumbLinks(c)).join(" | ");
+    const tags = renderTagLinks(post.tags || [], "");
     const isPdf = post.path.toLowerCase().endsWith(".pdf");
     const viewer = isPdf ? pdfViewerUrl(post.path) : post.path;
     const open = `<a class="pill" href="${viewer}" target="_blank" rel="noopener noreferrer">新窗口</a>`;
@@ -887,6 +1080,7 @@ function renderPost(posts, { postId, postPath }) {
       `<span class="meta-date">${formatDate(post.date)}</span>` +
       `<span class="meta-sep">·</span>` +
       `<span class="meta-cats">${cats}</span>` +
+      `${tags ? `<span class="meta-sep">·</span><span class="meta-tags">${tags}</span>` : ""}` +
       `</span>` +
       `<span class="meta-actions">${open}${raw}${download}${fullscreen}</span>`;
   }
@@ -964,6 +1158,19 @@ function categoryBreadcrumbLinks(path) {
     .join(" / ");
 }
 
+function tagHref(tag) {
+  return `tag.html#tag=${encodeURIComponent(tag)}`;
+}
+
+function renderTagLinks(tags, activeTag) {
+  return tags
+    .map((tag) => {
+      const active = tagKey(tag) === tagKey(activeTag) ? " is-active" : "";
+      return `<a class="tags-post__tag${active}" href="${tagHref(tag)}"># ${escapeHtml(tag)}</a>`;
+    })
+    .join("");
+}
+
 function scrollToTopCategory(topName, behavior) {
   const el = document.getElementById(`cat-top_${categoryId(topName)}`);
   if (!el) return;
@@ -977,10 +1184,12 @@ function scrollToTopCategory(topName, behavior) {
 function route({ posts, categories }) {
   const hash = parseHashParams();
   let activeCategory = normalizeCategoryPath(hash.c || hash.top || "");
+  const activeTag = normalizeTagName(hash.tag || hash.t || "");
 
   const isPostPage = Boolean(qs("post-frame"));
   const isCategoryIndex = Boolean(qs("cat-sections"));
   const isArchivePage = Boolean(qs("archive-timeline"));
+  const isTagsPage = Boolean(qs("tag-cloud"));
 
   const postId = hash.id || "";
   const postPath = hash.path || "";
@@ -1006,6 +1215,10 @@ function route({ posts, categories }) {
 
   if (isArchivePage) {
     renderArchive(posts);
+  }
+
+  if (isTagsPage) {
+    renderTagsPage(posts, activeTag);
   }
 
   if (isPostPage) {
@@ -1106,7 +1319,7 @@ async function main() {
 
 main().catch((err) => {
   console.error(err);
-  const container = qs("latest-list") || qs("cat-sections") || qs("archive-timeline") || qs("cat-groups");
+  const container = qs("latest-list") || qs("cat-sections") || qs("archive-timeline") || qs("tag-results") || qs("tag-cloud") || qs("cat-groups");
   if (container) {
     container.innerHTML =
       `<div style="padding:10px;color:rgba(20,20,20,.7)">` +
