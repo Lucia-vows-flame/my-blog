@@ -2186,14 +2186,20 @@ body.archive .archive-year__title {
 }
 
 body.archive .archive-month__title {
-  color: #64748b;
+  color: #94a3b8;
   font-weight: 500;
   font-size: 0.84rem;
   letter-spacing: 0.1em;
 }
 
 body.archive .archive-month__head::before {
-  background: #e2e8f0;
+  content: none !important;
+  display: none !important;
+}
+
+body.archive .archive-month__head {
+  gap: 0.56rem;
+  margin-bottom: 12px;
 }
 
 body.archive .archive-year__node,
@@ -2247,26 +2253,20 @@ body.archive .archive-entry__date {
   text-shadow: none;
   transform: none;
   padding: 2px 8px;
+  margin-left: 12px !important;
   min-width: 0;
   color: #64748b;
+  font-weight: 500;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  position: relative;
+  z-index: 10;
   transition: all 0.2s ease-in-out;
 }
 
+body.archive .archive-entry__date::before,
 body.archive .archive-entry__date::after {
   content: none !important;
   display: none !important;
-}
-
-body.archive .archive-entry__date::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: 100%;
-  left: auto;
-  width: 12px;
-  height: 1px;
-  background: #e2e8f0;
-  transform: translateY(-50%);
 }
 
 body.archive .archive-entry:nth-child(odd) .archive-entry__date,
