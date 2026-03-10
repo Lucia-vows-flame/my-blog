@@ -1,5 +1,5 @@
 const POSTS_URL = "data/posts.json";
-const PDF_VIEWER_VERSION = "20260310tags5";
+const PDF_VIEWER_VERSION = "20260310tags6";
 const PDF_VIEWER = `pdf.html?v=${PDF_VIEWER_VERSION}`;
 let didInitialRoute = false;
 
@@ -815,7 +815,9 @@ function renderTagsPage(posts, activeTag) {
   const activeKey = tagKey(activeTag);
   const selected = tags.find((item) => item.key === activeKey) || null;
 
-  document.title = selected ? `${selected.name} · TAGS` : "TAGS";
+  const isTagDetail = document.body.classList.contains("tag-detail");
+  const pageTitle = isTagDetail ? "TAG" : "TAGS";
+  document.title = selected ? `${selected.name} · ${pageTitle}` : pageTitle;
   if (totalEl) totalEl.textContent = String(tags.length);
   if (currentEl) {
     currentEl.innerHTML = selected
