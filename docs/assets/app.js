@@ -1186,7 +1186,7 @@ function renderTagLinks(tags, activeTag) {
       const active = tagKey(tag) === tagKey(activeTag) ? " is-active" : "";
       const color = stableColorByKey(tagKey(tag));
       const rgb = hexToRgbChannels(color);
-      return `<a class="tags-post__tag${active}" href="${tagHref(tag)}" style="--tag-color:${color};--tag-color-rgb:${rgb}"># ${escapeHtml(tag)}</a>`;
+      return `<a class="tags-post__tag${active}" href="${tagHref(tag)}" style="--tag-color:${color};--tag-color-rgb:${rgb}"><span class="tags-post__hash">#</span><span class="tags-post__label">${escapeHtml(tag)}</span></a>`;
     })
     .join("");
 }
