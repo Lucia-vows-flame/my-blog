@@ -2199,7 +2199,7 @@ body.archive .archive-month__head::before {
 
 body.archive .archive-month__head {
   gap: 0.56rem;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 body.archive .archive-year__node,
@@ -2209,6 +2209,7 @@ body.archive .archive-entry::before {
   background: #ffffff;
   border: 2px solid #cbd5e1;
   box-shadow: none;
+  transition: border-color 0.2s ease;
 }
 
 body.archive .archive-year__node {
@@ -2260,7 +2261,7 @@ body.archive .archive-entry__date {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   position: relative;
   z-index: 10;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease;
 }
 
 body.archive .archive-entry__date::before,
@@ -2281,7 +2282,7 @@ body.archive .archive-entry__title {
   margin-bottom: 0 !important;
   padding-top: 0;
   line-height: 1.5;
-  transition: all 0.2s ease-in-out;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 body.archive .archive-entry:hover .archive-entry__title {
@@ -2292,7 +2293,7 @@ body.archive .archive-entry:hover .archive-entry__title {
 body.archive .archive-entry:hover .archive-entry__date {
   background-color: #f1f5f9 !important;
   border-color: #cbd5e1 !important;
-  color: #334155;
+  color: #475569;
 }
 
 body.archive .archive-entry__title:hover {
