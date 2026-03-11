@@ -142,14 +142,16 @@ html[lang^="zh"] body :where(
 
 #mainNav .navbar-brand {
   display: inline-flex;
-  align-items: center;
-  gap: 0.72rem;
+  align-items: center !important;
+  justify-content: center;
+  gap: 12px !important;
   font-weight: 600;
   text-decoration: none;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
+  overflow: visible !important;
 }
 
 #mainNav .navbar-brand__mark {
@@ -159,12 +161,15 @@ html[lang^="zh"] body :where(
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
+  overflow: visible !important;
 }
 
 #mainNav .header-logo {
   height: 48px !important;
   width: auto !important;
-  display: block !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   flex: 0 0 auto;
   transition: opacity 0.3s ease;
   filter: none !important;
@@ -172,10 +177,21 @@ html[lang^="zh"] body :where(
   outline: none !important;
   background: transparent !important;
   box-shadow: none !important;
+  overflow: visible !important;
+  vertical-align: middle;
 }
 
 #mainNav .header-logo:hover {
   opacity: 0.8;
+}
+
+#mainNav .header-logo svg,
+#mainNav svg.header-logo,
+#mainNav .navbar-brand__mark svg {
+  height: 100% !important;
+  width: auto !important;
+  display: block;
+  overflow: visible !important;
 }
 
 #mainNav .header-logo path {
