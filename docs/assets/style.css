@@ -2565,7 +2565,7 @@ body.tags:not(.pdf-page)::after {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #475569;
+  color: rgba(73, 177, 245, 0.96);
 }
 
 .tags-card__metaIco svg {
@@ -2610,7 +2610,7 @@ body.tags:not(.pdf-page)::after {
   align-items: center;
   align-content: center;
   justify-content: center;
-  gap: 0;
+  gap: 12px;
 }
 
 .tag-cloud__item {
@@ -2621,11 +2621,12 @@ body.tags:not(.pdf-page)::after {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  margin: 8px;
-  padding: 6px 12px;
+  margin: 0;
+  padding: 6px 14px;
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  background-color: #ffffff;
+  border-left: 3px solid var(--tag-color);
+  background-color: #f8fafc;
   color: #334155;
   text-decoration: none;
   font-size: var(--tag-size);
@@ -2634,12 +2635,13 @@ body.tags:not(.pdf-page)::after {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+  transition: all 0.3s ease;
 }
 
 .tag-cloud__item:hover {
-  background-color: #ffffff;
-  border-color: rgba(0, 0, 0, 0.14);
+  transform: translateY(-2px);
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
   color: #0f172a;
   text-decoration: none;
 }
@@ -2650,8 +2652,8 @@ body.tags:not(.pdf-page)::after {
 }
 
 .tag-cloud__item.is-active {
-  border-color: rgba(51, 65, 85, 0.18);
-  background-color: #ffffff;
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
   color: #0f172a;
 }
 
@@ -2659,7 +2661,7 @@ body.tags:not(.pdf-page)::after {
   opacity: 1;
   font-weight: 500;
   font-size: 0.9em;
-  color: #64748b;
+  color: #cbd5e1;
 }
 
 .tag-cloud__label {
@@ -2825,16 +2827,20 @@ body.tags:not(.pdf-page)::after {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.45rem;
+  gap: 12px;
 }
 
 .tags-post__tag {
+  --tag-color: #49b1f5;
+  --tag-color-rgb: 73, 177, 245;
   display: inline-flex;
   align-items: center;
-  padding: 6px 12px;
+  gap: 0.3rem;
+  padding: 6px 14px;
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  background: #ffffff;
+  border-left: 3px solid var(--tag-color);
+  background: #f8fafc;
   color: #334155;
   text-decoration: none;
   font-size: 0.86rem;
@@ -2843,30 +2849,31 @@ body.tags:not(.pdf-page)::after {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease;
+  transition: all 0.3s ease;
 }
 
 .tags-post__tag:hover {
-  background: #ffffff;
-  border-color: rgba(0, 0, 0, 0.14);
+  transform: translateY(-2px);
+  background: #eff6ff;
+  border-color: #bfdbfe;
   color: #0f172a;
   text-decoration: none;
 }
 
 .tags-post__tag.is-active {
-  background: #ffffff;
-  border-color: rgba(51, 65, 85, 0.18);
+  background: #eff6ff;
+  border-color: #bfdbfe;
   color: #0f172a;
 }
 
 .post-heading .meta-tags .tags-post__tag {
-  background: #ffffff;
+  background: #f8fafc;
   color: #334155;
   border-color: rgba(0, 0, 0, 0.08);
 }
 
 .post-heading .meta-tags .tags-post__tag:hover {
-  background: #ffffff;
+  background: #eff6ff;
   color: #0f172a;
 }
 
@@ -2904,8 +2911,7 @@ body.tags:not(.pdf-page)::after {
   }
 
   .tag-cloud__item {
-    margin: 6px;
-    padding: 6px 12px;
+    padding: 6px 14px;
   }
 
   .tags-post {
