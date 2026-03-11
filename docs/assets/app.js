@@ -177,6 +177,16 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+function hexToRgbChannels(hex) {
+  const s = String(hex || "").trim();
+  const raw = s.startsWith("#") ? s.slice(1) : s;
+  if (!/^[\da-fA-F]{6}$/.test(raw)) return "73, 177, 245";
+  const r = Number.parseInt(raw.slice(0, 2), 16);
+  const g = Number.parseInt(raw.slice(2, 4), 16);
+  const b = Number.parseInt(raw.slice(4, 6), 16);
+  return `${r}, ${g}, ${b}`;
+}
+
 function pickRandomCategoryChipColor() {
   return CATEGORY_CHIP_COLORS[Math.floor(Math.random() * CATEGORY_CHIP_COLORS.length)] || CATEGORY_CHIP_COLORS[0];
 }
@@ -245,9 +255,8 @@ function getTagVisual(tag, maxCount) {
 
   const color = pickRandomCategoryChipColor();
   const ratio = maxCount > 1 ? (tag.count - 1) / (maxCount - 1) : 0.5;
-  const fontSize = (1.02 + ratio * 0.74 + Math.random() * 0.16).toFixed(2);
-  const rotate = ((Math.random() * 12) - 6).toFixed(2);
-  const visual = { color, fontSize, rotate };
+  const fontSize = (0.98 + ratio * 0.16).toFixed(2);
+  const visual = { color, colorRgb: hexToRgbChannels(color), fontSize, rotate: 0 };
   TAG_VISUAL_CACHE.set(key, visual);
   return visual;
 }
@@ -845,8 +854,8 @@ function renderTagsPage(posts, activeTag) {
 
     const visual = getTagVisual(tag, maxCount);
     chip.style.setProperty("--tag-color", visual.color);
-    chip.style.setProperty("--tag-bg", hexToRgba(visual.color, 0.12));
-    chip.style.setProperty("--tag-shadow", hexToRgba(visual.color, 0.18));
+    chip.style.setProperty("--tag-color-rgb", visual.colorRgb);
+    chip.style.setProperty("--tag-bg", hexToRgba(visual.color, 0.1));
     chip.style.setProperty("--tag-size", `${visual.fontSize}rem`);
     chip.style.setProperty("--tag-rotate", `${visual.rotate}deg`);
 
