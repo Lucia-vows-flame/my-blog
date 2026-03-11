@@ -198,11 +198,6 @@ html[lang^="zh"] body :where(
   fill: #ffffff !important;
 }
 
-#mainNav .header-logo path:first-of-type {
-  display: none !important;
-  fill: transparent !important;
-}
-
 #mainNav .navbar-brand__text {
   font-family: var(--blog-font-title);
   font-size: 0.98rem;
