@@ -146,19 +146,32 @@ html[lang^="zh"] body :where(
   gap: 0.72rem;
   font-weight: 600;
   text-decoration: none;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
 #mainNav .navbar-brand__mark {
   flex: 0 0 auto;
   display: block;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
 #mainNav .header-logo {
-  height: 32px !important;
+  height: 48px !important;
   width: auto !important;
-  display: block;
+  display: block !important;
   flex: 0 0 auto;
   transition: opacity 0.3s ease;
+  filter: none !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 #mainNav .header-logo:hover {
@@ -167,6 +180,11 @@ html[lang^="zh"] body :where(
 
 #mainNav .header-logo path {
   fill: #ffffff !important;
+}
+
+#mainNav .header-logo path:first-of-type {
+  display: none !important;
+  fill: transparent !important;
 }
 
 #mainNav .navbar-brand__text {
@@ -1214,7 +1232,7 @@ body.category:not(.pdf-page)::after {
   }
 
   #mainNav .header-logo {
-    height: 28px !important;
+    height: 36px !important;
   }
 
   #mainNav .navbar-brand__text {
