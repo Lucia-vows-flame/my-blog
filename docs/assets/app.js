@@ -177,25 +177,8 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-function hexToRgbChannels(hex) {
-  const s = String(hex || "").trim();
-  const raw = s.startsWith("#") ? s.slice(1) : s;
-  if (!/^[\da-fA-F]{6}$/.test(raw)) return "73, 177, 245";
-  const r = Number.parseInt(raw.slice(0, 2), 16);
-  const g = Number.parseInt(raw.slice(2, 4), 16);
-  const b = Number.parseInt(raw.slice(4, 6), 16);
-  return `${r}, ${g}, ${b}`;
-}
-
 function pickRandomCategoryChipColor() {
   return CATEGORY_CHIP_COLORS[Math.floor(Math.random() * CATEGORY_CHIP_COLORS.length)] || CATEGORY_CHIP_COLORS[0];
-}
-
-function stableColorByKey(key) {
-  const s = String(key || "");
-  let hash = 0;
-  for (let i = 0; i < s.length; i += 1) hash = (hash * 31 + s.charCodeAt(i)) >>> 0;
-  return CATEGORY_CHIP_COLORS[hash % CATEGORY_CHIP_COLORS.length] || CATEGORY_CHIP_COLORS[0];
 }
 
 function computeTopLevelPostCounts(posts) {
@@ -260,10 +243,9 @@ function getTagVisual(tag, maxCount) {
   const key = tag.key;
   if (TAG_VISUAL_CACHE.has(key)) return TAG_VISUAL_CACHE.get(key);
 
-  const color = pickRandomCategoryChipColor();
   const ratio = maxCount > 1 ? (tag.count - 1) / (maxCount - 1) : 0.5;
   const fontSize = (0.98 + ratio * 0.16).toFixed(2);
-  const visual = { color, colorRgb: hexToRgbChannels(color), fontSize, rotate: 0 };
+  const visual = { fontSize, rotate: 0 };
   TAG_VISUAL_CACHE.set(key, visual);
   return visual;
 }
@@ -860,9 +842,6 @@ function renderTagsPage(posts, activeTag) {
     if (selected && tag.key === selected.key) chip.classList.add("is-active");
 
     const visual = getTagVisual(tag, maxCount);
-    chip.style.setProperty("--tag-color", visual.color);
-    chip.style.setProperty("--tag-color-rgb", visual.colorRgb);
-    chip.style.setProperty("--tag-bg", hexToRgba(visual.color, 0.1));
     chip.style.setProperty("--tag-size", `${visual.fontSize}rem`);
     chip.style.setProperty("--tag-rotate", `${visual.rotate}deg`);
 
@@ -1184,9 +1163,7 @@ function renderTagLinks(tags, activeTag) {
   return tags
     .map((tag) => {
       const active = tagKey(tag) === tagKey(activeTag) ? " is-active" : "";
-      const color = stableColorByKey(tagKey(tag));
-      const rgb = hexToRgbChannels(color);
-      return `<a class="tags-post__tag${active}" href="${tagHref(tag)}" style="--tag-color:${color};--tag-color-rgb:${rgb}"><span class="tags-post__hash">#</span><span class="tags-post__label">${escapeHtml(tag)}</span></a>`;
+      return `<a class="tags-post__tag${active}" href="${tagHref(tag)}"><span class="tags-post__hash">#</span><span class="tags-post__label">${escapeHtml(tag)}</span></a>`;
     })
     .join("");
 }
