@@ -167,7 +167,7 @@ html[lang^="zh"] body :where(
 }
 
 #mainNav .header-logo {
-  height: 48px !important;
+  height: 62px !important;
   width: auto !important;
   display: flex !important;
   align-items: center !important;
@@ -1246,7 +1246,7 @@ body.category:not(.pdf-page)::after {
   }
 
   #mainNav .header-logo {
-    height: 36px !important;
+    height: 46px !important;
   }
 
   #mainNav .navbar-brand__text {
