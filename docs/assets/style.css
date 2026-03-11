@@ -2624,10 +2624,9 @@ body.tags:not(.pdf-page)::after {
   margin: 0;
   padding: 6px 14px;
   border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-left: 3px solid var(--tag-color);
-  background-color: #f8fafc;
-  color: #334155;
+  border: 1px solid color-mix(in srgb, var(--tag-color), transparent 60%);
+  background-color: color-mix(in srgb, var(--tag-color), transparent 85%);
+  color: color-mix(in srgb, var(--tag-color), black 30%);
   text-decoration: none;
   font-size: var(--tag-size);
   line-height: 1.15;
@@ -2635,14 +2634,15 @@ body.tags:not(.pdf-page)::after {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   transition: all 0.3s ease;
 }
 
 .tag-cloud__item:hover {
   transform: translateY(-2px);
-  background-color: #eff6ff;
-  border-color: #bfdbfe;
-  color: #0f172a;
+  background-color: color-mix(in srgb, var(--tag-color), transparent 70%);
+  border-color: color-mix(in srgb, var(--tag-color), transparent 50%);
+  color: color-mix(in srgb, var(--tag-color), black 34%);
   text-decoration: none;
 }
 
@@ -2652,13 +2652,13 @@ body.tags:not(.pdf-page)::after {
 }
 
 .tag-cloud__item.is-active {
-  background-color: #eff6ff;
-  border-color: #bfdbfe;
-  color: #0f172a;
+  background-color: color-mix(in srgb, var(--tag-color), transparent 72%);
+  border-color: color-mix(in srgb, var(--tag-color), transparent 48%);
+  color: color-mix(in srgb, var(--tag-color), black 34%);
 }
 
 .tag-cloud__hash {
-  opacity: 1;
+  opacity: 0.6;
   font-weight: 500;
   font-size: 0.9em;
   color: #cbd5e1;
@@ -2838,10 +2838,9 @@ body.tags:not(.pdf-page)::after {
   gap: 0.3rem;
   padding: 6px 14px;
   border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-left: 3px solid var(--tag-color);
-  background: #f8fafc;
-  color: #334155;
+  border: 1px solid color-mix(in srgb, var(--tag-color), transparent 60%);
+  background: color-mix(in srgb, var(--tag-color), transparent 85%);
+  color: color-mix(in srgb, var(--tag-color), black 30%);
   text-decoration: none;
   font-size: 0.86rem;
   line-height: 1.1;
@@ -2849,32 +2848,33 @@ body.tags:not(.pdf-page)::after {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   transition: all 0.3s ease;
 }
 
 .tags-post__tag:hover {
   transform: translateY(-2px);
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  color: #0f172a;
+  background: color-mix(in srgb, var(--tag-color), transparent 70%);
+  border-color: color-mix(in srgb, var(--tag-color), transparent 50%);
+  color: color-mix(in srgb, var(--tag-color), black 34%);
   text-decoration: none;
 }
 
 .tags-post__tag.is-active {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  color: #0f172a;
+  background: color-mix(in srgb, var(--tag-color), transparent 72%);
+  border-color: color-mix(in srgb, var(--tag-color), transparent 48%);
+  color: color-mix(in srgb, var(--tag-color), black 34%);
 }
 
 .post-heading .meta-tags .tags-post__tag {
-  background: #f8fafc;
-  color: #334155;
-  border-color: rgba(0, 0, 0, 0.08);
+  background: color-mix(in srgb, var(--tag-color), transparent 85%);
+  color: color-mix(in srgb, var(--tag-color), black 30%);
+  border-color: color-mix(in srgb, var(--tag-color), transparent 60%);
 }
 
 .post-heading .meta-tags .tags-post__tag:hover {
-  background: #eff6ff;
-  color: #0f172a;
+  background: color-mix(in srgb, var(--tag-color), transparent 70%);
+  color: color-mix(in srgb, var(--tag-color), black 34%);
 }
 
 .tags-results__scroll::-webkit-scrollbar {
