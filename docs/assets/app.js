@@ -191,6 +191,13 @@ function pickRandomCategoryChipColor() {
   return CATEGORY_CHIP_COLORS[Math.floor(Math.random() * CATEGORY_CHIP_COLORS.length)] || CATEGORY_CHIP_COLORS[0];
 }
 
+function stableColorByKey(key) {
+  const s = String(key || "");
+  let hash = 0;
+  for (let i = 0; i < s.length; i += 1) hash = (hash * 31 + s.charCodeAt(i)) >>> 0;
+  return CATEGORY_CHIP_COLORS[hash % CATEGORY_CHIP_COLORS.length] || CATEGORY_CHIP_COLORS[0];
+}
+
 function computeTopLevelPostCounts(posts) {
   /** @type {Map<string, number>} */
   const m = new Map();
@@ -1177,7 +1184,9 @@ function renderTagLinks(tags, activeTag) {
   return tags
     .map((tag) => {
       const active = tagKey(tag) === tagKey(activeTag) ? " is-active" : "";
-      return `<a class="tags-post__tag${active}" href="${tagHref(tag)}"># ${escapeHtml(tag)}</a>`;
+      const color = stableColorByKey(tagKey(tag));
+      const rgb = hexToRgbChannels(color);
+      return `<a class="tags-post__tag${active}" href="${tagHref(tag)}" style="--tag-color:${color};--tag-color-rgb:${rgb}"># ${escapeHtml(tag)}</a>`;
     })
     .join("");
 }
