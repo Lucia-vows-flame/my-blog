@@ -1,23 +1,16 @@
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta http-equiv="Cache-Control" content="no-store, max-age=0" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>TAGS</title>
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <link rel="stylesheet" href="assets/clean-blog.css" />
-    <link rel="stylesheet" href="assets/style.css?v=20260311logo5" />
-  </head>
-  <body class="tags">
-    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav" data-nav>
-      <div class="container-fluid px-4 px-lg-5">
-        <a class="navbar-brand" href="./" aria-label="Geoffrey Xu home"><svg class="navbar-brand__mark header-logo" aria-hidden="true" focusable="false" version="1.0" xmlns="http://www.w3.org/2000/svg"
- viewBox="0 0 2000.000000 2000.000000"
- preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,2000.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none"><path d="m10612 2173 c10 -9 18 -21 18 -26 0 -6 7 -19 17 -29 17 -19 29
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="2000.000000pt" height="2000.000000pt" viewBox="0 0 2000.000000 2000.000000"
+ preserveAspectRatio="xMidYMid meet">
+<metadata>
+Created by potrace 1.12, written by Peter Selinger 2001-2015
+</metadata>
+<g transform="translate(0.000000,2000.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M0 10000 l0 -10000 10000 0 10000 0 0 10000 0 10000 -10000 0 -10000
+0 0 -10000z m10612 2173 c10 -9 18 -21 18 -26 0 -6 7 -19 17 -29 17 -19 29
 -38 58 -95 10 -18 21 -33 26 -33 5 0 9 -8 9 -18 0 -10 9 -24 20 -32 11 -8 20
 -22 20 -32 0 -10 5 -18 10 -18 6 0 10 -6 10 -13 0 -8 9 -22 20 -32 11 -10 20
 -24 20 -31 0 -8 9 -19 20 -26 11 -7 20 -20 20 -28 0 -9 9 -22 20 -30 11 -8 20
@@ -210,7 +203,8 @@ m934 -321 c0 -217 4 -335 10 -335 6 0 10 -8 10 -19 0 -43 156 -72 230 -43 58
 -8 -22 0 -43 -4 -46 -10 -4 -6 -55 -10 -121 -10 -69 0 -114 4 -114 10 0 6 -18
 10 -40 10 -22 0 -40 5 -40 10 0 6 -9 10 -20 10 -11 0 -20 5 -20 10 0 6 -6 10
 -13 10 -19 0 -92 80 -108 118 -8 17 -17 32 -21 32 -5 0 -8 164 -8 365 l0 365
-115 0 115 0 0 -335z"/><path d="M10552 11417 c-12 -13 -22 -29 -22 -35 0 -7 -9 -17 -20 -24 -11 -7
+115 0 115 0 0 -335z"/>
+<path d="M10552 11417 c-12 -13 -22 -29 -22 -35 0 -7 -9 -17 -20 -24 -11 -7
 -20 -20 -20 -28 0 -9 -9 -22 -20 -30 -11 -8 -20 -21 -20 -30 0 -9 -9 -22 -20
 -30 -11 -8 -20 -21 -20 -30 0 -9 -9 -22 -20 -30 -11 -8 -20 -21 -20 -30 0 -9
 -9 -22 -20 -30 -11 -8 -20 -21 -20 -30 0 -9 -9 -22 -20 -30 -11 -8 -20 -22
@@ -256,7 +250,8 @@ m934 -321 c0 -217 4 -335 10 -335 6 0 10 -8 10 -19 0 -43 156 -72 230 -43 58
 -20 21 -20 30 0 9 -9 22 -20 30 -11 8 -20 21 -20 30 0 9 -9 22 -20 30 -11 8
 -20 22 -20 32 0 10 -4 18 -10 18 -5 0 -10 8 -10 19 0 10 -7 24 -15 31 -8 7
 -15 18 -15 25 0 6 -9 20 -20 30 -11 10 -20 23 -20 30 0 7 -9 20 -20 30 -11 10
--20 22 -20 27 0 9 -25 38 -33 38 -2 0 -13 -10 -25 -23z"/><path d="M9393 11235 c-7 -8 -13 -21 -13 -30 0 -8 -4 -15 -10 -15 -5 0 -10 -8
+-20 22 -20 27 0 9 -25 38 -33 38 -2 0 -13 -10 -25 -23z"/>
+<path d="M9393 11235 c-7 -8 -13 -21 -13 -30 0 -8 -4 -15 -10 -15 -5 0 -10 -8
 -10 -18 0 -10 -9 -24 -20 -32 -11 -8 -20 -21 -20 -30 0 -9 -9 -22 -20 -30 -11
 -8 -20 -21 -20 -30 0 -9 -9 -22 -20 -30 -11 -8 -20 -19 -20 -26 0 -6 -9 -19
 -20 -29 -11 -10 -20 -23 -20 -29 0 -7 -9 -18 -20 -26 -11 -8 -20 -21 -20 -30
@@ -291,7 +286,8 @@ m934 -321 c0 -217 4 -335 10 -335 6 0 10 -8 10 -19 0 -43 156 -72 230 -43 58
 -20 22 -20 32 0 10 -4 18 -10 18 -5 0 -10 8 -10 18 0 10 -9 24 -20 32 -11 8
 -20 21 -20 30 0 8 -9 21 -20 28 -11 7 -20 18 -20 26 0 7 -9 21 -20 31 -11 10
 -20 24 -20 31 0 8 -9 19 -20 26 -11 7 -20 20 -20 28 0 9 -9 22 -20 30 -11 8
--20 21 -20 29 0 8 -7 23 -17 33 -9 10 -21 28 -27 40 -14 27 -36 33 -53 13z"/><path d="M8214 11036 c-6 -7 -20 -30 -30 -52 -10 -21 -26 -46 -36 -55 -10 -9
+-20 21 -20 29 0 8 -7 23 -17 33 -9 10 -21 28 -27 40 -14 27 -36 33 -53 13z"/>
+<path d="M8214 11036 c-6 -7 -20 -30 -30 -52 -10 -21 -26 -46 -36 -55 -10 -9
 -18 -23 -18 -30 0 -8 -9 -21 -20 -29 -11 -8 -20 -21 -20 -30 0 -9 -9 -22 -20
 -30 -11 -8 -20 -21 -20 -30 0 -9 -9 -22 -20 -30 -11 -8 -20 -21 -20 -30 0 -9
 -9 -22 -20 -30 -11 -8 -20 -21 -20 -30 0 -9 -9 -22 -20 -30 -11 -8 -20 -22
@@ -322,7 +318,8 @@ c256 0 274 1 274 18 0 10 9 24 20 32 11 8 20 19 20 26 0 6 9 19 20 29 11 10
 16 -10 16 -5 0 -10 8 -10 18 0 10 -9 24 -20 32 -11 8 -20 21 -20 30 0 9 -9 22
 -20 30 -11 8 -20 21 -20 30 0 9 -9 22 -20 30 -11 8 -20 21 -20 30 0 9 -9 22
 -20 30 -11 8 -20 19 -20 24 0 5 -7 18 -17 28 -9 10 -21 28 -27 40 -13 26 -27
-31 -42 14z"/><path d="M8730 10232 c0 -10 -9 -24 -20 -32 -11 -8 -20 -22 -20 -32 0 -10 -4
+31 -42 14z"/>
+<path d="M8730 10232 c0 -10 -9 -24 -20 -32 -11 -8 -20 -22 -20 -32 0 -10 -4
 -18 -10 -18 -5 0 -10 -6 -10 -13 0 -7 -14 -26 -30 -42 -17 -16 -28 -35 -26
 -42 3 -7 1 -13 -4 -13 -6 0 -10 -8 -10 -18 0 -10 -9 -24 -20 -32 -11 -8 -20
 -21 -20 -28 0 -8 -13 -27 -30 -42 -16 -15 -30 -34 -30 -42 0 -7 -9 -20 -20
@@ -341,136 +338,16 @@ c256 0 274 1 274 18 0 10 9 24 20 32 11 8 20 19 20 26 0 6 9 19 20 29 11 10
 -20 27 -20 34 0 8 -9 20 -20 28 -11 8 -20 21 -20 30 0 9 -9 22 -20 30 -11 8
 -20 21 -20 30 0 9 -9 22 -20 30 -11 8 -20 22 -20 31 0 9 -6 19 -14 22 -8 3
 -22 23 -32 44 -10 21 -26 45 -36 54 -10 9 -18 24 -18 33 0 9 -8 16 -20 16 -13
-0 -20 -7 -20 -18z"/><path d="M7600 8190 c0 -5 -13 -10 -30 -10 -16 0 -30 -4 -30 -10 0 -5 -7 -10
+0 -20 -7 -20 -18z"/>
+<path d="M7600 8190 c0 -5 -13 -10 -30 -10 -16 0 -30 -4 -30 -10 0 -5 -7 -10
 -15 -10 -20 0 -85 -65 -85 -85 0 -8 -4 -15 -10 -15 -5 0 -10 -15 -10 -34 0
 -19 -4 -38 -10 -41 -5 -3 -10 -31 -10 -61 0 -30 5 -54 10 -54 6 0 10 -22 10
 -50 0 -27 5 -50 10 -50 6 0 10 -9 10 -20 0 -11 5 -20 10 -20 6 0 10 -8 10 -19
 0 -13 17 -27 55 -46 46 -22 69 -27 134 -27 101 0 181 34 181 76 0 9 5 16 10
 16 6 0 10 9 10 20 0 11 5 20 10 20 6 0 10 18 10 40 0 22 5 40 10 40 6 0 10 30
 10 70 0 40 -4 70 -10 70 -5 0 -10 14 -10 30 0 38 -14 63 -65 118 -24 26 -48
-42 -62 42 -13 0 -23 5 -23 10 0 6 -27 10 -60 10 -33 0 -60 -4 -60 -10z"/><path d="M10140 8075 l0 -105 113 0 c105 0 115 2 133 23 51 60 60 128 21 165
--21 20 -34 22 -145 22 l-122 0 0 -105z"/></g></svg><span class="navbar-brand__text">Geoffrey Xu</span></a>
-        <button class="navbar-toggler" type="button" data-action="nav-toggle" aria-controls="navbarResponsive" aria-expanded="false">
-          菜单
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive" data-nav-collapse>
-          <ul class="navbar-nav ms-auto py-4 py-lg-0">
-            <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4" href="./">
-                <span class="nav-ico" aria-hidden="true">
-                  <svg viewBox="0 0 1024 1024" focusable="false">
-                    <path d="M940 485 562 105Q540 85 511.5 85.0Q483 85 462 105L84 485Q64 505 64.0 533.5Q64 562 84.5 583.0Q105 604 135 604Q163 604 185 584L511 255L839 584Q858 604 891 604Q917 604 940 584Q950 573 954.0 560.5Q958 548 960 534Q959 519 954.5 507.0Q950 495 940 485ZM511 322Q520 322 529 335L822 626V858Q821 939 741 939H607V624Q607 620 605.5 616.0Q604 612 600 610Q597 604 587 604H433Q429 604 425.0 605.5Q421 607 418.5 609.5Q416 612 414.5 616.0Q413 620 413 624V939H279Q198 939 198 858V630L493 333Q504 323 511 322Z"></path>
-                  </svg>
-                </span>
-                <span>HOME</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4" href="category.html">
-                <span class="nav-ico" aria-hidden="true">
-                  <svg viewBox="0 0 1024 1024" focusable="false">
-                    <path d="M457 152V410Q457 439 438.0 458.0Q419 477 391 478H148Q120 477 101.5 458.0Q83 439 82 410V152Q83 123 101.5 104.0Q120 85 148 84H394Q420 85 438.5 104.5Q457 124 457 152ZM605 478H851Q879 477 897.5 458.0Q916 439 917 410V152Q916 123 897.5 104.0Q879 85 851 84H605Q577 85 558.5 104.0Q540 123 539 152V410Q542 438 559.5 457.5Q577 477 605 478ZM391 546H148Q120 547 101.5 566.5Q83 586 82 614V869Q83 899 101.5 918.0Q120 937 148 938H394Q422 937 440.5 918.0Q459 899 460 869V614Q457 586 438.0 566.5Q419 547 391 546ZM858 546H614Q586 547 567.5 566.5Q549 586 548 614V869Q549 899 567.5 918.0Q586 937 614 938H860Q888 937 906.5 918.0Q925 899 926 869V614Q924 586 905.0 566.5Q886 547 858 546Z"></path>
-                  </svg>
-                </span>
-                <span>CATEGORY</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4" href="archive.html">
-                <span class="nav-ico" aria-hidden="true">
-                  <svg viewBox="0 0 1024 1024" focusable="false">
-                    <path d="M841 0H183Q127 1 90.0 37.5Q53 74 51 128V896Q53 950 90.0 986.5Q127 1023 183 1024H841Q897 1023 934.0 986.5Q971 950 973 896V128Q971 74 934.0 37.5Q897 1 841 0ZM775 832H249V704H775ZM775 576H249V448H775ZM775 256H249L183 64H841Z"></path>
-                  </svg>
-                </span>
-                <span>ARCHIVE</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4 active" href="tags.html" aria-current="page">
-                <span class="nav-ico" aria-hidden="true">
-                  <svg viewBox="0 0 1024 1024" focusable="false">
-                    <path d="M451.8 549.8a64 64 0 1 1 0-90.5a64 64 0 0 1 0 90.5Zm71.3-361.7H274.7A96 96 0 0 0 179 284v248.4a96 96 0 0 0 28.1 67.9L534 927.2a96 96 0 0 0 135.8 0l157.4-157.4a96 96 0 0 0 0-135.8L591 197.7a96 96 0 0 0-67.9-28.1ZM788 730.8L630.6 888.2a40 40 0 0 1-56.6 0L247.1 561.4A40 40 0 0 1 235 532.4V284a40 40 0 0 1 39.7-40h248.4a40 40 0 0 1 28.3 11.7L788 492.4a40 40 0 0 1 0 56.6Z"></path>
-                  </svg>
-                </span>
-                <span>TAGS</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">
-                <span class="nav-ico" aria-hidden="true">
-                  <svg viewBox="0 0 1024 1024" focusable="false">
-                    <path d="M900 117Q914 128 912 145L797 831Q795 844 783 851Q777 855 769 855Q764 855 759 853L556 770L448 902Q440 912 426 912Q421 912 416 910Q408 907 403.0 899.5Q398 892 398 883V728L783 255L306 668L130 596Q113 589 112.0 571.0Q111 553 126 545L869 116Q876 112 884.0 112.0Q892 112 900 117Z"></path>
-                  </svg>
-                </span>
-                <span>ABOUT</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">
-                <span class="nav-ico" aria-hidden="true">
-                  <svg viewBox="0 0 1024 1024" focusable="false">
-                    <path d="M699 312Q741 364 741.0 426.0Q741 488 699.0 541.0Q657 594 584.0 624.5Q511 655 426 655Q388 655 348 648Q292 687 224 705Q207 709 185 712H184Q179 712 175.0 708.5Q171 705 170 699L169 696V693L170 691L173 686L189 668Q197 660 200 655L210 642Q217 634 221.5 625.0Q226 616 231 605Q175 573 143.5 526.0Q112 479 112 426Q112 364 154.0 311.5Q196 259 268.5 228.0Q341 197 426.5 197.0Q512 197 584.5 228.0Q657 259 699 312ZM912 541Q912 594 880.5 640.5Q849 687 793 720Q798 730 802.5 739.0Q807 748 814 756L824 769Q827 774 835 782L845 794L853 803L855 808V811L854 814Q853 820 848.5 823.5Q844 827 839 827Q816 823 800 819Q731 802 676 762Q636 769 598 769Q476 769 387 710Q413 712 426 712Q498 712 564.0 692.0Q630 672 682 634Q737 593 767.0 539.5Q797 486 797 426Q797 392 787 359Q845 390 878.5 438.0Q912 486 912 541Z"></path>
-                  </svg>
-                </span>
-                <span>CONTACT</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <header class="masthead tags-hero" style="background-image: url('assets/img/home_background.png')">
-      <div class="container position-relative px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-          <div class="col-md-10 col-lg-8 col-xl-7">
-            <div class="site-heading">
-              <h1>TAGS</h1>
-              <span class="subheading">字里行间的隐秘关联</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <main class="container px-4 px-lg-5 tags-main">
-      <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-11">
-          <section class="tags-card">
-            <div class="tags-card__meta">
-              <span class="tags-card__metaIco" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path style="fill: currentColor; stroke: none" d="M17.63,5.84C17.27,5.33 16.67,5 16,5H5C3.9,5 3,5.9 3,7V17C3,18.11 3.9,19 5,19H16C16.67,19 17.27,18.67 17.63,18.16L21,12L17.63,5.84M16,17H5V7H16L18.72,12L16,17M8,9H14V11H8V9M8,13H13V15H8V13Z"></path>
-                </svg>
-              </span>
-              <span>目前共计</span>
-              <strong id="tag-total">0</strong>
-              <span>个标签</span>
-            </div>
-
-            <p class="tags-card__desc" id="tag-current">点击任意标签，查看该标签下的全部文章。</p>
-
-            <div class="tags-card__cloud">
-              <div class="tag-cloud" id="tag-cloud" aria-label="Tag cloud"></div>
-            </div>
-
-            <section class="tags-results" id="tag-results" hidden></section>
-          </section>
-        </div>
-      </div>
-    </main>
-
-    <footer class="border-top">
-      <div class="container px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-          <div class="col-md-10 col-lg-8 col-xl-7">
-            <div class="small text-center text-muted fst-italic">© <span id="footer-year"></span> · Powered by GitHub Pages</div>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-    <script type="module" src="assets/logo.js?v=20260311logo5"></script>
-    <script type="module" src="assets/app.js?v=20260311tags4"></script>
-  </body>
-</html>
+42 -62 42 -13 0 -23 5 -23 10 0 6 -27 10 -60 10 -33 0 -60 -4 -60 -10z"/>
+<path d="M10140 8075 l0 -105 113 0 c105 0 115 2 133 23 51 60 60 128 21 165
+-21 20 -34 22 -145 22 l-122 0 0 -105z"/>
+</g>
+</svg>

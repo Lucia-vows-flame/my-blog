@@ -166,16 +166,6 @@ html[lang^="zh"] body :where(
   overflow: visible !important;
 }
 
-#mainNav .navbar-brand::before {
-  content: "";
-  flex: 0 0 auto;
-  width: 50px;
-  height: 50px;
-  display: block;
-  background: center / contain no-repeat url("icons/logo-source.svg?v=20260311logo4");
-  filter: brightness(0) invert(1);
-}
-
 #mainNav .header-logo {
   height: 48px !important;
   width: auto !important;
@@ -191,10 +181,6 @@ html[lang^="zh"] body :where(
   box-shadow: none !important;
   overflow: visible !important;
   vertical-align: middle;
-}
-
-#mainNav .navbar-brand__mark.header-logo {
-  display: none !important;
 }
 
 #mainNav .header-logo:hover {
@@ -1257,11 +1243,6 @@ body.category:not(.pdf-page)::after {
 
   #mainNav .navbar-brand__mark {
     flex: 0 0 auto;
-  }
-
-  #mainNav .navbar-brand::before {
-    width: 38px;
-    height: 38px;
   }
 
   #mainNav .header-logo {
