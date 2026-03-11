@@ -2199,7 +2199,7 @@ body.archive .archive-month__head::before {
 
 body.archive .archive-month__head {
   gap: 0.56rem;
-  margin-bottom: 16px;
+  margin-bottom: 16px !important;
 }
 
 body.archive .archive-year__node,
@@ -2230,9 +2230,9 @@ body.archive .archive-entry:hover::before {
 }
 
 body.archive .archive-entry {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
   padding: 12px 0;
 }
 
@@ -2247,16 +2247,17 @@ body.archive .archive-entry + .archive-entry {
 }
 
 body.archive .archive-entry__date {
+  background: #f8fafc !important;
   background-color: #f8fafc !important;
   border: 1px solid #e2e8f0 !important;
-  border-radius: 6px;
-  box-shadow: none;
+  border-radius: 6px !important;
+  box-shadow: none !important;
   text-shadow: none;
   transform: none;
   padding: 2px 8px;
   margin-left: 12px !important;
   min-width: 0;
-  color: #64748b;
+  color: #64748b !important;
   font-weight: 500;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   position: relative;
@@ -2278,22 +2279,22 @@ body.archive .archive-entry:nth-child(even) .archive-entry__date {
 body.archive .archive-entry__title {
   color: #334155;
   font-weight: 400;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  margin: 0 !important;
   padding-top: 0;
-  line-height: 1.5;
+  line-height: 1 !important;
+  transform: translateY(-1px);
   transition: color 0.2s ease, transform 0.2s ease;
 }
 
 body.archive .archive-entry:hover .archive-entry__title {
   color: #2563eb;
-  transform: translateX(4px);
+  transform: translate(4px, -1px);
 }
 
 body.archive .archive-entry:hover .archive-entry__date {
   background-color: #f1f5f9 !important;
   border-color: #cbd5e1 !important;
-  color: #475569;
+  color: #475569 !important;
 }
 
 body.archive .archive-entry__title:hover {
