@@ -149,12 +149,24 @@ html[lang^="zh"] body :where(
 }
 
 #mainNav .navbar-brand__mark {
-  width: 1.48rem;
-  height: 1.76rem;
-  flex: 0 0 1.48rem;
+  flex: 0 0 auto;
   display: block;
-  object-fit: contain;
-  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.12));
+}
+
+#mainNav .header-logo {
+  height: 32px !important;
+  width: auto !important;
+  display: block;
+  flex: 0 0 auto;
+  transition: opacity 0.3s ease;
+}
+
+#mainNav .header-logo:hover {
+  opacity: 0.8;
+}
+
+#mainNav .header-logo path {
+  fill: #ffffff !important;
 }
 
 #mainNav .navbar-brand__text {
@@ -468,9 +480,7 @@ body.home #mainNav .navbar-brand {
 }
 
 body.home #mainNav .navbar-brand__mark {
-  width: 1.62rem;
-  height: 1.94rem;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.24));
+  flex: 0 0 auto;
 }
 
 body.home #mainNav .navbar-brand__text {
@@ -1200,8 +1210,11 @@ body.category:not(.pdf-page)::after {
   }
 
   #mainNav .navbar-brand__mark {
-    width: 1.3rem;
-    height: 1.56rem;
+    flex: 0 0 auto;
+  }
+
+  #mainNav .header-logo {
+    height: 28px !important;
   }
 
   #mainNav .navbar-brand__text {
