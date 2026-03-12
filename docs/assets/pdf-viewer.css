@@ -108,8 +108,10 @@
 }
 
 .pdf-page #mainNav {
-  background: linear-gradient(to bottom, rgba(7, 10, 16, 0.58), rgba(7, 10, 16, 0.28), transparent);
-  backdrop-filter: blur(14px);
+  position: fixed;
+  inset: 0 0 auto 0;
+  background: transparent;
+  backdrop-filter: none;
 }
 
 .pdf-page #mainNav .navbar-brand,
@@ -128,8 +130,8 @@
 }
 
 .pdf-page #mainNav.is-scrolled {
-  background: linear-gradient(to bottom, rgba(7, 10, 16, 0.72), rgba(7, 10, 16, 0.34), transparent);
-  backdrop-filter: blur(16px);
+  background: transparent;
+  backdrop-filter: none;
 }
 
 .pdf-page .masthead.pdf-hero {
