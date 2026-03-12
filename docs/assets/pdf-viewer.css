@@ -1838,8 +1838,13 @@
 
 .pdf-sidebarCard__tabs {
   gap: 0.95rem;
-  padding-bottom: 0.82rem;
-  margin-bottom: 0.8rem;
+  padding-bottom: 18px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarCard__tabs {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 
 .pdf-sidebarCard__tab {
@@ -1863,7 +1868,14 @@
 }
 
 .pdf-sidebarCard:not(.is-reader-active) .pdf-sidebarCard__tab.is-active::after {
-  bottom: -8px;
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -19px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff7c7c, #ff9e73);
 }
 
 .pdf-overview {
