@@ -682,6 +682,7 @@ async function main() {
   /** @type {{id:string,parentId:string|null,title:string,page:number|null,url:string,action:string,depth:number,children:any[]}[]} */
   let outlineLinear = [];
   let activeOutlineId = "";
+  let preferredOutlineId = "";
 
   function flattenOutline(items, target = []) {
     for (const item of items) {
@@ -729,6 +730,13 @@ async function main() {
   }
 
   function pickActiveOutlineId(pageNum) {
+    if (preferredOutlineId) {
+      const preferred = outlineMap.get(preferredOutlineId);
+      if (preferred && Number.isFinite(preferred.page) && preferred.page === pageNum) {
+        return preferredOutlineId;
+      }
+    }
+
     let match = "";
     let first = "";
     for (const item of outlineLinear) {
@@ -792,15 +800,31 @@ async function main() {
       (item.page ? `<span class="pdf-tocPage">P. ${item.page}</span>` : "");
     button.addEventListener("click", (ev) => {
       ev.preventDefault();
+      preferredOutlineId = item.id;
       if (Number.isFinite(item.page) && item.page) {
+        for (const [id, entry] of outlineMap.entries()) {
+          entry.button.classList.toggle("is-active", id === item.id);
+        }
+        ensureOutlineAncestorsExpanded(item.id);
+        activeOutlineId = item.id;
         goToPage(item.page);
         return;
       }
       if (item.url) {
+        for (const [id, entry] of outlineMap.entries()) {
+          entry.button.classList.toggle("is-active", id === item.id);
+        }
+        ensureOutlineAncestorsExpanded(item.id);
+        activeOutlineId = item.id;
         window.open(item.url, "_blank", "noopener,noreferrer");
         return;
       }
       if (item.action) {
+        for (const [id, entry] of outlineMap.entries()) {
+          entry.button.classList.toggle("is-active", id === item.id);
+        }
+        ensureOutlineAncestorsExpanded(item.id);
+        activeOutlineId = item.id;
         goToNamedAction(item.action);
         return;
       }
@@ -833,6 +857,7 @@ async function main() {
     outlineMap.clear();
     outlineLinear = flattenOutline(items, []);
     activeOutlineId = "";
+    preferredOutlineId = "";
     outlineRoot.innerHTML = "";
 
     if (!outlineLinear.length) {
