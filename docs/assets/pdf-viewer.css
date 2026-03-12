@@ -254,8 +254,7 @@
 }
 
 .pdf-sidebarCard::before {
-  background: rgba(255, 255, 255, 0.98);
-  opacity: 1;
+  display: none;
 }
 
 .pdf-page[data-theme="dark"] .pdf-card {
@@ -1817,7 +1816,24 @@
 
 .pdf-sidebarCard {
   top: auto;
-  padding: 1.12rem 1.12rem 1.2rem;
+  padding: 24px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  backdrop-filter: saturate(1.02);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.pdf-sidebarCard::after {
+  display: none;
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarCard {
+  border-color: rgba(148, 163, 184, 0.08);
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
 }
 
 .pdf-sidebarCard__tabs {
@@ -3491,7 +3507,8 @@
 }
 
 @media (max-width: 1100px) {
-  .pdf-card.pdf-readerCard {
+  .pdf-card.pdf-readerCard,
+  .pdf-sidebarCard {
     border-radius: 14px;
   }
 }
