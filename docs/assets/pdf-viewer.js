@@ -1,7 +1,7 @@
 /* global pdfjsLib */
 
 const WORKER_SRC = new URL("./vendor/pdfjs/pdf.worker.min.js", import.meta.url).toString();
-const POSTS_URL = new URL("./data/posts.json", import.meta.url).toString();
+const POSTS_URL = new URL("../data/posts.json", import.meta.url).toString();
 
 function qs(id) {
   return document.getElementById(id);
