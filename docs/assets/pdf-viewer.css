@@ -1862,6 +1862,10 @@
   background: linear-gradient(90deg, #ff7c7c, #ff9e73);
 }
 
+.pdf-sidebarCard:not(.is-reader-active) .pdf-sidebarCard__tab.is-active::after {
+  bottom: -8px;
+}
+
 .pdf-overview {
   margin-bottom: 0.92rem;
   padding-bottom: 1rem;
