@@ -1,9 +1,34 @@
 /* global pdfjsLib */
 
 const WORKER_SRC = new URL("./vendor/pdfjs/pdf.worker.min.js", import.meta.url).toString();
+const POSTS_URL = new URL("./data/posts.json", import.meta.url).toString();
 
 function qs(id) {
   return document.getElementById(id);
+}
+
+function normalizePostPath(path) {
+  return String(path || "")
+    .trim()
+    .replace(/^[./]+/, "")
+    .replace(/^\/+/, "")
+    .replaceAll("\\", "/");
+}
+
+async function fetchPdfPostTitle(file) {
+  const target = normalizePostPath(file);
+  if (!target) return "";
+
+  try {
+    const res = await fetch(POSTS_URL, { cache: "no-store" });
+    if (!res.ok) return "";
+    const data = await res.json();
+    const posts = Array.isArray(data?.posts) ? data.posts : [];
+    const matched = posts.find((post) => normalizePostPath(post?.path) === target);
+    return String(matched?.title || "").trim();
+  } catch {
+    return "";
+  }
 }
 
 function disableSidebarPinning() {
@@ -551,7 +576,8 @@ async function main() {
   const title = qs("pdf-title");
   const subtitle = qs("pdf-subtitle");
   const fileBaseName = basename(file);
-  if (title) title.textContent = fileBaseName;
+  const postTitle = (await fetchPdfPostTitle(file)) || fileBaseName;
+  if (title) title.textContent = postTitle;
   if (subtitle) subtitle.textContent = file;
 
   const openRaw = qs("open-raw");
@@ -559,7 +585,7 @@ async function main() {
   if (openRaw) openRaw.setAttribute("href", file);
   if (download) download.setAttribute("href", file);
 
-  setLoadingVisible(true, { text: `正在加载：${basename(file)}` });
+  setLoadingVisible(true, { text: `正在加载：${postTitle}` });
 
   if (!isPdfJsReady()) {
     showError("PDF.js 未加载（可能是网络受限或 CDN 不可用）。", { file });
@@ -610,8 +636,8 @@ async function main() {
     return;
   }
 
-  setText(fileNamePrimary, fileBaseName);
-  setText(infoName, fileBaseName);
+  setText(fileNamePrimary, postTitle);
+  setText(infoName, postTitle);
 
   const ctx = canvas.getContext("2d", { alpha: false });
   if (!ctx) {
@@ -864,7 +890,7 @@ async function main() {
     setText(metaPages, pageLabel);
     if (progressBar) progressBar.style.width = `${progress}%`;
     if (subtitle) subtitle.textContent = total ? `${file} · ${page}/${total}` : file;
-    document.title = total ? `${fileBaseName} · ${page}/${total}` : fileBaseName;
+    document.title = total ? `${postTitle} · ${page}/${total}` : postTitle;
     updateOutlineActive();
   }
 

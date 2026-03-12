@@ -454,7 +454,7 @@
 
       try {
         await waitForPdfJsReady();
-        await import(`./assets/pdf-viewer.js?v=20260309ai`);
+        await import(`./assets/pdf-viewer.js?v=20260312title1`);
       } catch (err) {
         console.error(err);
         showReaderBootstrapError(String(err?.message || err || "PDF 阅读器启动失败。"));
