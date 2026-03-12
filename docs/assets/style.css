@@ -140,6 +140,12 @@ html[lang^="zh"] body :where(
   -moz-osx-font-smoothing: grayscale;
 }
 
+#mainNav .site-branding,
+#mainNav .site-branding * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 #mainNav .navbar-brand {
   display: inline-flex;
   align-items: center !important;
@@ -161,16 +167,17 @@ html[lang^="zh"] body :where(
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  padding-left: 0;
+  padding-left: 16px;
   line-height: 1;
 }
 
 #mainNav .brand-station {
   font-family: "Helvetica Neue", Arial, sans-serif;
   font-size: 10px !important;
-  letter-spacing: 0.3em !important;
+  letter-spacing: 0.5em !important;
   font-weight: 500 !important;
   color: rgba(255, 255, 255, 0.7) !important;
+  opacity: 0.8 !important;
   text-transform: uppercase;
   margin-bottom: 2px !important;
   display: block;
@@ -184,7 +191,7 @@ html[lang^="zh"] body :where(
   letter-spacing: 0.06em;
   line-height: 1;
   display: block;
-  color: inherit;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 #mainNav .navbar-toggler {
@@ -193,6 +200,15 @@ html[lang^="zh"] body :where(
 
 #mainNav .navbar-nav > li.nav-item > a.nav-link {
   font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  will-change: transform, color, text-shadow;
+}
+
+#mainNav .navbar-nav > li.nav-item > a.nav-link:hover {
+  transform: translateY(-2px) !important;
+  color: rgba(255, 255, 255, 1) !important;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3) !important;
 }
 
 header.masthead .site-heading .subheading,
@@ -1222,7 +1238,7 @@ body.category:not(.pdf-page)::after {
 
   #mainNav .brand-station {
     font-size: 9px !important;
-    letter-spacing: 0.24em !important;
+    letter-spacing: 0.36em !important;
   }
 
   .home-hero .site-heading .subheading {
