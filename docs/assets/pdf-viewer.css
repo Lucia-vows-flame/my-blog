@@ -295,10 +295,14 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: -19px;
   height: 2px;
   border-radius: 999px;
-  background: var(--pdf-accent);
+  background: linear-gradient(90deg, rgba(79, 110, 161, 0.9), rgba(79, 110, 161, 0.42));
+}
+
+.pdf-page[data-theme="dark"] .pdf-sidebarCard__tab.is-active::after {
+  background: linear-gradient(90deg, rgba(143, 169, 214, 0.82), rgba(143, 169, 214, 0.36));
 }
 
 .pdf-section + .pdf-section,
@@ -2998,9 +3002,9 @@
 .pdf-sidebarCard.is-reader-active .pdf-sidebarCard__tab {
   position: relative;
   color: #94a3b8;
-  font-size: 13px;
+  font-size: 0.95rem;
   font-weight: 400;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.01em;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   transition: color 0.2s ease, opacity 0.2s ease;
